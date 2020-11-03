@@ -1,0 +1,1 @@
+### Aseprite projects go here
