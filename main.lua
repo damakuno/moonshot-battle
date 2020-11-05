@@ -43,9 +43,11 @@ function love.update(dt)
     timer:update(dt)
     if love.keyboard.isDown(keybind.UP) then
         imgPos.y = imgPos.y - 1
+        ohAnime:start()
     end
     if love.keyboard.isDown(keybind.DOWN) then
         imgPos.y = imgPos.y + 1
+        ohAnime:start()
     end
     if love.keyboard.isDown(keybind.LEFT) then
         imgPos.x = imgPos.x - 1        
@@ -60,10 +62,16 @@ function love.update(dt)
 end
 
 function love.keyreleased(key)
-    if key == keybind.RIGHT then
+    if key == keybind.UP then
+        ohAnime:stop()
+    end
+    if key == keybind.DOWN then
         ohAnime:stop()
     end
     if key == keybind.LEFT then
+        ohAnime:stop()
+    end
+    if key == keybind.RIGHT then
         ohAnime:stop()
     end
 end
