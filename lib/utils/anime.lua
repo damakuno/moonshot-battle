@@ -9,7 +9,7 @@ function Anime:new(image, width, height, duration, startingSpriteNum, enabled, o
         duration = duration,
         quads = {},
         spriteNum = startingSpriteNum or 1,
-        enabled = enabled or true
+        enabled = enabled or false
     }
 
     for y = 0, image:getHeight() - height, height do

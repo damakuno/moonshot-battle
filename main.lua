@@ -28,7 +28,7 @@ function love.load()
     -- keybind:set("UP", "w")
     love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
 
-    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16, 18, 2)
+    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16, 18, 2, 1, false)
 end
 
 function love.draw()
@@ -51,8 +51,17 @@ function love.update(dt)
     end
     if love.keyboard.isDown(keybind.RIGHT) then
         imgPos.x = imgPos.x + 1
+        ohAnime:start()
+    end    
+end
+
+function love.keyreleased(key)
+    if key == keybind.RIGHT then
+        ohAnime:stop()
     end
 end
+
+
 
 function show_vars()
     love.graphics.print("x: " .. imgPos.x, 10, 20)
