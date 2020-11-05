@@ -16,6 +16,7 @@ function love.load()
     }
     imgMoon = love.graphics.newImage("res/images/moon.png")
     imgPos = {
+        facing_x = 1,
         x = 20,
         y = 20,
         px = 20,
@@ -28,12 +29,12 @@ function love.load()
     -- keybind:set("UP", "w")
     love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
 
-    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16, 18, 2, 1, false)
+    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16, 18, 1, 1, false)
 end
 
 function love.draw()
     -- love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
-    ohAnime:draw(imgPos.x, imgPos.y, 0, 4)
+    ohAnime:draw(imgPos.x, imgPos.y, 0, imgPos.facing_x * 4, 4, ohAnime.width / 2, 0, 0, 0)
     show_vars()
 end
 
@@ -47,16 +48,22 @@ function love.update(dt)
         imgPos.y = imgPos.y + 1
     end
     if love.keyboard.isDown(keybind.LEFT) then
-        imgPos.x = imgPos.x - 1
+        imgPos.x = imgPos.x - 1        
+        imgPos.facing_x = -1
+        ohAnime:start()
     end
     if love.keyboard.isDown(keybind.RIGHT) then
         imgPos.x = imgPos.x + 1
+        imgPos.facing_x = 1
         ohAnime:start()
     end    
 end
 
 function love.keyreleased(key)
     if key == keybind.RIGHT then
+        ohAnime:stop()
+    end
+    if key == keybind.LEFT then
         ohAnime:stop()
     end
 end
