@@ -1,6 +1,7 @@
 Keybind = require "lib/utils/keybind"
 
 function love.load()
+    counter = 0
     -- This should go into game state
     deltaTime = 0
     imgMoon = love.graphics.newImage("res/images/moon.png")
@@ -17,11 +18,12 @@ end
 
 function love.draw()
     love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
-    love.graphics.print(deltaTime, 10, 10)
+    love.graphics.print(counter, 10, 10)
 end
 
 function love.update(dt)
     deltaTime = dt
+    counter = counter + dt
     if love.keyboard.isDown(keybind.UP) then
         imgPos.y = imgPos.y - 1
     end
