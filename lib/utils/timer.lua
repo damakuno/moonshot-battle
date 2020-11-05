@@ -1,11 +1,11 @@
 local Timer = {}
 
-function Timer:new(ticks, callback, object)
+function Timer:new(ticks, callback, enabled, object)
     object = object or {
         callback = callback,
         ticks = ticks or 1,
         counter = 0,
-        enabled = false
+        enabled = enabled or true
     }
     setmetatable(object, self)
     self.__index = self
@@ -17,8 +17,8 @@ function Timer:update(dt, ...)
     if self.enabled == true then
         self.counter = self.counter + dt
         if self.counter >= self.ticks then
-            self.counter = 0
-            self.callback(self.ticks, args)
+            self.callback(self.ticks, self.counter, args)
+            self.counter = self.counter - self.ticks
         end
     end
 end
