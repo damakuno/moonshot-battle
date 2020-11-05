@@ -34,15 +34,6 @@ function love.load()
 end
 
 function love.draw()
-<<<<<<< HEAD
-    love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
-    love.graphics.print(counter, 10, 10)
-end
-
-function love.update(dt)
-    deltaTime = dt
-    counter = counter + dt
-=======
     -- love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
     ohAnime:draw(imgPos.x, imgPos.y, 0, imgPos.facing_x * 4, 4, ohAnime.width / 2, 0, 0, 0)
     show_vars()
@@ -51,7 +42,6 @@ end
 function love.update(dt)
     ohAnime:update(dt)
     timer:update(dt)
->>>>>>> 0cbe36394a56dec3d1f48c3004a48fc1a6b0bf2d
     if love.keyboard.isDown(keybind.UP) then
         imgPos.y = imgPos.y - 1
         ohAnime:start()
