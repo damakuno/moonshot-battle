@@ -3,6 +3,7 @@ Timer = require "lib.utils.timer"
 Anime = require "lib.utils.anime"
 
 function love.load()
+    counter = 0
     -- This should go into game state
     velocity = {
         x = 0,
