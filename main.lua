@@ -39,8 +39,8 @@ function love.draw()
 end
 
 function love.update(dt)
-    ohAnime:update(dt)
-    timer:update(dt)
+    updates(dt, ohAnime, timer)
+
     if love.keyboard.isDown(keybind.UP) then
         imgPos.y = imgPos.y - 1
         ohAnime:start()
@@ -98,6 +98,13 @@ function calcVelocity(ticks, counter)
     acceleration.y = (velocity.y - velocity.py) / ticks
     velocity.px = velocity.x
     velocity.py = velocity.y
+end
+
+function updates(dt, ...)
+    local args = {...}
+    for i, arg in ipairs(args) do
+        arg:update(dt)
+    end
 end
 
 -- example starting and stopping animation based on timer
