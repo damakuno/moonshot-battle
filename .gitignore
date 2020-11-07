@@ -41,6 +41,3 @@ luac.out
 
 # Love files
 *.love
-
-# VS Code config
-.vscode

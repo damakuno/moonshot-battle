@@ -1,8 +1,19 @@
 Keybind = require "lib.utils.keybind"
 Timer = require "lib.utils.timer"
 Anime = require "lib.utils.anime"
+Dialog = require "lib.utils.dialog"
 
 function love.load()
+    font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
+    dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
+
+    str_index = 1
+    dialog_text = "this is some long text " .. "this is some long text " .. "this is some long text " ..
+                      "this is some long text " .. "this is some long text " .. "this is some long text " ..
+                      "this is some long text " .. "this is some long text " .. "this is some long text " ..
+                      "this is some long text"
+    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.05)
+
     counter = 0
     -- This should go into game state
     velocity = {
@@ -37,10 +48,11 @@ function love.draw()
     -- love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
     ohAnime:draw(imgPos.x, imgPos.y, 0, imgPos.facing_x * 4, 4, ohAnime.width / 2, 0, 0, 0)
     show_vars()
+    draws(dialog)    
 end
 
 function love.update(dt)
-    updates(dt, ohAnime, timer)
+    updates(dt, ohAnime, timer, dialog)
 
     if love.keyboard.isDown(keybind.UP) then
         imgPos.y = imgPos.y - 1
@@ -51,7 +63,7 @@ function love.update(dt)
         ohAnime:start()
     end
     if love.keyboard.isDown(keybind.LEFT) then
-        imgPos.x = imgPos.x - 1        
+        imgPos.x = imgPos.x - 1
         imgPos.facing_x = -1
         ohAnime:start()
     end
@@ -59,7 +71,7 @@ function love.update(dt)
         imgPos.x = imgPos.x + 1
         imgPos.facing_x = 1
         ohAnime:start()
-    end    
+    end
 end
 
 function love.keyreleased(key)
@@ -77,22 +89,20 @@ function love.keyreleased(key)
     end
 end
 
-
-
 function show_vars()
-    love.graphics.print("x: " .. imgPos.x, 10, 20)
-    love.graphics.print("y: " .. imgPos.y, 10, 30)
-    love.graphics.print("px: " .. imgPos.px, 10, 40)
-    love.graphics.print("py: " .. imgPos.py, 10, 50)
-    love.graphics.print("x velocity: " .. velocity.x, 10, 60)
-    love.graphics.print("y velocity: " .. velocity.y, 10, 70)
-    love.graphics.print("x acceleration: " .. acceleration.x, 10, 80)
-    love.graphics.print("y acceleration: " .. acceleration.y, 10, 90)
+    love.graphics.print("x: " .. imgPos.x, font, 10, 20)
+    love.graphics.print("y: " .. imgPos.y, font, 10, 30)
+    love.graphics.print("px: " .. imgPos.px, font, 10, 40)
+    love.graphics.print("py: " .. imgPos.py, font, 10, 50)
+    love.graphics.print("x velocity: " .. velocity.x, font, 10, 60)
+    love.graphics.print("y velocity: " .. velocity.y, font, 10, 70)
+    love.graphics.print("x acceleration: " .. acceleration.x, font, 10, 80)
+    love.graphics.print("y acceleration: " .. acceleration.y, font, 10, 90)
 end
 
 function calcVelocity(ticks, counter)
     velocity.x = (imgPos.x - imgPos.px) / ticks
-    velocity.y =  (imgPos.y - imgPos.py) / ticks
+    velocity.y = (imgPos.y - imgPos.py) / ticks
     imgPos.px = imgPos.x
     imgPos.py = imgPos.y
     acceleration.x = (velocity.x - velocity.px) / ticks
@@ -105,6 +115,13 @@ function updates(dt, ...)
     local args = {...}
     for i, arg in ipairs(args) do
         arg:update(dt)
+    end
+end
+
+function draws(...)
+    local args = {...}
+    for i, arg in ipairs(args) do
+        arg:draw()
     end
 end
 
