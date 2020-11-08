@@ -5,7 +5,10 @@ function Keybind:new(object)
         UP = "up",
         DOWN = "down",
         LEFT = "left",
-        RIGHT = "right"
+        RIGHT = "right",
+        SPACE = "space",
+        C = "c",
+        S = "s"
     }    
     setmetatable(object, self)
 

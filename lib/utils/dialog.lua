@@ -8,12 +8,13 @@ function Dialog:new(text, font, x, y, limit, align, ticks, increment, object)
         y = y or 500,
         limit = limit or 760,
         align = align or "left",
-        str_index = 1,
-        display_text = "",
         ticks = ticks or 0.3,
         increment = increment or 1,
         enabled = false,
-        counter = 0
+        counter = 0,
+        str_index = 1,
+        display_text = "",
+        displaying = true
     }
     setmetatable(object, self)
     self.__index = self
@@ -31,27 +32,46 @@ function Dialog:update(dt)
 end
 
 function Dialog:draw()
-    -- print(self.text, self.font, self.x, self.y, self.limit, self.align)
-    love.graphics.printf(self.display_text, self.font, self.x, self.y, self.limit, self.align)
+    love.graphics.printf(self.display_text, self.font, self.x, self.y,
+                         self.limit, self.align)
+
 end
 
-function Dialog:addIncrement(num)
-    self.str_index = self.str_index + num
-end
+function Dialog:addIncrement(num) self.str_index = self.str_index + num end
 
 function Dialog:updateDialogText()
     local text = self.text
     if self.str_index < #text then
+        self.displaying = true
         self:addIncrement(self.increment)
         self.display_text = text:sub(1, self.str_index)
     end
+
+    if self.str_index == #text then self.displaying = false end
 end
 
-function Dialog:start()
-    self.enabled = true
+function Dialog:skipDialog()
+    if (self.displaying == true) and (self.enabled == true) then
+        local text = self.text
+        self.str_index = #text - 1
+    end
 end
+
+function Dialog:setNewDialog(text)
+    if self.displaying == false then
+        self.text = text
+        self.str_index = 1
+        self.displaying = true
+    end
+end
+
+function Dialog:start() self.enabled = true end
 
 function Dialog:stop()
+    self.str_index = 1
+    self.text = ""
+    self.display_text = ""
+    self.displaying = false
     self.enabled = false
 end
 
