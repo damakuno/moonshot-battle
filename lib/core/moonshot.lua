@@ -58,10 +58,7 @@ function Moonshot:draw()
     self.dialog:draw()
 end
 
-function Moonshot:keyreleased(key)
-    -- TODO
-    -- Fix bug / Add feature for not transition between "stories"
-    local keybind = Keybind:new()
+function Moonshot:keyreleased(key, keybind)
     if key == keybind.SPACE then
         if self.story_index == #(self.story) then
             return true

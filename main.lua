@@ -37,7 +37,7 @@ function love.keyreleased(key)
             moonshot:start()
             storyend = false
         else 
-            storyend = moonshot:keyreleased(key)
+            storyend = moonshot:keyreleased(key, keybind)
         end
     end
     
