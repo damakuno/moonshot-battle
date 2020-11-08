@@ -20,6 +20,7 @@ function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, obj
         charaAnime = anime
     }
 
+    print("init")
 
     setmetatable(object, self)
     self.__index = self
@@ -27,6 +28,7 @@ function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, obj
 end
 
 function Dialog:update(dt)
+    print("update")
     if self.enabled == true then
         self.counter = self.counter + dt
         if self.counter >= self.ticks then

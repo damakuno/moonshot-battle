@@ -8,7 +8,7 @@ function love.load()
 
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
-    
+
     dialog_text = "this is some long text " .. "this is some long text " ..
                       "this is some long text " .. "this is some long text " ..
                       "this is some long text " .. "this is some long text " ..
@@ -25,8 +25,8 @@ function love.load()
     jillAnime = Anime:new(love.graphics.newImage("res/images/Jill.png"), 205,
                           190, 1, 1)
 
-    dialog = Dialog:new(mikiAnime, dialog_text, dialog_font, 10, 500, 760, "left",
-                        0.04)
+    dialog = Dialog:new(mikiAnime, dialog_text, dialog_font, 10, 500, 760,
+                        "left", 0.04)
     dialog:start()
 
     keybind = Keybind:new()
@@ -36,13 +36,13 @@ function love.load()
 end
 
 function love.draw()
-    show_vars()
     draws(dialog)
+    show_vars()
 end
 
 function love.update(dt)
     deltaTime = dt
-    updates(dt, timer, dialog)
+    updates(dt, dialog, mikiAnime, jillAnime)
 end
 
 function love.keyreleased(key)
@@ -52,9 +52,7 @@ function love.keyreleased(key)
     end
 end
 
-function show_vars()
-    love.graphics.print("dt: " .. deltaTime, font, 10, 10)
-end
+function show_vars() love.graphics.print("dt: " .. deltaTime, font, 10, 10) end
 
 function calcVelocity(ticks, counter)
     velocity.x = (imgPos.x - imgPos.px) / ticks
