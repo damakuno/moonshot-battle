@@ -12,13 +12,6 @@ function love.load()
 
     moonshot = Moonshot:new("intro", dialog_font)
     moonshot:start()
-    -- dialog_text = "Hey Jill, care to recommend me something good?"
-    -- dialog_text2 = "Sure, how does a Sugar Rush sound?"
-    -- mikiAnime = Anime:new("Kira Miki", love.graphics.newImage("res/images/KiraMikiSprite.png"), 205, 200, 1, 1)
-    -- jillAnime = Anime:new("Jill", love.graphics.newImage("res/images/Jill.png"), 205, 190, 1, 1)
-
-    -- dialog = Dialog:new(mikiAnime, dialog_text, dialog_font, 10, 500, 760, "left", 0.04)
-    -- dialog:start()
 
     keybind = Keybind:new()
     -- Example setting of key bindings
@@ -38,10 +31,6 @@ end
 
 function love.keyreleased(key)
     moonshot:keyreleased(key)
-    -- if key == keybind.SPACE then
-    --     dialog:skipDialog()
-    --     dialog:setNewDialog(dialog_text2, jillAnime)
-    -- end
 end
 
 function show_vars()
