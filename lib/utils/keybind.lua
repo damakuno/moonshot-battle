@@ -10,6 +10,8 @@ function Keybind:new(object)
         C = "c",
         S = "s"
     }    
+    -- TODO
+    -- Load keybind from configuration file
     setmetatable(object, self)
 
     self.__index = self
@@ -24,6 +26,8 @@ end
 
 function Keybind:set(keyname, keyString)
     self[keyname] = keyString
+    -- TODO
+    -- Save keybind to configuration file
 end
 
 return Keybind
