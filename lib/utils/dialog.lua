@@ -36,13 +36,15 @@ function Dialog:update(dt)
 end
 
 function Dialog:draw()
-    self.charaAnime:draw(self.x, self.y - self.charaAnime.height - 10, 0)
-    love.graphics.printf(self.display_text, self.font, self.x, self.y,
-                         self.limit, self.align)
+    self.charaAnime:draw(self.x, self.y - self.charaAnime.height - 40, 0)
+    love.graphics.printf(self.display_text, self.font, self.x, self.y, self.limit, self.align)
+    love.graphics.printf(self.charaAnime.name, self.font, self.x, self.y - 30, self.limit, self.align)
 
 end
 
-function Dialog:addIncrement(num) self.str_index = self.str_index + num end
+function Dialog:addIncrement(num)
+    self.str_index = self.str_index + num
+end
 
 function Dialog:updateDialogText()
     local text = self.text
@@ -52,8 +54,8 @@ function Dialog:updateDialogText()
         self.display_text = text:sub(1, self.str_index)
     end
 
-    if self.str_index == #text then 
-        self.displaying = false 
+    if self.str_index == #text then
+        self.displaying = false
         self.charaAnime:stop()
     end
 end
@@ -62,7 +64,9 @@ function Dialog:skipDialog()
     if (self.displaying == true) and (self.enabled == true) then
         local text = self.text
         self.str_index = #text - 1
+        return true
     end
+    return false
 end
 
 function Dialog:setNewDialog(text, charaAnime)
@@ -70,14 +74,14 @@ function Dialog:setNewDialog(text, charaAnime)
         self.text = text
         self.str_index = 1
         self.displaying = true
-        self.charaAnime = charaAnime or self.charaAnime  
+        self.charaAnime = charaAnime or self.charaAnime
         self.charaAnime:start()
     end
 end
 
 function Dialog:start()
-     self.enabled = true     
-     self.charaAnime:start()
+    self.enabled = true
+    self.charaAnime:start()
 end
 
 function Dialog:stop()

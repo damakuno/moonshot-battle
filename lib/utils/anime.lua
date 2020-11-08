@@ -1,9 +1,10 @@
 local Anime = {}
 
-function Anime:new(image, width, height, duration, startingSpriteNum, enabled,
+function Anime:new(name, image, width, height, duration, startingSpriteNum, enabled,
                    loop, playTillEnd, object)
     object = object or {
         currentTime = 0,
+        name = name,
         spriteSheet = image,
         width = width,
         height = height,
