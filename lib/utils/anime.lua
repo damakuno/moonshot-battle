@@ -1,16 +1,19 @@
 local Anime = {}
 
-function Anime:new(image, width, height, duration, startingSpriteNum, enabled, object)
-    object = object or {
-        currentTime = 0,
-        spriteSheet = image,
-        width = width,
-        height = height,
-        duration = duration,
-        quads = {},
-        spriteNum = startingSpriteNum or 1,
-        enabled = enabled or false
-    }
+function Anime:new(image, width, height, duration, startingSpriteNum, enabled, playTillEnd, object)
+    object =
+        object or
+        {
+            currentTime = 0,
+            spriteSheet = image,
+            width = width,
+            height = height,
+            duration = duration,
+            quads = {},
+            spriteNum = startingSpriteNum or 1,
+            enabled = enabled or false,
+            playTillEnd = playTillEnd or false
+        }
 
     for y = 0, image:getHeight() - height, height do
         for x = 0, image:getWidth() - width, width do
@@ -28,6 +31,15 @@ function Anime:update(dt)
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.duration then
             self.currentTime = self.currentTime - self.duration
+        end
+    else
+        if self.playTillEnd == true then
+            if not (self.spriteNum == 1) then
+                self.currentTime = self.currentTime + dt
+                if self.currentTime >= self.duration then
+                    self.currentTime = self.currentTime - self.duration
+                end
+            end
         end
     end
 end
