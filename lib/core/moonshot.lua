@@ -77,6 +77,10 @@ function Moonshot:start()
     self.dialog:start()
 end
 
+function Moonshot:stop()
+    self.dialog:stop()
+end
+
 function Moonshot:trim(str)
     return string.gsub(str, '^%s*(.-)%s*$', '%1')
 end
