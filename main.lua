@@ -4,6 +4,7 @@ Anime = require "lib.utils.anime"
 Dialog = require "lib.utils.dialog"
 
 function love.load()
+    deltaTime = 0
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
 
@@ -12,7 +13,7 @@ function love.load()
                       "this is some long text " .. "this is some long text " .. "this is some long text " ..
                       "this is some long text " .. "this is some long text " .. "this is some long text " ..
                       "this is some long text"
-    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.05)
+    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.05, 1)
 
     counter = 0
     -- This should go into game state
@@ -52,6 +53,7 @@ function love.draw()
 end
 
 function love.update(dt)
+    deltaTime = dt
     updates(dt, ohAnime, timer, dialog)
 
     if love.keyboard.isDown(keybind.UP) then
@@ -89,7 +91,8 @@ function love.keyreleased(key)
     end
 end
 
-function show_vars()
+function show_vars()    
+    love.graphics.print("dt: " .. deltaTime, font, 10, 10)
     love.graphics.print("x: " .. imgPos.x, font, 10, 20)
     love.graphics.print("y: " .. imgPos.y, font, 10, 30)
     love.graphics.print("px: " .. imgPos.px, font, 10, 40)
