@@ -25,7 +25,7 @@ function love.load()
     jillAnime = Anime:new(love.graphics.newImage("res/images/Jill.png"), 205,
                           190, 1, 1)
 
-    dialog = Dialog:new(ohAnime, dialog_text, dialog_font, 10, 500, 760, "left",
+    dialog = Dialog:new(mikiAnime, dialog_text, dialog_font, 10, 500, 760, "left",
                         0.04)
     dialog:start()
 
