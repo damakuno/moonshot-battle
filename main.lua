@@ -12,7 +12,8 @@ function love.load()
                       "this is some long text " .. "this is some long text " .. "this is some long text " ..
                       "this is some long text " .. "this is some long text " .. "this is some long text " ..
                       "this is some long text"
-    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.05)
+    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.04)    
+    dialog:start()
 
     counter = 0
     -- This should go into game state

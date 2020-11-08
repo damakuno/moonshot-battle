@@ -12,6 +12,7 @@ function Dialog:new(text, font, x, y, limit, align, ticks, increment, object)
         display_text = "",
         ticks = ticks or 0.3,
         increment = increment or 1,
+        enabled = false,
         counter = 0
     }
     setmetatable(object, self)
@@ -20,10 +21,12 @@ function Dialog:new(text, font, x, y, limit, align, ticks, increment, object)
 end
 
 function Dialog:update(dt)
-    self.counter = self.counter + dt
-    if self.counter >= self.ticks then
-        self:updateDialogText()
-        self.counter = self.counter - self.ticks
+    if self.enabled == true then
+        self.counter = self.counter + dt
+        if self.counter >= self.ticks then
+            self:updateDialogText()
+            self.counter = self.counter - self.ticks
+        end
     end
 end
 
@@ -42,6 +45,14 @@ function Dialog:updateDialogText()
         self:addIncrement(self.increment)
         self.display_text = text:sub(1, self.str_index)
     end
+end
+
+function Dialog:start()
+    self.enabled = true
+end
+
+function Dialog:stop()
+    self.enabled = false
 end
 
 return Dialog
