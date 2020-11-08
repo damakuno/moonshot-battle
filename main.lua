@@ -36,9 +36,11 @@ function love.keyreleased(key)
             moonshot:setNewStory("act1")
             moonshot:start()
             storyend = false
+        else 
+            storyend = moonshot:keyreleased(key)
         end
     end
-    storyend = moonshot:keyreleased(key)
+    
 end
 
 function show_vars()
