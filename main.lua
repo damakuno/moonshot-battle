@@ -8,17 +8,29 @@ function love.load()
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
 
     str_index = 1
-    dialog_text = "this is some long text " .. "this is some long text " ..
-                      "this is some long text " .. "this is some long text " ..
-                      "this is some long text " .. "this is some long text " ..
-                      "this is some long text " .. "this is some long text " ..
-                      "this is some long text " .. "this is some long text"
-    dialog_text2 = "some other long text " .. "some other long text " ..
-                       "some other long text " .. "some other long text " ..
-                       "some other long text " .. "some other long text " ..
-                       "some other long text " .. "some other long text " ..
-                       "some other long text " .. "some other long text"
-    dialog = Dialog:new(dialog_text, dialog_font, 10, 500, 760, "left", 0.04)
+    dialog_text =
+        "this is some long text " ..
+        "this is some long text " ..
+            "this is some long text " ..
+                "this is some long text " ..
+                    "this is some long text " ..
+                        "this is some long text " ..
+                            "this is some long text " ..
+                                "this is some long text " .. "this is some long text " .. "this is some long text"
+    dialog_text2 =
+        "some other long text " ..
+        "some other long text " ..
+            "some other long text " ..
+                "some other long text " ..
+                    "some other long text " ..
+                        "some other long text " ..
+                            "some other long text " ..
+                                "some other long text " .. "some other long text " .. "some other long text"
+    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16, 18, 1, 1, false, true)
+    mikiAnime = Anime:new(love.graphics.newImage("res/images/KiraMikiSprite.png"), 205, 200, 1, 1, false)
+    jillAnime = Anime:new(love.graphics.newImage("res/images/Jill.png"), 205, 190, 1, 1, false)
+
+    dialog = Dialog:new(mikiAnime, dialog_text, dialog_font, 10, 500, 760, "left", 0.04)
     dialog:start()
 
     counter = 0
@@ -33,15 +45,11 @@ function love.load()
     -- Example setting of key bindings
     -- keybind:set("UP", "w")
     love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
-
-    ohAnime = Anime:new(love.graphics.newImage("res/images/oldHero.png"), 16,
-                        18, 1, 1, false)
 end
 
 function love.draw()
     -- love.graphics.draw(imgMoon, imgPos.x, imgPos.y)
-    ohAnime:draw(imgPos.x, imgPos.y, 0, imgPos.facing_x * 4, 4,
-                 ohAnime.width / 2, 0, 0, 0)
+    ohAnime:draw(imgPos.x, imgPos.y, 0, imgPos.facing_x * 4, 4, ohAnime.width / 2, 0, 0, 0)
     show_vars()
     draws(dialog)
 end
@@ -70,15 +78,23 @@ function love.update(dt)
 end
 
 function love.keyreleased(key)
-    if key == keybind.UP then ohAnime:stop() end
-    if key == keybind.DOWN then ohAnime:stop() end
-    if key == keybind.LEFT then ohAnime:stop() end
-    if key == keybind.RIGHT then ohAnime:stop() end
+    if key == keybind.UP then
+        ohAnime:stop()
+    end
+    if key == keybind.DOWN then
+        ohAnime:stop()
+    end
+    if key == keybind.LEFT then
+        ohAnime:stop()
+    end
+    if key == keybind.RIGHT then
+        ohAnime:stop()
+    end
 
-    if key == keybind.SPACE then 
+    if key == keybind.SPACE then
         dialog:skipDialog()
-        dialog:setNewDialog(dialog_text2)
-    end    
+        dialog:setNewDialog(dialog_text2, jillAnime)
+    end
 end
 
 function show_vars()
@@ -105,12 +121,16 @@ end
 
 function updates(dt, ...)
     local args = {...}
-    for i, arg in ipairs(args) do arg:update(dt) end
+    for i, arg in ipairs(args) do
+        arg:update(dt)
+    end
 end
 
 function draws(...)
     local args = {...}
-    for i, arg in ipairs(args) do arg:draw() end
+    for i, arg in ipairs(args) do
+        arg:draw()
+    end
 end
 
 -- example starting and stopping animation based on timer

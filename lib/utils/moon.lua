@@ -1,29 +1,26 @@
--- Parser for .moon files
-local Moon = {}
+-- Parser for .moonshot files
+local Moonshot = {}
 
-function Moon:new(path, object)
+function Moonshot:new(path, object)
     object = object or {
-        path = path
+        path = path,
         story = {}
     }
-
-    
-
     setmetatable(object, self)
     self.__index = self
     return object
 end
 
-function Moon:update(dt)
+function Moonshot:update(dt)
 
 end
 
-function Moon:draw()
+function Moonshot:draw()
 
 end
 
-function Moon:trim(str)
+function Moonshot:trim(str)
     return string.gsub(str, '^%s*(.-)%s*$', '%1')
 end
 
-return Moon
+return Moonshot

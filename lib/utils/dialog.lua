@@ -1,6 +1,8 @@
 local Dialog = {}
 
-function Dialog:new(text, font, x, y, limit, align, ticks, increment, object)
+local Anime = require "lib.utils.anime"
+
+function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, object)
     object = object or {
         text = text,
         font = font,
@@ -14,8 +16,11 @@ function Dialog:new(text, font, x, y, limit, align, ticks, increment, object)
         counter = 0,
         str_index = 1,
         display_text = "",
-        displaying = true
+        displaying = true,
+        charaAnime = anime
     }
+
+
     setmetatable(object, self)
     self.__index = self
     return object
@@ -32,6 +37,7 @@ function Dialog:update(dt)
 end
 
 function Dialog:draw()
+    self.charaAnime:draw(self.x, self.y - self.charaAnime.height - 10, 0)
     love.graphics.printf(self.display_text, self.font, self.x, self.y,
                          self.limit, self.align)
 
@@ -47,7 +53,10 @@ function Dialog:updateDialogText()
         self.display_text = text:sub(1, self.str_index)
     end
 
-    if self.str_index == #text then self.displaying = false end
+    if self.str_index == #text then 
+        self.displaying = false 
+        self.charaAnime:stop()
+    end
 end
 
 function Dialog:skipDialog()
@@ -57,15 +66,20 @@ function Dialog:skipDialog()
     end
 end
 
-function Dialog:setNewDialog(text)
+function Dialog:setNewDialog(text, charaAnime)
     if self.displaying == false then
         self.text = text
         self.str_index = 1
         self.displaying = true
+        self.charaAnime = charaAnime or self.charaAnime  
+        self.charaAnime:start()
     end
 end
 
-function Dialog:start() self.enabled = true end
+function Dialog:start()
+     self.enabled = true     
+     self.charaAnime:start()
+end
 
 function Dialog:stop()
     self.str_index = 1
