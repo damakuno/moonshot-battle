@@ -59,16 +59,23 @@ function Moonshot:draw()
 end
 
 function Moonshot:keyreleased(key)
+    -- TODO
+    -- Fix bug / Add feature for not transition between "stories"
     local keybind = Keybind:new()
     if key == keybind.SPACE then
-        local skipped = self.dialog:skipDialog()
-        if not(skipped) then
-            if self.story_index < #(self.story) then
-                self.story_index = self.story_index + 1
+        if self.story_index == #(self.story) then
+            return true
+        else
+            local skipped = self.dialog:skipDialog()
+            if not (skipped) then
+                if self.story_index < #(self.story) then
+                    self.story_index = self.story_index + 1
+                end
+                local story = self.story[self.story_index]
+                local anime = self.charaAnimes[story.alias]
+                self.dialog:setNewDialog(story.text, anime)
             end
-            local story = self.story[self.story_index]
-            local anime = self.charaAnimes[story.alias]
-            self.dialog:setNewDialog(story.text, anime)
+            return false
         end
     end
 end
@@ -77,8 +84,49 @@ function Moonshot:start()
     self.dialog:start()
 end
 
+function Moonshot:reset()
+    self.story = {}
+    self.charas = {}
+    self.charaAnimes = {}
+    self.story = {}
+    self.story_index = 1
+end
+
 function Moonshot:stop()
+    self:reset()
     self.dialog:stop()
+end
+
+function Moonshot:setNewStory(path)
+    self.moonshotfile = path .. ".moonshot"
+    self.charafile = path .. ".moonshot.chara"
+    self:reset()
+    assert(type(self.moonshotfile) == 'string', 'Parameter "moonshotfile" must be a string.');
+    local file = assert(io.open(self.moonshotfile, 'r'), 'Error loading moonshot file : ' .. self.moonshotfile);
+
+    for line in file:lines() do
+        local k, v = line:match('(.-) (.+)$')
+        if (k and v ~= nil) then
+            table.insert(self.story, {
+                alias = k,
+                text = v
+            })
+        end
+    end
+    file:close()
+
+    self.charas = LIP.load(self.charafile)
+
+    for k, v in pairs(self.charas) do
+        local alias = k
+        local config = v
+        self.charaAnimes[alias] = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width,
+                                      config.height, config.duration, config.startingSpriteNum, false, config.loop)
+    end
+
+    local story = self.story[self.story_index]
+    local anime = self.charaAnimes[story.alias]
+    self.dialog = Dialog:new(anime, story.text, self.font, 10, 500, 760, "left", 0.04)
 end
 
 function Moonshot:trim(str)

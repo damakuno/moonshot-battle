@@ -29,8 +29,16 @@ function love.update(dt)
     updates(dt, moonshot, mikiAnime, jillAnime)
 end
 
+local storyend = false
 function love.keyreleased(key)
-    moonshot:keyreleased(key)
+    if key == keybind.SPACE then
+        if storyend == true then
+            moonshot:setNewStory("act1")
+            moonshot:start()
+            storyend = false
+        end
+    end
+    storyend = moonshot:keyreleased(key)
 end
 
 function show_vars()

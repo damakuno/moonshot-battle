@@ -1,0 +1,18 @@
+[miki:idle]
+name=Kira Miki
+sprite=res/images/KiraMikiSprite.png
+width=205
+height=200
+duration=1
+startingSpriteNum=1
+loop=false
+
+[jill:idle]
+name=Jill
+sprite=res/images/Jill.png
+width=205
+height=190
+duration=1
+startingSpriteNum=1
+loop=false
+
