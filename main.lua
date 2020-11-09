@@ -11,7 +11,6 @@ function love.load()
 
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
-
     moonshot = Moonshot:new("intro", dialog_font)
     moonshot:registerCallback("storyend", function()
         print("callback called")
