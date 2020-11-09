@@ -7,18 +7,17 @@ local Dialog = require "lib.utils.dialog"
 local LIP = require "lib.utils.LIP"
 
 function Moonshot:new(path, font, object)
-    object =
-        object or
-        {
-            path = path,
-            font = font,
-            moonshotfile = path .. ".moonshot",
-            charafile = path .. ".moonshot.chara",
-            charas = {},
-            charaAnimes = {},
-            story = {},
-            story_index = 1
-        }
+    object = object or {
+        path = path,
+        font = font,
+        moonshotfile = path .. ".moonshot",
+        charafile = path .. ".moonshot.chara",
+        charas = {},
+        charaAnimes = {},
+        story = {},
+        story_index = 1,
+        callback = {}
+    }
 
     assert(type(object.moonshotfile) == "string", 'Parameter "moonshotfile" must be a string.')
     local file = assert(io.open(object.moonshotfile, "r"), "Error loading moonshot file : " .. object.moonshotfile)
@@ -26,13 +25,10 @@ function Moonshot:new(path, font, object)
     for line in file:lines() do
         local k, v = line:match("(.-) (.+)$")
         if (k and v ~= nil) then
-            table.insert(
-                object.story,
-                {
-                    alias = k,
-                    text = v
-                }
-            )
+            table.insert(object.story, {
+                alias = k,
+                text = v
+            })
         end
     end
     file:close()
@@ -42,20 +38,10 @@ function Moonshot:new(path, font, object)
     for k, v in pairs(object.charas) do
         local alias = k
         local config = v
-        print(k, v)
-        object.charaAnimes[alias] =
-            Anime:new(
-            config.name,
-            love.graphics.newImage(config.sprite),
-            config.width,
-            config.height,
-            config.duration,
-            config.startingSpriteNum,
-            false,
-            config.loop,
-            false,
-            config.dialogPosition
-        )
+        -- print(k, v)
+        object.charaAnimes[alias] = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width,
+                                        config.height, config.duration, config.startingSpriteNum, false, config.loop,
+                                        false, config.dialogPosition)
     end
 
     local story = object.story[object.story_index]
@@ -99,7 +85,6 @@ function Moonshot:start()
 end
 
 function Moonshot:reset()
-    self.story = {}
     self.charas = {}
     self.charaAnimes = {}
     self.story = {}
@@ -121,13 +106,10 @@ function Moonshot:setNewStory(path)
     for line in file:lines() do
         local k, v = line:match("(.-) (.+)$")
         if (k and v ~= nil) then
-            table.insert(
-                self.story,
-                {
-                    alias = k,
-                    text = v
-                }
-            )
+            table.insert(self.story, {
+                alias = k,
+                text = v
+            })
         end
     end
     file:close()
@@ -137,24 +119,27 @@ function Moonshot:setNewStory(path)
     for k, v in pairs(self.charas) do
         local alias = k
         local config = v
-        self.charaAnimes[alias] =
-            Anime:new(
-            config.name,
-            love.graphics.newImage(config.sprite),
-            config.width,
-            config.height,
-            config.duration,
-            config.startingSpriteNum,
-            false,
-            config.loop,
-            false,
-            config.dialogPosition
-        )
+        self.charaAnimes[alias] = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width,
+                                      config.height, config.duration, config.startingSpriteNum, false, config.loop,
+                                      false, config.dialogPosition)
     end
 
     local story = self.story[self.story_index]
     local anime = self.charaAnimes[story.alias]
     self.dialog = Dialog:new(anime, story.text, self.font, 10, 500, 760, "left", 0.04)
+end
+
+function Moonshot:registerCallback(event, callback)
+    if event == "storyend" then
+        local storyEndCallback = function(dialog)
+            if self.story_index == #(self.story) then
+                callback(self)
+            end
+        end
+        self.dialog:registerCallback("textend", storyEndCallback)
+    else
+        self.callback[event] = callback
+    end
 end
 
 function Moonshot:trim(str)

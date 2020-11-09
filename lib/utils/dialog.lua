@@ -3,26 +3,26 @@ local Dialog = {}
 local Anime = require "lib.utils.anime"
 
 function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, object)
-    object =
-        object or
-        {
-            text = text,
-            font = font,
-            x = x or 10,
-            y = y or 500,
-            limit = limit or 760,
-            align = align or "left",
-            ticks = ticks or 0.3,
-            increment = increment or 1,
-            enabled = false,
-            counter = 0,
-            str_index = 1,
-            display_text = "",
-            displaying = true,
-            charaAnime = anime,
-            selectedChara = "left",
-            charaBuffer = {}
-        }
+    object = object or {
+        text = text,
+        font = font,
+        x = x or 10,
+        y = y or 500,
+        limit = limit or 760,
+        align = align or "left",
+        ticks = ticks or 0.3,
+        increment = increment or 1,
+        enabled = false,
+        counter = 0,
+        str_index = 1,
+        display_text = "",
+        displaying = true,
+        charaAnime = anime,
+        selectedChara = "left",
+        charaBuffer = {},
+        callback = {},        
+        callbackFlag = {}
+    }
 
     object.charaBuffer[anime.dialogPosition] = anime
     setmetatable(object, self)
@@ -61,13 +61,10 @@ function Dialog:draw()
         if self.selectedChara == "right" then
             love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         end
-        self.charaBuffer["right"]:draw(
-            window_width - self.charaBuffer["right"].width - self.x,
-            self.y - self.charaBuffer["right"].height - 40,
-            0
-        )
+        self.charaBuffer["right"]:draw(window_width - self.charaBuffer["right"].width - self.x,
+            self.y - self.charaBuffer["right"].height - 40, 0)
     end
-    
+
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
     love.graphics.printf(self.display_text, self.font, self.x, self.y, self.limit, self.align)
 end
@@ -85,6 +82,12 @@ function Dialog:updateDialogText()
     end
 
     if self.str_index == #text then
+        if self.callback["textend"] ~= nil then
+            if self.callbackFlag["textend"] == false then
+                self.callback["textend"](self)
+                self.callbackFlag["textend"] = true
+            end
+        end
         self.displaying = false
         self.charaAnime:stop()
     end
@@ -108,8 +111,11 @@ function Dialog:setNewDialog(text, charaAnime)
         -- Add anime to buffer, based on position. If it exists, set it to that
         self.charaBuffer[self.charaAnime.dialogPosition] = self.charaAnime
         self.selectedChara = self.charaAnime.dialogPosition
+        if self.callbackFlag["textend"] ~= nil then
+            self.callbackFlag["textend"] = false
+        end
         self.charaAnime:start()
-        print(self.selectedChara)
+        -- print(self.selectedChara)
     end
 end
 
@@ -124,6 +130,11 @@ function Dialog:stop()
     self.display_text = ""
     self.displaying = false
     self.enabled = false
+end
+
+function Dialog:registerCallback(event, callback)
+    self.callback[event] = callback
+    self.callbackFlag[event] = false
 end
 
 return Dialog

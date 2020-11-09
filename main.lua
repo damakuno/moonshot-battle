@@ -4,6 +4,8 @@ Anime = require "lib.utils.anime"
 Dialog = require "lib.utils.dialog"
 Moonshot = require "lib.core.moonshot"
 
+local storyend = false
+
 function love.load()
     deltaTime = 0
 
@@ -11,6 +13,10 @@ function love.load()
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
 
     moonshot = Moonshot:new("intro", dialog_font)
+    moonshot:registerCallback("storyend", function()
+        print("callback called")
+        storyend = true
+    end)
     moonshot:start()
 
     keybind = Keybind:new()
@@ -29,18 +35,21 @@ function love.update(dt)
     updates(dt, moonshot, mikiAnime, jillAnime)
 end
 
-local storyend = false
 function love.keyreleased(key)
     if key == keybind.SPACE then
         if storyend == true then
             moonshot:setNewStory("act1")
+            moonshot:registerCallback("storyend", function()
+                print("callback called")
+                storyend = true
+            end)
             moonshot:start()
             storyend = false
-        else 
-            storyend = moonshot:keyreleased(key, keybind)
+        else
+            moonshot:keyreleased(key, keybind)
         end
     end
-    
+
 end
 
 function show_vars()
