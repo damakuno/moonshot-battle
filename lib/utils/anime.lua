@@ -1,26 +1,37 @@
 local Anime = {}
 
-function Anime:new(name, image, width, height, duration, startingSpriteNum, enabled,
-                   loop, playTillEnd, object)
-    object = object or {
-        currentTime = 0,
-        name = name,
-        spriteSheet = image,
-        width = width,
-        height = height,
-        duration = duration,
-        quads = {},
-        spriteNum = startingSpriteNum or 1,
-        enabled = enabled or false,
-        loop = loop or false,
-        playTillEnd = playTillEnd or false
-    }
+function Anime:new(
+    name,
+    image,
+    width,
+    height,
+    duration,
+    startingSpriteNum,
+    enabled,
+    loop,
+    playTillEnd,
+    dialogPosition,
+    object)
+    object =
+        object or
+        {
+            currentTime = 0,
+            name = name,
+            spriteSheet = image,
+            width = width,
+            height = height,
+            duration = duration,
+            quads = {},
+            spriteNum = startingSpriteNum or 1,
+            enabled = enabled or false,
+            loop = loop or false,
+            playTillEnd = playTillEnd or false,
+            dialogPosition = dialogPosition or "left"
+        }
 
     for y = 0, image:getHeight() - height, height do
         for x = 0, image:getWidth() - width, width do
-            table.insert(object.quads, love.graphics.newQuad(x, y, width,
-                                                             height,
-                                                             image:getDimensions()))
+            table.insert(object.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
         end
     end
 
@@ -50,14 +61,16 @@ function Anime:update(dt)
 end
 
 function Anime:draw(x, y, r, sx, sy, ox, oy, kx, ky)
-    self.spriteNum =
-        math.floor(self.currentTime / self.duration * #self.quads) + 1
-    love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r,
-                       sx, sy, ox, oy, kx, ky)
+    self.spriteNum = math.floor(self.currentTime / self.duration * #self.quads) + 1
+    love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r, sx, sy, ox, oy, kx, ky)
 end
 
-function Anime:start() self.enabled = true end
+function Anime:start()
+    self.enabled = true
+end
 
-function Anime:stop() self.enabled = false end
+function Anime:stop()
+    self.enabled = false
+end
 
 return Anime

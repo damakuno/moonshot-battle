@@ -6,6 +6,7 @@ height=200
 duration=1
 startingSpriteNum=1
 loop=false
+dialogPosition=right
 
 [jill:idle]
 name=Jill
@@ -15,4 +16,5 @@ height=190
 duration=1
 startingSpriteNum=1
 loop=false
+dialogPosition=left
 

@@ -7,27 +7,32 @@ local Dialog = require "lib.utils.dialog"
 local LIP = require "lib.utils.LIP"
 
 function Moonshot:new(path, font, object)
-    object = object or {
-        path = path,
-        font = font,
-        moonshotfile = path .. ".moonshot",
-        charafile = path .. ".moonshot.chara",
-        charas = {},
-        charaAnimes = {},
-        story = {},
-        story_index = 1
-    }
+    object =
+        object or
+        {
+            path = path,
+            font = font,
+            moonshotfile = path .. ".moonshot",
+            charafile = path .. ".moonshot.chara",
+            charas = {},
+            charaAnimes = {},
+            story = {},
+            story_index = 1
+        }
 
-    assert(type(object.moonshotfile) == 'string', 'Parameter "moonshotfile" must be a string.');
-    local file = assert(io.open(object.moonshotfile, 'r'), 'Error loading moonshot file : ' .. object.moonshotfile);
+    assert(type(object.moonshotfile) == "string", 'Parameter "moonshotfile" must be a string.')
+    local file = assert(io.open(object.moonshotfile, "r"), "Error loading moonshot file : " .. object.moonshotfile)
 
     for line in file:lines() do
-        local k, v = line:match('(.-) (.+)$')
+        local k, v = line:match("(.-) (.+)$")
         if (k and v ~= nil) then
-            table.insert(object.story, {
-                alias = k,
-                text = v
-            })
+            table.insert(
+                object.story,
+                {
+                    alias = k,
+                    text = v
+                }
+            )
         end
     end
     file:close()
@@ -37,8 +42,20 @@ function Moonshot:new(path, font, object)
     for k, v in pairs(object.charas) do
         local alias = k
         local config = v
-        object.charaAnimes[alias] = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width,
-                                        config.height, config.duration, config.startingSpriteNum, false, config.loop)
+        print(k, v)
+        object.charaAnimes[alias] =
+            Anime:new(
+            config.name,
+            love.graphics.newImage(config.sprite),
+            config.width,
+            config.height,
+            config.duration,
+            config.startingSpriteNum,
+            false,
+            config.loop,
+            false,
+            config.dialogPosition
+        )
     end
 
     local story = object.story[object.story_index]
@@ -59,7 +76,7 @@ function Moonshot:draw()
 end
 
 function Moonshot:keyreleased(key, keybind)
-    if key == keybind.SPACE then        
+    if key == keybind.SPACE then
         local skipped = self.dialog:skipDialog()
         if self.story_index == #(self.story) then
             return true
@@ -98,16 +115,19 @@ function Moonshot:setNewStory(path)
     self.moonshotfile = path .. ".moonshot"
     self.charafile = path .. ".moonshot.chara"
     self:reset()
-    assert(type(self.moonshotfile) == 'string', 'Parameter "moonshotfile" must be a string.');
-    local file = assert(io.open(self.moonshotfile, 'r'), 'Error loading moonshot file : ' .. self.moonshotfile);
+    assert(type(self.moonshotfile) == "string", 'Parameter "moonshotfile" must be a string.')
+    local file = assert(io.open(self.moonshotfile, "r"), "Error loading moonshot file : " .. self.moonshotfile)
 
     for line in file:lines() do
-        local k, v = line:match('(.-) (.+)$')
+        local k, v = line:match("(.-) (.+)$")
         if (k and v ~= nil) then
-            table.insert(self.story, {
-                alias = k,
-                text = v
-            })
+            table.insert(
+                self.story,
+                {
+                    alias = k,
+                    text = v
+                }
+            )
         end
     end
     file:close()
@@ -117,8 +137,19 @@ function Moonshot:setNewStory(path)
     for k, v in pairs(self.charas) do
         local alias = k
         local config = v
-        self.charaAnimes[alias] = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width,
-                                      config.height, config.duration, config.startingSpriteNum, false, config.loop)
+        self.charaAnimes[alias] =
+            Anime:new(
+            config.name,
+            love.graphics.newImage(config.sprite),
+            config.width,
+            config.height,
+            config.duration,
+            config.startingSpriteNum,
+            false,
+            config.loop,
+            false,
+            config.dialogPosition
+        )
     end
 
     local story = self.story[self.story_index]
@@ -127,7 +158,7 @@ function Moonshot:setNewStory(path)
 end
 
 function Moonshot:trim(str)
-    return string.gsub(str, '^%s*(.-)%s*$', '%1')
+    return string.gsub(str, "^%s*(.-)%s*$", "%1")
 end
 
 return Moonshot
