@@ -59,11 +59,11 @@ function Moonshot:draw()
 end
 
 function Moonshot:keyreleased(key, keybind)
-    if key == keybind.SPACE then
+    if key == keybind.SPACE then        
+        local skipped = self.dialog:skipDialog()
         if self.story_index == #(self.story) then
             return true
         else
-            local skipped = self.dialog:skipDialog()
             if not (skipped) then
                 if self.story_index < #(self.story) then
                     self.story_index = self.story_index + 1
