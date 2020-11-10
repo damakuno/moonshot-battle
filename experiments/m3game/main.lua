@@ -13,25 +13,36 @@ function love.load()
     }
 
     grid = {
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0}
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0}
     }
     keybind = Keybind:new()
+    
+    math.randomseed(os.clock()*100000000000)
+    for i=1,3 do
+        math.random()
+    end
+    
+    print("\n")
     for i, row in ipairs(grid) do
+        local rowVals = ""
         for j, col in ipairs(row) do
+            -- print(i, j)
             grid[i][j] = randomInt(0, 5)
             -- moons[0]:draw(20, 20, 0, 0.5, 0.5)
-            print(grid[i][j])
+            rowVals = rowVals..grid[i][j]            
         end
+        print(rowVals)
     end
+end
+
+function checkMatch(grid, i, j) 
+    
 end
 
 function love.draw()
@@ -54,10 +65,6 @@ function love.keyreleased(key)
 end
 
 function randomInt(start, length)
-    math.randomseed(os.clock()*100000000000)
-    for i=1,3 do
-        math.random()
-    end
     return math.floor(math.random() * length + start)
 end
 
