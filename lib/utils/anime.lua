@@ -12,6 +12,13 @@ function Anime:new(
     playTillEnd,
     dialogPosition,
     object)
+    if width == nil then
+        width = image:getWidth()
+    end
+    if height == nil then
+        height = image:getHeight()
+    end
+
     object =
         object or
         {
@@ -20,7 +27,7 @@ function Anime:new(
             spriteSheet = image,
             width = width,
             height = height,
-            duration = duration,
+            duration = duration or 1,
             quads = {},
             spriteNum = startingSpriteNum or 1,
             enabled = enabled or false,

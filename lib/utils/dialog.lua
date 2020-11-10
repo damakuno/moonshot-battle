@@ -64,7 +64,8 @@ function Dialog:draw()
         self.charaBuffer["right"]:draw(window_width - self.charaBuffer["right"].width - self.x,
             self.y - self.charaBuffer["right"].height - 40, 0)
     end
-
+    local x_offset = 0
+    local limit_offset = 0
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
     love.graphics.printf(self.display_text, self.font, self.x, self.y, self.limit, self.align)
 end
