@@ -32,12 +32,7 @@ function love.load()
     for i, row in ipairs(grid) do
         local rowVals = ""
         for j, col in ipairs(row) do
-<<<<<<< HEAD
             grid[i][j] = randomInt(1, 5)
-=======
-            -- print(i, j)
-            grid[i][j] = randomInt(0, 5)
->>>>>>> 77bd4a68f558842c8532a614bc3f3e58bfe1c29a
             -- moons[0]:draw(20, 20, 0, 0.5, 0.5)
             rowVals = rowVals..grid[i][j]            
         end
