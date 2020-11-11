@@ -5,11 +5,11 @@ function love.load()
     deltaTime = 0
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     moons = {
-        [0] = Anime:new("damage", love.graphics.newImage("res/images/moonDamage.png")),
-        [1] = Anime:new("freeze", love.graphics.newImage("res/images/moonFreeze.png")),
-        [2] = Anime:new("heal", love.graphics.newImage("res/images/moonHeal.png")),
-        [3] = Anime:new("meter", love.graphics.newImage("res/images/moonMeter.png")),
-        [4] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
+        [1] = Anime:new("damage", love.graphics.newImage("res/images/moonDamage.png")),
+        [2] = Anime:new("freeze", love.graphics.newImage("res/images/moonFreeze.png")),
+        [3] = Anime:new("heal", love.graphics.newImage("res/images/moonHeal.png")),
+        [4] = Anime:new("meter", love.graphics.newImage("res/images/moonMeter.png")),
+        [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
 
     grid = {
@@ -27,7 +27,7 @@ function love.load()
     keybind = Keybind:new()
     for i, row in ipairs(grid) do
         for j, col in ipairs(row) do
-            grid[i][j] = randomInt(0, 5)
+            grid[i][j] = randomInt(1, 5)
             -- moons[0]:draw(20, 20, 0, 0.5, 0.5)
             print(grid[i][j])
         end
