@@ -40,7 +40,7 @@ function love.load()
     end
 end
 
-function checkMatch(grid, i, j) 
+function checkMatches(grid) 
     
 end
 
