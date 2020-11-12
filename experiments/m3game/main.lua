@@ -22,26 +22,31 @@ function love.load()
         {0, 0, 0, 0, 0, 0}
     }
     keybind = Keybind:new()
-    
-    math.randomseed(os.clock()*100000000000)
-    for i=1,3 do
+
+    math.randomseed(os.clock() * 100000000000)
+    for i = 1, 3 do
         math.random()
     end
-    
+
     print("\n")
     for i, row in ipairs(grid) do
         local rowVals = ""
         for j, col in ipairs(row) do
             grid[i][j] = randomInt(1, 5)
             -- moons[0]:draw(20, 20, 0, 0.5, 0.5)
-            rowVals = rowVals..grid[i][j]            
+            rowVals = rowVals .. grid[i][j]
         end
         print(rowVals)
     end
 end
 
-function checkMatches(grid) 
-    
+function checkMatches(grid)
+    buffer = {}
+    for i, row in ipairs(grid) do
+        for j, col in ipairs(row) do
+            
+        end
+    end
 end
 
 function love.draw()
