@@ -1,5 +1,6 @@
 local Keybind = require "lib.utils.keybind"
 local Anime = require "lib.utils.anime"
+local Grid = require "lib.core.grid"
 
 function love.load()
     deltaTime = 0
@@ -12,15 +13,28 @@ function love.load()
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
 
-    grid = {
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0}
+    spawnTable = {
+        [1] = 20,
+        [2] = 20,
+        [3] = 20,
+        [4] = 20,
+        [5] = 20
     }
+
+    newGrid = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},  
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0}
+    }
+
+    grid = Grid:new(newGrid, spawnTable) 
+    grid:fill()
+    grid:show()
+
     keybind = Keybind:new()
 
     math.randomseed(os.clock() * 100000000000)
@@ -28,38 +42,7 @@ function love.load()
         math.random()
     end
 
-    print("\n")
-    for i, row in ipairs(grid) do
-        local rowVals = ""
-        for j, col in ipairs(row) do
-            grid[i][j] = randomInt(1, 5)
-            -- moons[0]:draw(20, 20, 0, 0.5, 0.5)
-            rowVals = rowVals .. grid[i][j]
-        end
-        print(rowVals)
-    end
-    checkMatches(grid)
-end
-
-function checkMatches(grid)
-    rowBuffer = {}
-    colBuffer = {}
-
-    prevRow = 0
-    rowCount = 0
-    for i, row in ipairs(grid) do
-        prevCol = 0
-        colCount = 0
-        for j, col in ipairs(row) do
-            if col ~= prevCol then
-                prevCol = col
-                colCount = 1
-            elseif col == prevCol then
-                colCount = colCount + 1
-            end
-            print(prevCol, colCount)
-        end
-    end
+    
 end
 
 function love.draw()
@@ -79,10 +62,6 @@ function love.keyreleased(key)
     if key == keybind.SPACE then
         print(randomInt(0, 5))
     end
-end
-
-function randomInt(start, length)
-    return math.floor(math.random() * length + start)
 end
 
 function updates(dt, ...)
