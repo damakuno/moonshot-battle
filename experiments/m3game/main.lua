@@ -38,13 +38,26 @@ function love.load()
         end
         print(rowVals)
     end
+    checkMatches(grid)
 end
 
 function checkMatches(grid)
-    buffer = {}
+    rowBuffer = {}
+    colBuffer = {}
+
+    prevRow = 0
+    rowCount = 0
     for i, row in ipairs(grid) do
+        prevCol = 0
+        colCount = 0
         for j, col in ipairs(row) do
-            
+            if col ~= prevCol then
+                prevCol = col
+                colCount = 1
+            elseif col == prevCol then
+                colCount = colCount + 1
+            end
+            print(prevCol, colCount)
         end
     end
 end
