@@ -2,14 +2,14 @@ local Keybind = {}
 
 function Keybind:new(object)
     object = object or {
-        UP = "up",
-        DOWN = "down",
-        LEFT = "left",
-        RIGHT = "right",
+        UP = "w",
+        DOWN = "s",
+        LEFT = "a",
+        RIGHT = "d",
         SPACE = "space",
         C = "c",
-        S = "s"
-    }    
+        Q = "q"
+    }
     -- TODO
     -- Load keybind from configuration file
     setmetatable(object, self)

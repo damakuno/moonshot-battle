@@ -3,6 +3,10 @@ local Anime = require "lib.utils.anime"
 local Grid = require "lib.core.grid"
 
 function love.load()
+    cursor = {
+        x = 1,
+        y = 1
+    }
     deltaTime = 0
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     moons = {
@@ -42,13 +46,45 @@ function love.draw()
     local screenHeight = love.graphics.getHeight()
     -- love.graphics.print("Screen width: "..screenWidth, font, 10, 10)
     -- love.graphics.print("Screen height: "..screenHeight, font, 10, 20)
-    love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
-    love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
+    -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
+    -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
     grid:draw(10, 10, 50, 50)
+
+    width = 50
+    height = 50
+    ox = width - 10
+    oy = height - 10
+    nx = (cursor.x * width) - ox
+    ny = (cursor.y * height) - oy
+    nx2 = ((cursor.x + 1) * width) - ox
+    love.graphics.rectangle("line", nx, ny, width, height)
+    love.graphics.rectangle("line", nx2, ny, width, height)
 end
 
 function love.update(dt)
     deltaTime = dt
+end
+
+function love.keypressed(key)
+    if key == keybind.UP then
+        cursor.y = cursor.y - 1
+    end
+
+    if key == keybind.DOWN then
+        cursor.y = cursor.y + 1
+    end
+
+    if key == keybind.LEFT then
+        cursor.x = cursor.x - 1
+    end
+
+    if key == keybind.RIGHT then
+        cursor.x = cursor.x + 1
+    end
+
+    if key == keybind.SPACE then
+        grid:swap(cursor.x, cursor.y)
+    end
 end
 
 function love.keyreleased(key)

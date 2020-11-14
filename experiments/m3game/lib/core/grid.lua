@@ -36,7 +36,7 @@ function Grid:draw(x, y, width, height)
             oy = height - y
             nx = (j * width) - ox
             ny = (i * height) - oy
-            love.graphics.rectangle("line", nx, ny, width, height)
+            -- love.graphics.rectangle("line", nx, ny, width, height)
             self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
         end
     end
