@@ -21,17 +21,10 @@ function love.load()
         [5] = 20
     }
 
-    newGrid = {
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},  
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0}
-    }
+    newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
-    grid = Grid:new(newGrid, spawnTable) 
+    grid = Grid:new(newGrid, spawnTable, moons)
     grid:fill()
     grid:show()
 
@@ -42,7 +35,6 @@ function love.load()
         math.random()
     end
 
-    
 end
 
 function love.draw()
@@ -52,16 +44,7 @@ function love.draw()
     -- love.graphics.print("Screen height: "..screenHeight, font, 10, 20)
     love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
     love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
-    for i, row in ipairs(grid.grid) do
-        for j, col in ipairs(row) do
-            ox = 20
-            oy = 20
-            nx = (j * 50) - ox
-            ny = (i * 50) - oy
-            love.graphics.rectangle("line", nx, ny, 50, 50)
-            moons[col]:draw(nx, ny, 0, 50 / moons[col].width, 50 / moons[col].height)
-        end
-    end
+    grid:draw(10, 10, 50, 50)
 end
 
 function love.update(dt)

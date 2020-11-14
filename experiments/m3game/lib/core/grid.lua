@@ -1,14 +1,13 @@
 local Grid = {}
 
-function Grid:new(grid, spawnTable, object)
-    object =
-        object or
-        {
-            grid = grid,
-            spawnTable = spawnTable,
-            spawnRates = {},
-            spawnRateCount = 0
-        }
+function Grid:new(grid, spawnTable, tiles, object)
+    object = object or {
+        grid = grid,
+        spawnTable = spawnTable,
+        tiles = tiles,
+        spawnRates = {},
+        spawnRateCount = 0
+    }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -16,13 +15,12 @@ function Grid:new(grid, spawnTable, object)
     end
 
     for i, spawnRate in ipairs(object.spawnTable) do
-        for j = 1, spawnRate do                
+        for j = 1, spawnRate do
             table.insert(object.spawnRates, i)
             object.spawnRateCount = object.spawnRateCount + 1
         end
     end
 
-    
     setmetatable(object, self)
     self.__index = self
     return object
@@ -31,7 +29,17 @@ end
 function Grid:update(dt)
 end
 
-function Grid:draw()
+function Grid:draw(x, y, width, height)
+    for i, row in ipairs(grid.grid) do
+        for j, col in ipairs(row) do
+            ox = width - x
+            oy = height - y
+            nx = (j * width) - ox
+            ny = (i * height) - oy
+            love.graphics.rectangle("line", nx, ny, width, height)
+            self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
+        end
+    end
 end
 
 function Grid:fill()
