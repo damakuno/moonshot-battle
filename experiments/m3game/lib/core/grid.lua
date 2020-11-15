@@ -15,7 +15,7 @@ function Grid:new(grid, spawnTable, tiles, object)
             [5] = 0
         },
         currentTime = 0,
-        duration = 0.2,
+        duration = 0.5,
         enabled = false
     }
 
@@ -58,7 +58,6 @@ function Grid:draw(x, y, width, height)
             oy = height - y
             nx = (j * width) - ox
             ny = (i * height) - oy
-            -- love.graphics.rectangle("line", nx, ny, width, height)
             if self.tiles[col] ~= nil then
                 self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
             end
@@ -92,9 +91,7 @@ function Grid:hasEmpty()
 end
 
 function Grid:fillEmpty()
-    -- TODO, fill in empty tiles (tiles with 0) with tiles above it or new tile if it is the first row.
     local hasMatches = false
-    -- repeat
     for i = #(self.grid), 1, -1 do
         row = self.grid[i]
         for j, col in ipairs(row) do
@@ -109,22 +106,41 @@ function Grid:fillEmpty()
             end
         end
     end
-    -- m = self:checkMatch(self.grid)
-    --     if (#m > 0) then
-    --         hasMatches = true
-    --     else
-    --         hasMatches = false
-    --     end
-    -- until (hasMatches == false)
 end
 
-function Grid:swap(x, y)
+function Grid:swap(x, y, direction)
+    local invalidMove = false
     if self.enabled == false then
-        self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
-        self.enabled = true
+        if direction == "up" then
+            if self.grid[y - 1] ~= nil then
+                self.grid[y][x], self.grid[y - 1][x] = self.grid[y - 1][x], self.grid[y][x]
+            else
+                invalidMove = true
+            end
+        elseif direction == "down" then
+            if self.grid[y + 1] ~= nil then
+                self.grid[y][x], self.grid[y + 1][x] = self.grid[y + 1][x], self.grid[y][x]
+            else
+                invalidMove = true
+            end
+        elseif direction == "left" then
+            if self.grid[x - 1] ~= nil then
+                self.grid[y][x], self.grid[y][x - 1] = self.grid[y][x - 1], self.grid[y][x]
+            else
+                invalidMove = true
+            end
+        elseif direction == "right" then
+            if self.grid[x + 1] ~= nil then
+                self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
+            else
+                invalidMove = true
+            end
+        end
+        if invalidMove == false then
+            self.enabled = true
+        end
     end
-    -- self:clearMatches()
-    -- self:fillEmpty()
+    return invalidMove
 end
 
 function Grid:show()
@@ -142,8 +158,6 @@ function Grid:show()
 end
 
 function Grid:checkMatch()
-    -- local vMatches = {}
-    -- local hMatches = {}
     local matches = {}
     local grid = self.grid
     local prevRows = {}
@@ -171,7 +185,6 @@ function Grid:checkMatch()
                 end
             end
             prevCol = col
-            -- print(col, colCount)
 
             if col ~= prevRows[j] then
                 rowCounts[j] = 1
@@ -188,10 +201,8 @@ function Grid:checkMatch()
                 end
             end
             prevRows[j] = col
-            -- print(col, rowCounts[j])
         end
     end
-    --    return hMatches, vMatches
     return matches
 end
 
@@ -216,18 +227,36 @@ function Grid:clearMatches()
     }
 
     for i, match in ipairs(matches) do
-        -- print("Grid Before:")
-        -- self:show()
         local x = match[1]
         local y = match[2]
-        -- print(x, y)
-        -- print("self.grid[y][x]: ", self.grid[y][x])
         if self.grid[y][x] ~= 0 then
             self.matchResults[self.grid[y][x]] = self.matchResults[self.grid[y][x]] + 1
             self.grid[y][x] = 0
         end
     end
+end
 
+function Grid:checkPossibleMoves()
+
+end
+
+function Grid:copyGrid()
+    local gridCopy = {}
+    for i, row in ipairs(self.grid) do
+        local rowCopy = {}
+        for j, col in ipairs(row) do
+            table.insert(rowCopy, col)
+        end
+        table.insert(gridCopy, rowCopy)
+    end
+end
+
+function Grid:getWidth()
+    return #(self.grid[1])
+end
+
+function Grid:getHeight()
+    return #(self.grid)
 end
 
 function Grid:spawnTile()

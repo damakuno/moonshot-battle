@@ -4,6 +4,7 @@ local Grid = require "lib.core.grid"
 
 function love.load()
     cursor = {
+        selectMode = false,
         x = 1,
         y = 1
     }
@@ -56,9 +57,14 @@ function love.draw()
     oy = height - 60
     nx = (cursor.x * width) - ox
     ny = (cursor.y * height) - oy
-    nx2 = ((cursor.x + 1) * width) - ox
+    -- nx2 = ((cursor.x + 1) * width) - ox
+    if cursor.selectMode == true then
+        love.graphics.setColor(50 / 255, 255 / 255, 0 / 255, 1)
+    end
+
     love.graphics.rectangle("line", nx, ny, width, height)
-    love.graphics.rectangle("line", nx2, ny, width, height)
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+    -- love.graphics.rectangle("line", nx2, ny, width, height)
 
     show_vars()
 end
@@ -69,24 +75,57 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-    if key == keybind.UP then
-        cursor.y = cursor.y - 1
-    end
+    if cursor.selectMode == true then
+        local invalidMove = false
+        if key == keybind.UP then
+            invalidMove = grid:swap(cursor.x, cursor.y, "up")
+        end
 
-    if key == keybind.DOWN then
-        cursor.y = cursor.y + 1
-    end
+        if key == keybind.DOWN then
+            invalidMove = grid:swap(cursor.x, cursor.y, "down")
+        end
 
-    if key == keybind.LEFT then
-        cursor.x = cursor.x - 1
-    end
+        if key == keybind.LEFT then
+            invalidMove = grid:swap(cursor.x, cursor.y, "left")
+        end
 
-    if key == keybind.RIGHT then
-        cursor.x = cursor.x + 1
-    end
+        if key == keybind.RIGHT then
+            invalidMove = grid:swap(cursor.x, cursor.y, "right")
+        end
 
+        if invalidMove == false then
+            cursor.selectMode = false
+        end
+    else
+        if key == keybind.UP then
+            if cursor.y > 1 then
+                cursor.y = cursor.y - 1
+            end
+        end
+
+        if key == keybind.DOWN then
+            if cursor.y < grid:getHeight() then
+                cursor.y = cursor.y + 1
+            end
+        end
+
+        if key == keybind.LEFT then
+            if cursor.x > 1 then
+                cursor.x = cursor.x - 1
+            end
+        end
+
+        if key == keybind.RIGHT then
+            if cursor.x < grid:getWidth() then
+                cursor.x = cursor.x + 1
+            end
+        end
+    end
     if key == keybind.SPACE then
-        grid:swap(cursor.x, cursor.y)
+        -- grid:swap(cursor.x, cursor.y)
+        if cursor.selectMode == false then
+            cursor.selectMode = true
+        end
     end
 end
 
@@ -105,7 +144,7 @@ function show_vars()
     end
 
     for i, res in ipairs(grid.matchResults) do
-        love.graphics.print(moons[i].name..": "..res, font, 500, 200 + (i * 10))
+        love.graphics.print(moons[i].name .. ": " .. res, font, 500, 200 + (i * 10))
     end
 end
 
