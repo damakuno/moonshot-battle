@@ -41,7 +41,9 @@ function Grid:update(dt)
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.duration then
             self.currentTime = self.currentTime - self.duration
-            self:clearMatches()
+            if not (self:hasEmpty()) then
+                self:clearMatches()
+            end
             self:fillEmpty()
             m = self:checkMatch()
             if (not (#m > 0) and not (self:hasEmpty())) then
@@ -110,28 +112,45 @@ end
 
 function Grid:swap(x, y, direction)
     local invalidMove = false
+    local m = {}
     if self.enabled == false then
         if direction == "up" then
             if self.grid[y - 1] ~= nil then
                 self.grid[y][x], self.grid[y - 1][x] = self.grid[y - 1][x], self.grid[y][x]
+                m = self:checkMatch()
+                if not (#m > 0) then
+                    self.grid[y][x], self.grid[y - 1][x] = self.grid[y - 1][x], self.grid[y][x]
+                end
             else
                 invalidMove = true
             end
         elseif direction == "down" then
             if self.grid[y + 1] ~= nil then
                 self.grid[y][x], self.grid[y + 1][x] = self.grid[y + 1][x], self.grid[y][x]
+                m = self:checkMatch()
+                if not (#m > 0) then
+                    self.grid[y][x], self.grid[y + 1][x] = self.grid[y + 1][x], self.grid[y][x]
+                end
             else
                 invalidMove = true
             end
         elseif direction == "left" then
             if self.grid[x - 1] ~= nil then
                 self.grid[y][x], self.grid[y][x - 1] = self.grid[y][x - 1], self.grid[y][x]
+                m = self:checkMatch()
+                if not (#m > 0) then
+                    self.grid[y][x], self.grid[y][x - 1] = self.grid[y][x - 1], self.grid[y][x]
+                end
             else
                 invalidMove = true
             end
         elseif direction == "right" then
             if self.grid[x + 1] ~= nil then
                 self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
+                m = self:checkMatch()
+                if not (#m > 0) then
+                    self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
+                end
             else
                 invalidMove = true
             end
@@ -157,9 +176,9 @@ function Grid:show()
     end
 end
 
-function Grid:checkMatch()
+function Grid:checkMatch(_grid)
     local matches = {}
-    local grid = self.grid
+    local grid = _grid or self.grid
     local prevRows = {}
     local rowCounts = {}
     for i, row in ipairs(grid) do
@@ -237,6 +256,7 @@ function Grid:clearMatches()
 end
 
 function Grid:checkPossibleMoves()
+    local gridCopy = self:copyGrid()
 
 end
 
@@ -249,6 +269,7 @@ function Grid:copyGrid()
         end
         table.insert(gridCopy, rowCopy)
     end
+    return gridCopy
 end
 
 function Grid:getWidth()
