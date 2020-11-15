@@ -48,17 +48,19 @@ function love.draw()
     -- love.graphics.print("Screen height: "..screenHeight, font, 10, 20)
     -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
     -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
-    grid:draw(10, 10, 50, 50)
+    grid:draw(10, 60, 50, 50)
 
     width = 50
     height = 50
     ox = width - 10
-    oy = height - 10
+    oy = height - 60
     nx = (cursor.x * width) - ox
     ny = (cursor.y * height) - oy
     nx2 = ((cursor.x + 1) * width) - ox
     love.graphics.rectangle("line", nx, ny, width, height)
     love.graphics.rectangle("line", nx2, ny, width, height)
+
+    show_vars()
 end
 
 function love.update(dt)
@@ -89,7 +91,16 @@ end
 
 function love.keyreleased(key)
     if key == keybind.SPACE then
-        print(randomInt(0, 5))
+    end
+end
+
+function show_vars()
+    for i, row in ipairs(grid.grid) do
+        local rowVals = ""
+        for j, col in ipairs(row) do
+            rowVals = rowVals .. grid.grid[i][j]
+        end
+        love.graphics.print(rowVals, font, 500, i * 10)
     end
 end
 

@@ -2,10 +2,10 @@ local Keybind = {}
 
 function Keybind:new(object)
     object = object or {
-        UP = "w",
-        DOWN = "s",
-        LEFT = "a",
-        RIGHT = "d",
+        UP = "up",
+        DOWN = "down",
+        LEFT = "left",
+        RIGHT = "right",
         SPACE = "space",
         C = "c",
         Q = "q"

@@ -6,7 +6,14 @@ function Grid:new(grid, spawnTable, tiles, object)
         spawnTable = spawnTable,
         tiles = tiles,
         spawnRates = {},
-        spawnRateCount = 0
+        spawnRateCount = 0,
+        matchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        }
     }
 
     math.randomseed(os.clock() * 100000000000)
@@ -37,7 +44,9 @@ function Grid:draw(x, y, width, height)
             nx = (j * width) - ox
             ny = (i * height) - oy
             -- love.graphics.rectangle("line", nx, ny, width, height)
-            self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
+            if self.tiles[col] ~= nil then
+                self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
+            end
         end
     end
 end
@@ -51,8 +60,8 @@ function Grid:fill()
                 self.grid[i][j] = self:spawnTile()
             end
         end
-        h, v = self:checkMatch(self.grid)
-        if (#h > 0 or #v > 0) then
+        m = self:checkMatch(self.grid)
+        if (#m > 0) then
             hasMatches = true
         else
             hasMatches = false
@@ -62,21 +71,27 @@ end
 
 function Grid:swap(x, y)
     self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
+    self:clearMatches()
 end
 
 function Grid:show()
     for i, row in ipairs(self.grid) do
         local rowVals = ""
         for j, col in ipairs(row) do
-            rowVals = rowVals .. self.grid[i][j]
+            if self.grid[i][j] == nil then
+                rowVals = rowVals .. "x"
+            else
+                rowVals = rowVals .. self.grid[i][j]
+            end
         end
         print(rowVals)
     end
 end
 
 function Grid:checkMatch()
-    local vMatches = {}
-    local hMatches = {}
+    -- local vMatches = {}
+    -- local hMatches = {}
+    local matches = {}
     local grid = self.grid
     local prevRows = {}
     local rowCounts = {}
@@ -94,7 +109,11 @@ function Grid:checkMatch()
                 colCount = colCount + 1
                 if colCount >= 3 then
                     for h = 1, colCount do
-                        table.insert(hMatches, {j - h + 1, i})
+                        local hx = j - h + 1
+                        local hy = i
+                        if not (self:matchExists(hx, hy, matches)) then
+                            table.insert(matches, {hx, hy})
+                        end
                     end
                 end
             end
@@ -107,7 +126,11 @@ function Grid:checkMatch()
                 rowCounts[j] = rowCounts[j] + 1
                 if rowCounts[j] >= 3 then
                     for k = 1, rowCounts[j] do
-                        table.insert(vMatches, {j, i - k + 1})
+                        local vx = j
+                        local vy = i - k + 1
+                        if not (self:matchExists(vx, vy, matches)) then
+                            table.insert(matches, {vx, vy})
+                        end
                     end
                 end
             end
@@ -115,8 +138,43 @@ function Grid:checkMatch()
             -- print(col, rowCounts[j])
         end
     end
+    --    return hMatches, vMatches
+    return matches
+end
 
-    return hMatches, vMatches
+function Grid:matchExists(x, y, matches)
+    local hasMatch = false
+    for i, match in ipairs(matches) do
+        if x == match[1] and y == match[2] then
+            hasMatch = true
+        end
+    end
+    return hasMatch
+end
+
+function Grid:clearMatches()
+    local matches = self:checkMatch()
+    self.matchResults = {
+        [1] = 0,
+        [2] = 0,
+        [3] = 0,
+        [4] = 0,
+        [5] = 0
+    }
+
+    for i, match in ipairs(matches) do
+        -- print("Grid Before:")
+        -- self:show()
+        local x = match[1]
+        local y = match[2]
+        -- print(x, y)
+        -- print("self.grid[y][x]: ", self.grid[y][x])
+        if self.grid[y][x] ~= 0 then            
+            self.matchResults[self.grid[y][x]] = self.matchResults[self.grid[y][x]] + 1
+            self.grid[y][x] = 0
+        end
+    end
+
 end
 
 function Grid:spawnTile()
