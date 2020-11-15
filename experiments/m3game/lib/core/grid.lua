@@ -13,7 +13,10 @@ function Grid:new(grid, spawnTable, tiles, object)
             [3] = 0,
             [4] = 0,
             [5] = 0
-        }
+        },
+        currentTime = 0,
+        duration = 1,
+        enabled = false
     }
 
     math.randomseed(os.clock() * 100000000000)
@@ -34,6 +37,13 @@ function Grid:new(grid, spawnTable, tiles, object)
 end
 
 function Grid:update(dt)
+    if self.enabled == true then
+        self.currentTime = self.currentTime + dt
+        if self.currentTime >= self.duration then
+            self.currentTime = self.currentTime - self.duration
+            self:fillEmpty()
+        end
+    end
 end
 
 function Grid:draw(x, y, width, height)
@@ -61,26 +71,40 @@ function Grid:fill()
             end
         end
         m = self:checkMatch(self.grid)
-        if (#m > 0) then
-            hasMatches = true
-        else
-            hasMatches = false
-        end
-    until (hasMatches == false)
+    until (not (#m > 0))
 end
 
-function Grid:fillEmtpy()
-    --TODO, fill in empty tiles (tiles with 0) with tiles above it or new tile if it is the first row.
-    for i, row in ipairs(self.grid) do
+function Grid:fillEmpty()
+    -- TODO, fill in empty tiles (tiles with 0) with tiles above it or new tile if it is the first row.
+    local hasMatches = false
+    -- repeat
+    for i = #(self.grid), 1, -1 do
+        row = self.grid[i]
         for j, col in ipairs(row) do
-
+            if col == 0 then
+                for k = i, 1, -1 do
+                    if self.grid[k - 1] == nil then
+                        self.grid[k][j] = self:spawnTile()
+                    elseif self.grid[k - 1][j] ~= 0 then
+                        self.grid[k][j], self.grid[k - 1][j] = self.grid[k - 1][j], self.grid[k][j]
+                    end
+                end
+            end
         end
     end
+    -- m = self:checkMatch(self.grid)
+    --     if (#m > 0) then
+    --         hasMatches = true
+    --     else
+    --         hasMatches = false
+    --     end
+    -- until (hasMatches == false)
 end
 
 function Grid:swap(x, y)
     self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
     self:clearMatches()
+    self:fillEmpty()
 end
 
 function Grid:show()
@@ -178,7 +202,7 @@ function Grid:clearMatches()
         local y = match[2]
         -- print(x, y)
         -- print("self.grid[y][x]: ", self.grid[y][x])
-        if self.grid[y][x] ~= 0 then            
+        if self.grid[y][x] ~= 0 then
             self.matchResults[self.grid[y][x]] = self.matchResults[self.grid[y][x]] + 1
             self.grid[y][x] = 0
         end

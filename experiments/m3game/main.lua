@@ -65,6 +65,7 @@ end
 
 function love.update(dt)
     deltaTime = dt
+    updates(grid)
 end
 
 function love.keypressed(key)
@@ -101,6 +102,10 @@ function show_vars()
             rowVals = rowVals .. grid.grid[i][j]
         end
         love.graphics.print(rowVals, font, 500, i * 10)
+    end
+
+    for i, res in ipairs(grid.matchResults) do
+        love.graphics.print(moons[i].name..": "..res, font, 500, 200 + (i * 10))
     end
 end
 
