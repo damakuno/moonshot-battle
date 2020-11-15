@@ -69,6 +69,15 @@ function Grid:fill()
     until (hasMatches == false)
 end
 
+function Grid:fillEmtpy()
+    --TODO, fill in empty tiles (tiles with 0) with tiles above it or new tile if it is the first row.
+    for i, row in ipairs(self.grid) do
+        for j, col in ipairs(row) do
+
+        end
+    end
+end
+
 function Grid:swap(x, y)
     self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
     self:clearMatches()
