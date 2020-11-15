@@ -65,7 +65,7 @@ end
 
 function love.update(dt)
     deltaTime = dt
-    updates(grid)
+    updates(dt, grid)
 end
 
 function love.keypressed(key)

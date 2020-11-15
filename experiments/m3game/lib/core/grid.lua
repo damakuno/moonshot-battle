@@ -15,7 +15,7 @@ function Grid:new(grid, spawnTable, tiles, object)
             [5] = 0
         },
         currentTime = 0,
-        duration = 1,
+        duration = 0.2,
         enabled = false
     }
 
@@ -41,7 +41,12 @@ function Grid:update(dt)
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.duration then
             self.currentTime = self.currentTime - self.duration
+            self:clearMatches()
             self:fillEmpty()
+            m = self:checkMatch()
+            if (not (#m > 0) and not (self:hasEmpty())) then
+                self.enabled = false
+            end
         end
     end
 end
@@ -70,8 +75,20 @@ function Grid:fill()
                 self.grid[i][j] = self:spawnTile()
             end
         end
-        m = self:checkMatch(self.grid)
+        m = self:checkMatch()
     until (not (#m > 0))
+end
+
+function Grid:hasEmpty()
+    local has0 = false
+    for i, row in ipairs(self.grid) do
+        for j, col in ipairs(row) do
+            if col == 0 then
+                has0 = true
+            end
+        end
+    end
+    return has0
 end
 
 function Grid:fillEmpty()
@@ -102,9 +119,12 @@ function Grid:fillEmpty()
 end
 
 function Grid:swap(x, y)
-    self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
-    self:clearMatches()
-    self:fillEmpty()
+    if self.enabled == false then
+        self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
+        self.enabled = true
+    end
+    -- self:clearMatches()
+    -- self:fillEmpty()
 end
 
 function Grid:show()
