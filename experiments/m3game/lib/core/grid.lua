@@ -258,6 +258,11 @@ end
 function Grid:checkPossibleMoves()
     local gridCopy = self:copyGrid()
 
+    for i, row in ipairs(gridCopy) do
+        for j, col in ipairs(row) do
+            
+        end
+    end
 end
 
 function Grid:copyGrid()
