@@ -205,7 +205,7 @@ function Grid:checkMatch(_grid)
                         local hx = j - h + 1
                         local hy = i
                         if not (self:matchExists(hx, hy, matches)) then
-                            table.insert(matches, {hx, hy})
+                            table.insert(matches, {hx, hy, col})
                         end
                     end
                 end
@@ -221,7 +221,7 @@ function Grid:checkMatch(_grid)
                         local vx = j
                         local vy = i - k + 1
                         if not (self:matchExists(vx, vy, matches)) then
-                            table.insert(matches, {vx, vy})
+                            table.insert(matches, {vx, vy, col})
                         end
                     end
                 end
@@ -285,7 +285,7 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "up"})
+            table.insert(possibleSwaps, {x = x, y = y, dir = "up", matches=m})
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
     end
@@ -294,7 +294,7 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "down"})
+            table.insert(possibleSwaps, {x = x, y = y, dir = "down", matches=m})
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
     end
@@ -303,7 +303,7 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "left"})
+            table.insert(possibleSwaps, {x = x, y = y, dir = "left", matches=m})
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
     end
@@ -312,7 +312,7 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "right"})
+            table.insert(possibleSwaps, {x = x, y = y, dir = "right", matches=m})
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
     end

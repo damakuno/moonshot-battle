@@ -39,7 +39,10 @@ function love.load()
 
     print("possible moves")
     for i, move in ipairs(possibleMoves) do
-        print("x: "..move.x.." y: "..move.y.." dir: "..move.dir)
+        print("x: " .. move.x .. " y: " .. move.y .. " dir: " .. move.dir)
+        for j, match in ipairs(move.matches) do
+            print("\tmatches-> x: "..match[1].." y: "..match[2].." tileType: "..match[3])
+        end
     end
 end
 
