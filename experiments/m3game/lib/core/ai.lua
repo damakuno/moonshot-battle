@@ -47,6 +47,7 @@ function AI:draw(x, y, width, height)
 end
 
 function AI:play()
+    if self.grid.enabled == false then
     local moves = self.grid:checkPossibleMoves()
     -- local firstMove = moves[1]
     local cursorMovement = {
@@ -76,6 +77,7 @@ function AI:play()
             self.cursor.selectMode = true
         end
     end
+end
 end
 
 function AI:chooseMove(moves)
