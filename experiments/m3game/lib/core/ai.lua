@@ -46,17 +46,22 @@ function AI:draw(x, y, width, height)
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
 
-function AI:play()    
+function AI:play()
     local moves = self.grid:checkPossibleMoves()
     -- local firstMove = moves[1]
     local cursorMovement = {
         x = 0,
         y = 0
     }
-    print("x: "..self.cursor.x.." y: "..self.cursor.y.." chosen x: "..self.chosenMove.x.." chosen y: "..self.chosenMove.y)
-    if self.chosenMove.chosen == false then
+
+    if self.chosenMove.chosen == false and #moves > 0 then
         self.chosenMove = self:chooseMove(moves)
         self.chosenMove.chosen = true
+    end
+    if #moves > 0 then
+        print(
+            "x: " .. self.cursor.x .. " y: " .. self.cursor.y .. " chosen x: " .. self.chosenMove.x .. " chosen y: " ..
+                self.chosenMove.y .. " dir: '" .. self.chosenMove.dir .. "' match tile: " .. self.chosenMove.matches[1][3])
     end
     -- print("AI plays-> x:" .. firstMove.x .. " y: " .. firstMove.y .. " dir: " .. firstMove.dir)
     if self.cursor.x == self.chosenMove.x and self.cursor.y == self.chosenMove.y then

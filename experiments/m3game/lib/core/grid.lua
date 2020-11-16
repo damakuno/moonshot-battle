@@ -1,25 +1,23 @@
 local Grid = {}
 
 function Grid:new(grid, spawnTable, tiles, object)
-    object =
-        object or
-        {
-            grid = grid,
-            spawnTable = spawnTable,
-            tiles = tiles,
-            spawnRates = {},
-            spawnRateCount = 0,
-            matchResults = {
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-                [4] = 0,
-                [5] = 0
-            },
-            currentTime = 0,
-            duration = 0.5,
-            enabled = false
-        }
+    object = object or {
+        grid = grid,
+        spawnTable = spawnTable,
+        tiles = tiles,
+        spawnRates = {},
+        spawnRateCount = 0,
+        matchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        currentTime = 0,
+        duration = 0.5,
+        enabled = false
+    }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -56,7 +54,7 @@ function Grid:update(dt)
 end
 
 function Grid:draw(x, y, width, height)
-    for i, row in ipairs(grid.grid) do
+    for i, row in ipairs(self.grid) do
         for j, col in ipairs(row) do
             ox = width - x
             oy = height - y
@@ -70,7 +68,6 @@ function Grid:draw(x, y, width, height)
 end
 
 function Grid:fill()
-    print("\n")
     local hasMatches = false
     repeat
         for i, row in ipairs(self.grid) do
@@ -80,6 +77,15 @@ function Grid:fill()
         end
         m = self:checkMatch()
     until (not (#m > 0))
+end
+
+function Grid:reset()
+    for i, row in ipairs(self.grid) do
+        for j, col in ipairs(row) do
+            self.grid[i][j] = 0
+        end
+    end
+    self:fill()
 end
 
 function Grid:hasEmpty()
@@ -285,7 +291,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "up", matches=m})
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "up",
+                matches = m
+            })
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
     end
@@ -294,7 +305,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "down", matches=m})
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "down",
+                matches = m
+            })
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
     end
@@ -303,7 +319,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "left", matches=m})
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "left",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
     end
@@ -312,7 +333,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {x = x, y = y, dir = "right", matches=m})
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "right",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
     end

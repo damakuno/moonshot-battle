@@ -8,7 +8,8 @@ function Keybind:new(object)
         RIGHT = "right",
         SPACE = "space",
         C = "c",
-        Q = "q"
+        Q = "q",
+        R = "r"
     }
     -- TODO
     -- Load keybind from configuration file

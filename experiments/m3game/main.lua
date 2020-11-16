@@ -33,6 +33,7 @@ function love.load()
     grid = Grid:new(newGrid, spawnTable, moons)
     grid:fill()
     grid:show()
+    
 
     newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
@@ -46,6 +47,8 @@ function love.load()
     }
 
     grid2 = Grid:new(newGrid2, spawnTable2, moons)
+    grid2:fill()
+
     ai = AI:new(0.5, grid2)
     ai:start()
 
@@ -149,6 +152,10 @@ function love.keypressed(key)
         if cursor.selectMode == false then
             cursor.selectMode = true
         end
+    end
+
+    if key == keybind.R then
+        grid:reset()
     end
 end
 
