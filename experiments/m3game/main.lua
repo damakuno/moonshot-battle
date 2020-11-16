@@ -35,11 +35,12 @@ function love.load()
 
     keybind = Keybind:new()
 
-    math.randomseed(os.clock() * 100000000000)
-    for i = 1, 3 do
-        math.random()
-    end
+    possibleMoves = grid:checkPossibleMoves()
 
+    print("possible moves")
+    for i, move in ipairs(possibleMoves) do
+        print("x: "..move.x.." y: "..move.y.." dir: "..move.dir)
+    end
 end
 
 function love.draw()

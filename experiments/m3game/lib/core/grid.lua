@@ -1,23 +1,25 @@
 local Grid = {}
 
 function Grid:new(grid, spawnTable, tiles, object)
-    object = object or {
-        grid = grid,
-        spawnTable = spawnTable,
-        tiles = tiles,
-        spawnRates = {},
-        spawnRateCount = 0,
-        matchResults = {
-            [1] = 0,
-            [2] = 0,
-            [3] = 0,
-            [4] = 0,
-            [5] = 0
-        },
-        currentTime = 0,
-        duration = 0.5,
-        enabled = false
-    }
+    object =
+        object or
+        {
+            grid = grid,
+            spawnTable = spawnTable,
+            tiles = tiles,
+            spawnRates = {},
+            spawnRateCount = 0,
+            matchResults = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0
+            },
+            currentTime = 0,
+            duration = 0.5,
+            enabled = false
+        }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -178,9 +180,15 @@ end
 
 function Grid:checkMatch(_grid)
     local matches = {}
-    local grid = _grid or self.grid
+    local grid = self.grid
     local prevRows = {}
     local rowCounts = {}
+
+    if _grid ~= nil then
+        print("_grid assigned")
+        grid = _grid
+    end
+
     for i, row in ipairs(grid) do
         local prevCol = 0
         local colCount = 0
@@ -257,12 +265,60 @@ end
 
 function Grid:checkPossibleMoves()
     local gridCopy = self:copyGrid()
+    local moves = {}
 
     for i, row in ipairs(gridCopy) do
         for j, col in ipairs(row) do
-            
+            for k, tileMoves in ipairs(self:checkTileMoves(j, i, gridCopy)) do
+                table.insert(moves, tileMoves)
+            end
         end
     end
+    return moves
+end
+
+function Grid:checkTileMoves(x, y, _grid)
+    local grid = _grid
+    local m = {}
+    local possibleSwaps = {}
+    -- Check swap "up"
+    if grid[y - 1] ~= nil then
+        grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
+        m = self:checkMatch(grid)
+        if not (#m > 0) then
+            table.insert(possibleSwaps, {x = x, y = y, dir = "up"})
+        end
+        grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
+    end
+
+    if grid[y + 1] ~= nil then
+        grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
+        m = self:checkMatch(grid)
+        if not (#m > 0) then
+            table.insert(possibleSwaps, {x = x, y = y, dir = "down"})
+        end
+        grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
+    end
+
+    if grid[x - 1] ~= nil then
+        grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
+        m = self:checkMatch(grid)
+        if not (#m > 0) then
+            table.insert(possibleSwaps, {x = x, y = y, dir = "left"})
+        end
+        grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
+    end
+
+    if grid[x + 1] ~= nil then
+        grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
+        m = self:checkMatch(grid)
+        if not (#m > 0) then
+            table.insert(possibleSwaps, {x = x, y = y, dir = "right"})
+        end
+        grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
+    end
+
+    return possibleSwaps
 end
 
 function Grid:copyGrid()
