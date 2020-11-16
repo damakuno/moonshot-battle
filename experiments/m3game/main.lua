@@ -34,12 +34,24 @@ function love.load()
     grid:fill()
     grid:show()
 
-    ai = AI:new(2, grid)
+    newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
+
+    spawnTable2 = {
+        [1] = 30,
+        [2] = 20,
+        [3] = 20,
+        [4] = 20,
+        [5] = 10
+    }
+
+    grid2 = Grid:new(newGrid2, spawnTable2, moons)
+    ai = AI:new(0.5, grid2)
     ai:start()
 
     keybind = Keybind:new()
 
-    possibleMoves = grid:checkPossibleMoves()
+    -- possibleMoves = grid:checkPossibleMoves()
 
     -- print("possible moves")
     -- for i, move in ipairs(possibleMoves) do
@@ -58,7 +70,9 @@ function love.draw()
     -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
     -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
     grid:draw(10, 60, 50, 50)
-    ai:draw(10, 60, 50, 50)
+    grid2:draw(400, 60, 50, 50)
+    ai:draw(400, 60, 50, 50)
+
     width = 50
     height = 50
     ox = width - 10
@@ -74,12 +88,13 @@ function love.draw()
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
     -- love.graphics.rectangle("line", nx2, ny, width, height)
 
+
     show_vars()
 end
 
 function love.update(dt)
     deltaTime = dt
-    updates(dt, grid, ai)
+    updates(dt, grid, grid2, ai)
 end
 
 function love.keypressed(key)
@@ -143,16 +158,16 @@ function love.keyreleased(key)
 end
 
 function show_vars()
-    for i, row in ipairs(grid.grid) do
-        local rowVals = ""
-        for j, col in ipairs(row) do
-            rowVals = rowVals .. grid.grid[i][j]
-        end
-        love.graphics.print(rowVals, font, 500, i * 10)
-    end
+    -- for i, row in ipairs(grid.grid) do
+    --     local rowVals = ""
+    --     for j, col in ipairs(row) do
+    --         rowVals = rowVals .. grid.grid[i][j]
+    --     end
+    --     love.graphics.print(rowVals, font, 500, i * 10)
+    -- end
 
     for i, res in ipairs(grid.matchResults) do
-        love.graphics.print(moons[i].name .. ": " .. res, font, 500, 200 + (i * 10))
+        love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
     end
 end
 

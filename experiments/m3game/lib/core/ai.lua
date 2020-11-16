@@ -5,13 +5,17 @@ function AI:new(duration, grid, object)
         grid = grid,
         enabled = false,
         currentTime = 0,
-        duration = duration or 2,
+        duration = duration or 1,
         cursor = {
             selectMode = false,
             x = 1,
             y = 1
         },
-        chosenMove = {}
+        chosenMove = {
+            chosen = false,
+            x = 1,
+            y = 1
+        }
     }
     setmetatable(object, self)
     self.__index = self
@@ -42,21 +46,58 @@ function AI:draw(x, y, width, height)
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
 
-function AI:play()
-    print(self.grid)
+function AI:play()    
     local moves = self.grid:checkPossibleMoves()
-    local firstMove = moves[1]
-    if #firstMove == 0 then
-        self.chosenMove = firstMove
+    -- local firstMove = moves[1]
+    local cursorMovement = {
+        x = 0,
+        y = 0
+    }
+    print("x: "..self.cursor.x.." y: "..self.cursor.y.." chosen x: "..self.chosenMove.x.." chosen y: "..self.chosenMove.y)
+    if self.chosenMove.chosen == false then
+        self.chosenMove = self:chooseMove(moves)
+        self.chosenMove.chosen = true
     end
     -- print("AI plays-> x:" .. firstMove.x .. " y: " .. firstMove.y .. " dir: " .. firstMove.dir)
-    if cursor.x == self.chosenMove.x and cursor.y == self.chosenMove.y then
-        self.cursor.selectMode = true
+    if self.cursor.x == self.chosenMove.x and self.cursor.y == self.chosenMove.y then
         self.grid:swap(self.chosenMove.x, self.chosenMove.y, self.chosenMove.dir)
-        self.chosenMove = {}
-    else 
-       self.cursor.selectMode = false 
+        self.chosenMove.chosen = false
+        self.cursor.selectMode = false
+    else
+        cursorMovement = self:cursorMovement(self.cursor.x, self.cursor.y, self.chosenMove.x, self.chosenMove.y)
+        self.cursor.x = self.cursor.x + cursorMovement.x
+        self.cursor.y = self.cursor.y + cursorMovement.y
+        if self.cursor.x == self.chosenMove.x and self.cursor.y == self.chosenMove.y then
+            self.cursor.selectMode = true
+        end
     end
+end
+
+function AI:chooseMove(moves)
+    local chosenMove = {}
+    chosenMove = moves[1]
+    -- TODO prioritize move
+    return chosenMove
+end
+
+function AI:cursorMovement(fromX, fromY, toX, toY)
+    local dx = toX - fromX
+    local dy = toY - fromY
+    local cursorMove = {
+        x = 0,
+        y = 0
+    }
+    if dx < 0 then
+        cursorMove.x = -1
+    elseif dx > 0 then
+        cursorMove.x = 1
+    elseif dy < 0 then
+        cursorMove.y = -1
+    elseif dy > 0 then
+        cursorMove.y = 1
+    end
+
+    return cursorMove
 end
 
 function AI:start()
