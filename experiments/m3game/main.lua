@@ -1,6 +1,7 @@
 local Keybind = require "lib.utils.keybind"
 local Anime = require "lib.utils.anime"
 local Grid = require "lib.core.grid"
+local AI = require "lib.core.ai"
 
 function love.load()
     cursor = {
@@ -33,17 +34,20 @@ function love.load()
     grid:fill()
     grid:show()
 
+    ai = AI:new(2, grid)
+    ai:start()
+
     keybind = Keybind:new()
 
     possibleMoves = grid:checkPossibleMoves()
 
-    print("possible moves")
-    for i, move in ipairs(possibleMoves) do
-        print("x: " .. move.x .. " y: " .. move.y .. " dir: " .. move.dir)
-        for j, match in ipairs(move.matches) do
-            print("\tmatches-> x: "..match[1].." y: "..match[2].." tileType: "..match[3])
-        end
-    end
+    -- print("possible moves")
+    -- for i, move in ipairs(possibleMoves) do
+    --     print("x: " .. move.x .. " y: " .. move.y .. " dir: " .. move.dir)
+    --     for j, match in ipairs(move.matches) do
+    --         print("\tmatches-> x: "..match[1].." y: "..match[2].." tileType: "..match[3])
+    --     end
+    -- end
 end
 
 function love.draw()
@@ -54,7 +58,7 @@ function love.draw()
     -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
     -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
     grid:draw(10, 60, 50, 50)
-
+    ai:draw(10, 60, 50, 50)
     width = 50
     height = 50
     ox = width - 10
@@ -75,7 +79,7 @@ end
 
 function love.update(dt)
     deltaTime = dt
-    updates(dt, grid)
+    updates(dt, grid, ai)
 end
 
 function love.keypressed(key)
