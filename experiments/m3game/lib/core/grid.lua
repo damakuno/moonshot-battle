@@ -185,7 +185,6 @@ function Grid:checkMatch(_grid)
     local rowCounts = {}
 
     if _grid ~= nil then
-        print("_grid assigned")
         grid = _grid
     end
 
@@ -285,7 +284,7 @@ function Grid:checkTileMoves(x, y, _grid)
     if grid[y - 1] ~= nil then
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
-        if not (#m > 0) then
+        if #m > 0 then
             table.insert(possibleSwaps, {x = x, y = y, dir = "up"})
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
@@ -294,7 +293,7 @@ function Grid:checkTileMoves(x, y, _grid)
     if grid[y + 1] ~= nil then
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
-        if not (#m > 0) then
+        if #m > 0 then
             table.insert(possibleSwaps, {x = x, y = y, dir = "down"})
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
@@ -303,7 +302,7 @@ function Grid:checkTileMoves(x, y, _grid)
     if grid[x - 1] ~= nil then
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
-        if not (#m > 0) then
+        if #m > 0 then
             table.insert(possibleSwaps, {x = x, y = y, dir = "left"})
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
@@ -312,7 +311,7 @@ function Grid:checkTileMoves(x, y, _grid)
     if grid[x + 1] ~= nil then
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
-        if not (#m > 0) then
+        if #m > 0 then
             table.insert(possibleSwaps, {x = x, y = y, dir = "right"})
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
