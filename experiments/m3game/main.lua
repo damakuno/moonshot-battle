@@ -2,6 +2,7 @@ local Keybind = require "lib.utils.keybind"
 local Anime = require "lib.utils.anime"
 local Grid = require "lib.core.grid"
 local AI = require "lib.core.ai"
+local Chara = require "lib.core.chara"
 
 function love.load()
     cursor = {
@@ -30,9 +31,12 @@ function love.load()
     newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
+
+    chara = Chara:new("huiye.chara")
+            
     grid = Grid:new(newGrid, spawnTable, moons)
     grid:fill()
-    grid:show()
+    -- grid:show()
     
 
     newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},

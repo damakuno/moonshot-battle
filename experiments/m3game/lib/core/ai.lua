@@ -59,11 +59,11 @@ function AI:play()
         self.chosenMove = self:chooseMove(moves)
         self.chosenMove.chosen = true
     end
-    if #moves > 0 then
-        print(
-            "x: " .. self.cursor.x .. " y: " .. self.cursor.y .. " chosen x: " .. self.chosenMove.x .. " chosen y: " ..
-                self.chosenMove.y .. " dir: '" .. self.chosenMove.dir .. "' match tile: " .. self.chosenMove.matches[1][3])
-    end
+    -- if #moves > 0 then
+    --     print(
+    --         "x: " .. self.cursor.x .. " y: " .. self.cursor.y .. " chosen x: " .. self.chosenMove.x .. " chosen y: " ..
+    --             self.chosenMove.y .. " dir: '" .. self.chosenMove.dir .. "' match tile: " .. self.chosenMove.matches[1][3])
+    -- end
     -- print("AI plays-> x:" .. firstMove.x .. " y: " .. firstMove.y .. " dir: " .. firstMove.dir)
     if self.cursor.x == self.chosenMove.x and self.cursor.y == self.chosenMove.y then
         self.grid:swap(self.chosenMove.x, self.chosenMove.y, self.chosenMove.dir)
