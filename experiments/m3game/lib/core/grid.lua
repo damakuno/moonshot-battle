@@ -1,9 +1,9 @@
 local Grid = {}
 
-function Grid:new(grid, spawnTable, tiles, object)
+function Grid:new(grid, chara, tiles, object)
     object = object or {
         grid = grid,
-        spawnTable = spawnTable,
+        chara = chara,
         tiles = tiles,
         spawnRates = {},
         spawnRateCount = 0,
@@ -24,12 +24,14 @@ function Grid:new(grid, spawnTable, tiles, object)
         math.random()
     end
 
-    for i, spawnRate in ipairs(object.spawnTable) do
+    for i, spawnRate in ipairs(object.chara:getSpawnTable()) do
         for j = 1, spawnRate do
             table.insert(object.spawnRates, i)
             object.spawnRateCount = object.spawnRateCount + 1
         end
-    end
+    end    
+    -- circular reference to grid
+    chara.grid = object
 
     setmetatable(object, self)
     self.__index = self

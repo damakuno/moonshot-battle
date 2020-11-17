@@ -1,0 +1,12 @@
+[stats]
+hp=120
+meter=20
+damage=1
+heal=2
+
+[spawnTable]
+damage=15
+freeze=20
+heal=25
+meter=20
+shield=20

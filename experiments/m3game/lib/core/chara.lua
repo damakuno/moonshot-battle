@@ -4,17 +4,17 @@ local LIP = require "lib.utils.LIP"
 function Chara:new(charaFile, object)
     object = object or {
         charaFile = charaFile,
-        state = {}
+        state = {},
+        grid = {}
     }
     object.state = LIP.load(object.charaFile)
-    print("\n")
-    for k, v in pairs(object.state) do
-        print(k)
-        for p, t in pairs(v) do
-            print("\t", p, t)
-        end
-    end
-
+    -- print("\n")
+    -- for k, v in pairs(object.state) do
+    --     print(k)
+    --     for p, t in pairs(v) do
+    --         print("\t", p, t)
+    --     end
+    -- end
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
         math.random()
@@ -41,6 +41,13 @@ function Chara:getSpawnTable()
         [4] = self.state.spawnTable["meter"],
         [5] = self.state.spawnTable["shield"]
     }
+    return spawnTable
+end
+
+function Chara:evalMatchResults()
+    for k, v in pairs(self.grid.matchResults) do
+        print(k, v)
+    end
 end
 
 function randomInt(start, length)

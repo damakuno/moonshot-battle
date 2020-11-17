@@ -20,37 +20,22 @@ function love.load()
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
 
-    spawnTable = {
-        [1] = 20,
-        [2] = 20,
-        [3] = 20,
-        [4] = 20,
-        [5] = 20
-    }
-
     newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
-
-
-    chara = Chara:new("huiye.chara")
             
-    grid = Grid:new(newGrid, spawnTable, moons)
+    chara = Chara:new("huiye.chara")
+    chara2 = Chara:new("change.chara")
+
+    grid = Grid:new(newGrid, chara, moons)
     grid:fill()
-    -- grid:show()
-    
+    -- grid:show()    
+
+    chara:evalMatchResults()
 
     newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
-    spawnTable2 = {
-        [1] = 30,
-        [2] = 20,
-        [3] = 20,
-        [4] = 20,
-        [5] = 10
-    }
-
-    grid2 = Grid:new(newGrid2, spawnTable2, moons)
+    grid2 = Grid:new(newGrid2, chara2, moons)
     grid2:fill()
 
     ai = AI:new(0.5, grid2)
