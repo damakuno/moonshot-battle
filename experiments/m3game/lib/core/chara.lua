@@ -2,11 +2,51 @@ local Chara = {}
 local LIP = require "lib.utils.LIP"
 
 function Chara:new(charaFile, object)
-    object = object or {
-        charaFile = charaFile,
-        state = {},
-        grid = {}
-    }
+    object =
+        object or
+        {
+            charaFile = charaFile,
+            state = {},
+            grid = {},
+            enemy = {},
+            actions = {
+                --damage
+                [1] = {
+                    currentTime = 0,
+                    duration = 0.5,
+                    effectDuration = 0,
+                    enabled = false
+                },
+                --freeze
+                [2] = {
+                    currentTime = 0,
+                    duration = 0.5,
+                    effectDuration = 2,
+                    enabled = false
+                },
+                --heal
+                [3] = {
+                    currentTime = 0,
+                    duration = 0.5,
+                    effectDuration = 0,
+                    enabled = false
+                },
+                --meter
+                [4] = {
+                    currentTime = 0,
+                    duration = 0.5,
+                    effectDuration = 0,
+                    enabled = false
+                },
+                --shield
+                [5] = {
+                    currentTime = 0,
+                    duration = 0.5,
+                    effectDuration = 2,                    
+                    enabled = false
+                }
+            }
+        }
     object.state = LIP.load(object.charaFile)
     -- print("\n")
     -- for k, v in pairs(object.state) do
@@ -26,12 +66,15 @@ function Chara:new(charaFile, object)
 end
 
 function Chara:update(dt)
-
+    --TODO add all actions here. Actions that affect enemy will go to enemy state.
 end
 
 function Chara:draw()
-
 end
+
+function Chara:setEnemy(enemy) {
+   self.enemy = enemy
+}
 
 function Chara:getSpawnTable()
     local spawnTable = {
