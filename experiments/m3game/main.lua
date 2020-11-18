@@ -20,20 +20,34 @@ function love.load()
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
 
-    newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
-               {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
-            
+    newGrid = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0}
+    }
+
     chara = Chara:new("huiye.chara")
     chara2 = Chara:new("change.chara")
 
     grid = Grid:new(newGrid, chara, moons)
     grid:fill()
-    -- grid:show()    
+    -- grid:show()
 
     chara:evalMatchResults()
 
-    newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
+    newGrid2 = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0}
+    }
 
     grid2 = Grid:new(newGrid2, chara2, moons)
     grid2:fill()
@@ -79,7 +93,6 @@ function love.draw()
     love.graphics.rectangle("line", nx, ny, width, height)
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
     -- love.graphics.rectangle("line", nx2, ny, width, height)
-
 
     show_vars()
 end
@@ -164,6 +177,15 @@ function show_vars()
 
     for i, res in ipairs(grid.matchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
+    end
+    for i, res in ipairs(grid.finalMatchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 100, 500 + (i * 10))
+    end
+    for i, res in ipairs(grid2.matchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 600, 400 + (i * 10))
+    end
+    for i, res in ipairs(grid2.finalMatchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 600, 500 + (i * 10))
     end
 end
 
