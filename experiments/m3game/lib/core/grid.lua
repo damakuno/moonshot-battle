@@ -25,7 +25,9 @@ function Grid:new(grid, chara, tiles, object)
             },
             currentTime = 0,
             duration = 0.5,
-            enabled = false
+            enabled = false,
+            callback = {},
+            callbackFlag = {}
         }
 
     math.randomseed(os.clock() * 100000000000)
@@ -60,6 +62,16 @@ function Grid:update(dt)
             if (not (#m > 0) and not (self:hasEmpty())) then
                 self.enabled = false
                 -- TODO: Callback for when all matches are cleared
+                if self.callback["clearedMatches"] ~= nil then
+                    if self.callbackFlag["clearedMatches"] == false then
+                        local matchResultsCopy = {}
+                        for k, v in ipairs(matchResults) do
+                            matchResultsCopy[k] = v
+                        end
+                        self.callback["clearedMatches"](self, v)
+                        self.callbackFlag["clearedMatches"] = true
+                    end
+                end
                 self.matchResults = {
                     [1] = 0,
                     [2] = 0,
@@ -184,6 +196,9 @@ function Grid:swap(x, y, direction)
         end
         if invalidMove == false then
             self.enabled = true
+            if self.callback["clearedMatches"] ~= nil then
+                self.callbackFlag["clearedMatches"] = false
+            end
         end
     end
     return invalidMove
@@ -392,6 +407,11 @@ end
 
 function Grid:spawnTile()
     return self.spawnRates[randomInt(1, self.spawnRateCount)]
+end
+
+function Grid:registerCallback(event, callback)
+    self.callback[event] = callback
+    self.callbackFlag[event] = false
 end
 
 function randomInt(start, length)
