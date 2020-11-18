@@ -72,9 +72,9 @@ end
 function Chara:draw()
 end
 
-function Chara:setEnemy(enemy) {
+function Chara:setEnemy(enemy)
    self.enemy = enemy
-}
+end
 
 function Chara:getSpawnTable()
     local spawnTable = {
