@@ -59,6 +59,7 @@ function Grid:update(dt)
             m = self:checkMatch()
             if (not (#m > 0) and not (self:hasEmpty())) then
                 self.enabled = false
+                -- TODO: Callback for when all matches are cleared
                 self.matchResults = {
                     [1] = 0,
                     [2] = 0,
