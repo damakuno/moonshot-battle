@@ -1,7 +1,7 @@
 [stats]
 hp=120
 meter=20
-damage=1
+damage=2
 heal=2
 
 [spawnTable]

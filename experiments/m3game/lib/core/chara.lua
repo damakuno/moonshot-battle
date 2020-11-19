@@ -91,14 +91,25 @@ function Chara:initCallbacks()
                     --TODO add all actions here. Actions that affect enemy will go to enemy state.
                     local f = function()
                     end
+                    local timer = Timer:new(1, f, true)
                     if k == 1 then
                         f = function(t)
                             print("damage function called")
                             self.enemy.state.stats.hp = self.enemy.state.stats.hp - (self.state.stats.damage * v)
                             t.enabled = false
                         end
+                        timer = Timer:new(1, f, true)
                     end
-                    local timer = Timer:new(2, f, true)
+                    if k == 2 then
+                        -- TODO freeze function
+                        print("Freeze")
+                        f = function(t)
+                            -- TODO end freeze function
+                            print("End Freeze")
+                        end
+                        timer = Timer:new(1, f, true)
+                    end
+
                     table.insert(self.updates, timer)
                 end
             end
