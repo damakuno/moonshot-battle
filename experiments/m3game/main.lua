@@ -57,6 +57,14 @@ function love.load()
 
     keybind = Keybind:new()
 
+    grid:registerCallback("clearedMatches", function(g, res)
+        print("Matched:")
+        for k, v in ipairs(res) do
+            print("["..moons[k].name.."]: "..v)
+        end
+        print("combo: "..g.combo)
+    end)
+
     -- possibleMoves = grid:checkPossibleMoves()
 
     -- print("possible moves")
