@@ -59,7 +59,7 @@ function love.load()
     chara2:initCallbacks()
 
     ai = AI:new(0.5, grid2)
-    -- ai:start()
+    ai:start()
 
     keybind = Keybind:new()
 
