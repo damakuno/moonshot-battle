@@ -105,13 +105,16 @@ function Chara:initCallbacks()
                         print("Freeze")
                         f = function(t)
                             -- TODO end freeze function
-                            print("End Freeze")
-                            t.enabled = false
+                            print("Freeze for: " .. t.accumulator)
+                            -- set this to freeze duration
+                            if t.accumulator == 2 then
+                                t.enabled = false
+                                print("Freeze End")
+                            end
                         end
                         timer = Timer:new(1, f, true)
                     end
                     if k == 3 then
-                        
                     end
 
                     table.insert(self.updates, timer)

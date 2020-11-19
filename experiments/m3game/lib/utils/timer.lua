@@ -8,6 +8,7 @@ function Timer:new(ticks, callback, enabled, object)
             callback = callback,
             ticks = ticks or 1,
             counter = 0,
+            accumulator = 0,
             enabled = enabled or true,
             loop = true
         }
@@ -26,6 +27,7 @@ function Timer:update(dt, ...)
         self.counter = self.counter + dt
         if self.counter >= self.ticks then
             self.counter = self.counter - self.ticks
+            self.accumulator = self.accumulator + self.ticks
             self.callback(self, self.ticks, self.counter, args)
         end
     end
