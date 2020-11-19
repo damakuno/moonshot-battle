@@ -23,7 +23,7 @@ function Grid:new(grid, chara, tiles, object)
         },
         combo = 0,
         currentTime = 0,
-        duration = 1.0,
+        duration = 0.3,
         enabled = false,
         callback = {},
         callbackFlag = {}

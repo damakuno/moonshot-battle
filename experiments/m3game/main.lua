@@ -104,6 +104,9 @@ end
 
 function love.keypressed(key)
     if cursor.selectMode == true then
+        if key == keybind.SPACE then
+            cursor.selectMode = not cursor.selectMode
+        end
         local invalidMove = false
         if key == keybind.UP then
             invalidMove = grid:swap(cursor.x, cursor.y, "up")
@@ -148,11 +151,9 @@ function love.keypressed(key)
                 cursor.x = cursor.x + 1
             end
         end
-    end
-    if key == keybind.SPACE then
-        -- grid:swap(cursor.x, cursor.y)
-        if cursor.selectMode == false then
-            cursor.selectMode = true
+
+        if key == keybind.SPACE then
+            cursor.selectMode = not cursor.selectMode
         end
     end
 
@@ -174,8 +175,8 @@ function show_vars()
     --     end
     --     love.graphics.print(rowVals, font, 500, i * 10)
     -- end
-    love.graphics.print("combo: "..grid.combo, font, 100, 380)
-    love.graphics.print("combo: "..grid2.combo, font, 600, 380)
+    love.graphics.print("combo: " .. grid.combo, font, 100, 480)
+    love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
 
     for i, res in ipairs(grid.matchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
