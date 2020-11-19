@@ -109,6 +109,9 @@ function Chara:initCallbacks()
                         end
                         timer = Timer:new(1, f, true)
                     end
+                    if k == 3 then
+                        
+                    end
 
                     table.insert(self.updates, timer)
                 end
