@@ -1,5 +1,6 @@
 local Chara = {}
 local LIP = require "lib.utils.LIP"
+local Timer = require "lib.utils.timer"
 
 function Chara:new(charaFile, object)
     object =
@@ -21,7 +22,7 @@ function Chara:new(charaFile, object)
                 [2] = {
                     currentTime = 0,
                     duration = 0.5,
-                    effectDuration = 2,
+                    effectDuration = 1,
                     enabled = false
                 },
                 --heal
@@ -42,10 +43,11 @@ function Chara:new(charaFile, object)
                 [5] = {
                     currentTime = 0,
                     duration = 0.5,
-                    effectDuration = 2,                    
+                    effectDuration = 1,
                     enabled = false
                 }
-            }
+            },
+            updates = {}
         }
     object.state = LIP.load(object.charaFile)
     -- print("\n")
@@ -66,14 +68,42 @@ function Chara:new(charaFile, object)
 end
 
 function Chara:update(dt)
-    --TODO add all actions here. Actions that affect enemy will go to enemy state.
+    for i, arg in ipairs(self.updates) do
+        arg:update(dt)
+    end
 end
 
 function Chara:draw()
 end
 
 function Chara:setEnemy(enemy)
-   self.enemy = enemy
+    self.enemy = enemy
+end
+
+function Chara:initCallbacks()
+    self.grid:registerCallback(
+        "clearedMatches",
+        function(g, res)
+            print("Matched:")
+            for k, v in ipairs(res) do
+                print("[" .. moons[k].name .. "]: " .. v)
+                if v > 0 then
+                    --TODO add all actions here. Actions that affect enemy will go to enemy state.
+                    local f = function()
+                    end
+                    if k == 1 then
+                        f = function(t)
+                            print("damage function called")
+                            self.enemy.state.stats.hp = self.enemy.state.stats.hp - (self.state.stats.damage * v)
+                            t.enabled = false
+                        end
+                    end
+                    local timer = Timer:new(2, f, true)
+                    table.insert(self.updates, timer)
+                end
+            end
+        end
+    )
 end
 
 function Chara:getSpawnTable()

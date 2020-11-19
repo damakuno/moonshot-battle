@@ -5,8 +5,8 @@ damage=1
 heal=2
 
 [spawnTable]
-damage=15
+damage=40
 freeze=20
-heal=25
-meter=20
+heal=10
+meter=10
 shield=20

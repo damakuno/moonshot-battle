@@ -32,6 +32,8 @@ function love.load()
 
     chara = Chara:new("huiye.chara")
     chara2 = Chara:new("change.chara")
+    chara:setEnemy(chara2)
+    chara2:setEnemy(chara)
 
     grid = Grid:new(newGrid, chara, moons)
     grid:fill()
@@ -52,18 +54,22 @@ function love.load()
     grid2 = Grid:new(newGrid2, chara2, moons)
     grid2:fill()
 
+
+    chara:initCallbacks()
+    chara2:initCallbacks()
+
     ai = AI:new(0.5, grid2)
-    ai:start()
+    -- ai:start()
 
     keybind = Keybind:new()
 
-    grid:registerCallback("clearedMatches", function(g, res)
-        print("Matched:")
-        for k, v in ipairs(res) do
-            print("["..moons[k].name.."]: "..v)
-        end
-        print("combo: "..g.combo)
-    end)
+    -- grid:registerCallback("clearedMatches", function(g, res)
+    --     print("Matched:")
+    --     for k, v in ipairs(res) do
+    --         print("["..moons[k].name.."]: "..v)
+    --     end
+    --     print("combo: "..g.combo)
+    -- end)
 
     -- possibleMoves = grid:checkPossibleMoves()
 
@@ -107,7 +113,7 @@ end
 
 function love.update(dt)
     deltaTime = dt
-    updates(dt, grid, grid2, ai)
+    updates(dt, grid, grid2, ai, chara, chara2)
 end
 
 function love.keypressed(key)
@@ -185,7 +191,8 @@ function show_vars()
     -- end
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
     love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
-
+    love.graphics.print("hp: " .. chara.state.stats.hp, font, 100, 490)
+    love.graphics.print("hp: " .. chara2.state.stats.hp, font, 600, 490)
     for i, res in ipairs(grid.matchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
     end
