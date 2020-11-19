@@ -106,6 +106,7 @@ function Chara:initCallbacks()
                         f = function(t)
                             -- TODO end freeze function
                             print("End Freeze")
+                            t.enabled = false
                         end
                         timer = Timer:new(1, f, true)
                     end
