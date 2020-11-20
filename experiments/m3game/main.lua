@@ -191,8 +191,8 @@ function show_vars()
     -- end
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
     love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
-    love.graphics.print("hp: " .. chara.state.stats.hp, font, 100, 490)
-    love.graphics.print("hp: " .. chara2.state.stats.hp, font, 600, 490)
+    love.graphics.print("hp: " .. chara.state.stats.hp.."/"..chara.state.stats.maxhp, font, 100, 490)
+    love.graphics.print("hp: " .. chara2.state.stats.hp.."/"..chara2.state.stats.maxhp, font, 600, 490)
     for i, res in ipairs(grid.matchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
     end

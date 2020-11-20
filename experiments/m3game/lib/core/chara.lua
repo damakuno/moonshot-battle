@@ -92,29 +92,42 @@ function Chara:initCallbacks()
                     local f = function()
                     end
                     local timer = Timer:new(1, f, true)
+                    -- Damage
                     if k == 1 then
                         f = function(t)
-                            print("damage function called")
+                            -- print("damage function called")
                             self.enemy.state.stats.hp = self.enemy.state.stats.hp - (self.state.stats.damage * v)
                             t.enabled = false
                         end
                         timer = Timer:new(1, f, true)
                     end
+                    -- Freeze
                     if k == 2 then
                         -- TODO freeze function
-                        print("Freeze")
+                        -- print("Freeze")
                         f = function(t)
                             -- TODO end freeze function
-                            print("Freeze for: " .. t.accumulator)
+                            -- print("Freeze for: " .. t.accumulator)
                             -- set this to freeze duration
                             if t.accumulator == 2 then
                                 t.enabled = false
-                                print("Freeze End")
+                            -- print("Freeze End")
                             end
                         end
                         timer = Timer:new(1, f, true)
                     end
+                    -- Heal
                     if k == 3 then
+                        f = function(t)
+                            local healto = self.state.stats.hp + (self.state.stats.heal * v)
+                            if healto > self.state.stats.maxhp then
+                                self.state.stats.hp = self.state.stats.maxhp
+                            else
+                                self.state.stats.hp = healto
+                            end
+                            t.enabled = false
+                        end
+                        timer = Timer:new(1, f, true)
                     end
 
                     table.insert(self.updates, timer)
