@@ -82,8 +82,11 @@ end
 
 function AI:chooseMove(moves)
     local chosenMove = {}
-    chosenMove = moves[1]
+    -- chosenMove = moves[1]
     -- TODO prioritize move
+    -- For now, just randomize the chosen move
+    local moveIndex = randomInt(1, #moves)
+    chosenMove = moves[moveIndex]
     return chosenMove
 end
 
@@ -113,6 +116,10 @@ end
 
 function AI:stop()
     self.enabled = false
+end
+
+function randomInt(start, length)
+    return math.floor(math.random() * length + start)
 end
 
 return AI
