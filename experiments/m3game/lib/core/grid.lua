@@ -7,6 +7,7 @@ function Grid:new(grid, chara, tiles, object)
             grid = grid,
             chara = chara,
             tiles = tiles,
+            freezeGrid = grid,
             spawnRates = {},
             spawnRateCount = 0,
             matchResults = {

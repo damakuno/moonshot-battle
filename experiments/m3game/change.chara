@@ -1,7 +1,8 @@
 [stats]
 hp=120
 maxhp=120
-meter=20
+meter=0
+maxmeter=20
 damage=2
 heal=2
 

@@ -20,15 +20,8 @@ function love.load()
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
 
-    newGrid = {
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0}
-    }
+    newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
     chara = Chara:new("huiye.chara")
     chara2 = Chara:new("change.chara")
@@ -41,19 +34,11 @@ function love.load()
 
     chara:evalMatchResults()
 
-    newGrid2 = {
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0}
-    }
+    newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
     grid2 = Grid:new(newGrid2, chara2, moons)
     grid2:fill()
-
 
     chara:initCallbacks()
     chara2:initCallbacks()
@@ -191,8 +176,10 @@ function show_vars()
     -- end
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
     love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
-    love.graphics.print("hp: " .. chara.state.stats.hp.."/"..chara.state.stats.maxhp, font, 100, 490)
-    love.graphics.print("hp: " .. chara2.state.stats.hp.."/"..chara2.state.stats.maxhp, font, 600, 490)
+    love.graphics.print("hp: " .. chara.state.stats.hp .. "/" .. chara.state.stats.maxhp, font, 100, 490)
+    love.graphics.print("hp: " .. chara2.state.stats.hp .. "/" .. chara2.state.stats.maxhp, font, 600, 490)
+    love.graphics.print("meter: " .. chara.state.stats.meter .. "/" .. chara.state.stats.maxmeter, font, 100, 500)
+    love.graphics.print("meter: " .. chara2.state.stats.meter .. "/" .. chara2.state.stats.maxmeter, font, 600, 500)
     for i, res in ipairs(grid.matchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
     end
