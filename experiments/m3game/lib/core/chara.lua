@@ -45,7 +45,10 @@ function Chara:new(charaFile, object)
                 enabled = false
             }
         },
-        updates = {}
+        updates = {},
+        shieldCurrentTime = 0,
+        shieldDuration = 0,
+        shielded = false
     }
     object.state = LIP.load(object.charaFile)
     -- print("\n")
@@ -66,6 +69,16 @@ function Chara:new(charaFile, object)
 end
 
 function Chara:update(dt)
+    if self.shielded == true then
+        self.shieldCurrentTime = self.shieldCurrentTime + dt
+        -- print("shield left: "..(self.shieldDuration - self.shieldCurrentTime))
+        if self.shieldCurrentTime >= self.shieldDuration then
+            self.shieldCurrentTime = 0
+            self.shieldDuration = 0
+            self.shielded = false
+            print("shield end")
+        end
+    end
     for i, arg in ipairs(self.updates) do
         arg:update(dt)
     end
@@ -139,12 +152,21 @@ function Chara:initCallbacks()
                     end
                     timer = Timer:new(0.2, f, true)
                 end
+                -- Meter
                 if k == 4 then
                     f = function(t)
                         self:fillMeter(v)
                         t.enabled = false
                     end
                     timer = Timer:new(0.2, f, true)
+                end
+                -- shield
+                if k == 5 then
+                    self.shieldDuration = self.shieldDuration + v
+                    if self.shielded == false then
+                        self.shielded = true
+                        print("shield start")
+                    end
                 end
                 table.insert(self.updates, timer)
             end

@@ -1,14 +1,14 @@
 [stats]
-hp=100
-maxhp=100
+hp=200
+maxhp=200
 meter=0
 maxmeter=20
 damage=2
 heal=1
 
 [spawnTable]
-damage=30
+damage=10
 freeze=20
 heal=20
 meter=10
-shield=20
+shield=40
