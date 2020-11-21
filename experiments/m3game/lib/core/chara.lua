@@ -101,6 +101,12 @@ function Chara:takeDamage(damage)
     -- Half the damage if shield is active
     if self.shielded == true then
         damage = math.ceil(damage / 2)
+        local durationto = self.shieldDuration - damage
+        if durationto < 0 then
+            self.shieldDuration = 0
+        else
+            self.shieldDuration = self.shieldDuration - damage
+        end
     end
     self.state.stats.hp = self.state.stats.hp - damage
 end
