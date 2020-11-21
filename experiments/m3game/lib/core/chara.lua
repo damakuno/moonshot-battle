@@ -8,6 +8,7 @@ function Chara:new(charaFile, object)
         state = {},
         grid = {},
         enemy = {},
+        -- These are configurations, unused so far
         actions = {
             -- damage
             [1] = {
@@ -76,7 +77,7 @@ function Chara:update(dt)
             self.shieldCurrentTime = 0
             self.shieldDuration = 0
             self.shielded = false
-            print("shield end")
+            -- print("shield end")
         end
     end
     for i, arg in ipairs(self.updates) do
@@ -91,9 +92,17 @@ function Chara:setEnemy(enemy)
     self.enemy = enemy
 end
 
+function Chara:getShieldDuration()
+    return math.ceil(self.shieldDuration - self.shieldCurrentTime)
+end
+
 function Chara:takeDamage(damage)
-    self.state.stats.hp = self.state.stats.hp - damage
     self:fillMeter(math.ceil(damage / 2))
+    -- Half the damage if shield is active
+    if self.shielded == true then
+        damage = math.ceil(damage / 2)
+    end
+    self.state.stats.hp = self.state.stats.hp - damage
 end
 
 function Chara:heal(points)
@@ -165,7 +174,7 @@ function Chara:initCallbacks()
                     self.shieldDuration = self.shieldDuration + v
                     if self.shielded == false then
                         self.shielded = true
-                        print("shield start")
+                        -- print("shield start")
                     end
                 end
                 table.insert(self.updates, timer)

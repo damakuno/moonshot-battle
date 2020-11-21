@@ -75,8 +75,8 @@ function love.draw()
     -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
     -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
     grid:draw(10, 60, 50, 50)
-    grid2:draw(400, 60, 50, 50)
-    ai:draw(400, 60, 50, 50)
+    grid2:draw(420, 60, 50, 50)
+    ai:draw(420, 60, 50, 50)
 
     width = 50
     height = 50
@@ -174,6 +174,8 @@ function show_vars()
     --     end
     --     love.graphics.print(rowVals, font, 500, i * 10)
     -- end
+    love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - ".. chara:getShieldDuration(), font, 100, 470)
+    love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(), font, 600, 470)
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
     love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
     love.graphics.print("hp: " .. chara.state.stats.hp .. "/" .. chara.state.stats.maxhp, font, 100, 490)
