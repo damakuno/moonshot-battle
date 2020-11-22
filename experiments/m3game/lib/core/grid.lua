@@ -74,7 +74,7 @@ function Grid:update(dt)
                         self.callbackFlag["clearedAllMatches"] = true
                     end
                 end
-                self.combo = 0
+                self.combo = 0                
             end
         end
     end
@@ -88,7 +88,11 @@ function Grid:draw(x, y, width, height)
             nx = (j * width) - ox
             ny = (i * height) - oy
             if self.tiles[col] ~= nil then
+                if self.freezeGrid[j][i] == 1 then
+                    love.graphics.setColor(100 / 255, 100 / 255, 100 / 255, 0.8)
+                end
                 self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
+                love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
             end
         end
     end
@@ -412,7 +416,7 @@ function Grid:getUnfrozenTiles(count)
     local unfrozenTiles = self:checkUnfrozenTiles()
     local selectedTiles = {}
     local t = {}
-    print(#unfrozenTiles)
+    -- print(#unfrozenTiles)
     if count > #unfrozenTiles then
         count = #unfrozenTiles
     end
