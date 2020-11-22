@@ -75,6 +75,12 @@ function Grid:update(dt)
                     end
                 end
                 self.combo = 0                
+
+                local possibleMoves = self:checkPossibleMoves() 
+                print("possible move count: "..#possibleMoves)
+                if #possibleMoves < 1 then
+                    self:reset()
+                end
             end
         end
     end
