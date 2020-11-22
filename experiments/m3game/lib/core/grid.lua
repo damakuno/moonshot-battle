@@ -1,36 +1,34 @@
 local Grid = {}
 
 function Grid:new(grid, chara, tiles, object)
-    object =
-        object or
-        {
-            grid = grid,
-            chara = chara,
-            tiles = tiles,
-            freezeGrid = grid,
-            spawnRates = {},
-            spawnRateCount = 0,
-            matchResults = {
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-                [4] = 0,
-                [5] = 0
-            },
-            finalMatchResults = {
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-                [4] = 0,
-                [5] = 0
-            },
-            combo = 0,
-            currentTime = 0,
-            duration = 0.3,
-            enabled = false,
-            callback = {},
-            callbackFlag = {}
-        }
+    object = object or {
+        grid = grid,
+        chara = chara,
+        tiles = tiles,
+        freezeGrid = {},
+        spawnRates = {},
+        spawnRateCount = 0,
+        matchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        finalMatchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        combo = 0,
+        currentTime = 0,
+        duration = 0.3,
+        enabled = false,
+        callback = {},
+        callbackFlag = {}
+    }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -106,6 +104,9 @@ function Grid:fill()
         end
         m = self:checkMatch()
     until (not (#m > 0))
+
+    self.freezeGrid = self:copyGrid(true)
+
 end
 
 function Grid:reset()
@@ -335,15 +336,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "up",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "up",
+                matches = m
+            })
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
     end
@@ -352,15 +350,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "down",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "down",
+                matches = m
+            })
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
     end
@@ -369,15 +364,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "left",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "left",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
     end
@@ -386,15 +378,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "right",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "right",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
     end
@@ -402,12 +391,57 @@ function Grid:checkTileMoves(x, y, _grid)
     return possibleSwaps
 end
 
-function Grid:copyGrid()
+function Grid:checkUnfrozenTiles()
+    -- TODO check for tiles that are not frozen, 1 is frozen 0 is not.
+    local unfrozenTiles = {}
+    local freezeGrid = self.freezeGrid
+    for i, row in ipairs(freezeGrid) do
+        for j, col in ipairs(row) do
+            if col == 0 then
+                table.insert(unfrozenTiles, {
+                    x = j,
+                    y = i
+                })
+            end
+        end
+    end
+    return unfrozenTiles
+end
+
+function Grid:getUnfrozenTiles(count)
+    local unfrozenTiles = self:checkUnfrozenTiles()
+    local selectedTiles = {}
+    local t = {}
+    print(#unfrozenTiles)
+    if count > #unfrozenTiles then
+        count = #unfrozenTiles
+    end
+    for i = 1, count do
+        local ix = randomUniqueInt(t, 1, #unfrozenTiles)
+        table.insert(selectedTiles, unfrozenTiles[ix])
+        -- print("x: " .. unfrozenTiles[ix].x.." y: "..unfrozenTiles[ix].y)
+    end
+    return selectedTiles
+end
+
+function Grid:freezeTile(x, y)
+    self.freezeGrid[y][x] = 1
+end
+
+function Grid:unfreezeTile(x, y)
+    self.freezeGrid[y][x] = 0
+end
+
+function Grid:copyGrid(empty)
     local gridCopy = {}
     for i, row in ipairs(self.grid) do
         local rowCopy = {}
         for j, col in ipairs(row) do
-            table.insert(rowCopy, col)
+            if empty == true then
+                table.insert(rowCopy, 0)
+            else
+                table.insert(rowCopy, col)
+            end
         end
         table.insert(gridCopy, rowCopy)
     end
@@ -433,6 +467,15 @@ end
 
 function randomInt(start, length)
     return math.floor(math.random() * length + start)
+end
+
+function randomUniqueInt(t, from, to) -- second, exclude duplicates
+    local num = math.random(from, to)
+    if t[num] then
+        num = randomUniqueInt(t, from, to)
+    end
+    t[num] = num
+    return num
 end
 
 return Grid

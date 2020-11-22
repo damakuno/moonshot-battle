@@ -2,7 +2,7 @@
 hp=200
 maxhp=200
 meter=0
-maxmeter=20
+maxmeter=50
 damage=2
 heal=1
 

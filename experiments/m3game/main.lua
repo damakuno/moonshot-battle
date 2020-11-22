@@ -48,6 +48,8 @@ function love.load()
 
     keybind = Keybind:new()
 
+    grid:getUnfrozenTiles(3)
+
     -- grid:registerCallback("clearedMatches", function(g, res)
     --     print("Matched:")
     --     for k, v in ipairs(res) do

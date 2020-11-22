@@ -180,7 +180,6 @@ function Chara:initCallbacks()
                     self.shieldDuration = self.shieldDuration + v
                     if self.shielded == false then
                         self.shielded = true
-                        -- print("shield start")
                     end
                 end
                 table.insert(self.updates, timer)
