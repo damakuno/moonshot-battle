@@ -76,16 +76,10 @@ function Grid:update(dt)
                         self.callbackFlag["clearedAllMatches"] = true
                     end
                 end
-<<<<<<< HEAD
                 self.combo = 0                
 
                 local possibleMoves = self:checkPossibleMoves() 
                 print("possible move count: "..#possibleMoves)
-=======
-                self.combo = 0
-
-                local possibleMoves = self:checkPossibleMoves()
->>>>>>> c1cdc47fd77a8512137a7314e2369fea1ca222bc
                 if #possibleMoves < 1 then
                     self:reset()
                 end
