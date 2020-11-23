@@ -1,34 +1,36 @@
 local Grid = {}
 
 function Grid:new(grid, chara, tiles, object)
-    object = object or {
-        grid = grid,
-        chara = chara,
-        tiles = tiles,
-        freezeGrid = {},
-        spawnRates = {},
-        spawnRateCount = 0,
-        matchResults = {
-            [1] = 0,
-            [2] = 0,
-            [3] = 0,
-            [4] = 0,
-            [5] = 0
-        },
-        finalMatchResults = {
-            [1] = 0,
-            [2] = 0,
-            [3] = 0,
-            [4] = 0,
-            [5] = 0
-        },
-        combo = 0,
-        currentTime = 0,
-        duration = 0.3,
-        enabled = false,
-        callback = {},
-        callbackFlag = {}
-    }
+    object =
+        object or
+        {
+            grid = grid,
+            chara = chara,
+            tiles = tiles,
+            freezeGrid = {},
+            spawnRates = {},
+            spawnRateCount = 0,
+            matchResults = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0
+            },
+            finalMatchResults = {
+                [1] = 0,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0
+            },
+            combo = 0,
+            currentTime = 0,
+            duration = 0.3,
+            enabled = false,
+            callback = {},
+            callbackFlag = {}
+        }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -74,10 +76,16 @@ function Grid:update(dt)
                         self.callbackFlag["clearedAllMatches"] = true
                     end
                 end
+<<<<<<< HEAD
                 self.combo = 0                
 
                 local possibleMoves = self:checkPossibleMoves() 
                 print("possible move count: "..#possibleMoves)
+=======
+                self.combo = 0
+
+                local possibleMoves = self:checkPossibleMoves()
+>>>>>>> c1cdc47fd77a8512137a7314e2369fea1ca222bc
                 if #possibleMoves < 1 then
                     self:reset()
                 end
@@ -94,8 +102,8 @@ function Grid:draw(x, y, width, height)
             nx = (j * width) - ox
             ny = (i * height) - oy
             if self.tiles[col] ~= nil then
-                if self.freezeGrid[j][i] == 1 then
-                    love.graphics.setColor(100 / 255, 100 / 255, 100 / 255, 0.8)
+                if self.freezeGrid[i][j] == 1 then
+                    love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.8)
                 end
                 self.tiles[col]:draw(nx, ny, 0, width / self.tiles[col].width, height / self.tiles[col].height)
                 love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
@@ -116,7 +124,6 @@ function Grid:fill()
     until (not (#m > 0))
 
     self.freezeGrid = self:copyGrid(true)
-
 end
 
 function Grid:reset()
@@ -166,7 +173,9 @@ function Grid:swap(x, y, direction)
             if self.grid[y - 1] ~= nil then
                 self.grid[y][x], self.grid[y - 1][x] = self.grid[y - 1][x], self.grid[y][x]
                 m = self:checkMatch()
-                if not (#m > 0) then
+                -- print(self.chara.charaFile .. "-> grid frozen: " .. self.freezeGrid[y][x])
+                if (not (#m > 0)) or (self.freezeGrid[y][x] == 1 or self.freezeGrid[y - 1][x] == 1) then
+                    -- print(self.chara.charaFile .. "-> Can't move this tile!!")
                     self.grid[y][x], self.grid[y - 1][x] = self.grid[y - 1][x], self.grid[y][x]
                 end
             else
@@ -176,7 +185,9 @@ function Grid:swap(x, y, direction)
             if self.grid[y + 1] ~= nil then
                 self.grid[y][x], self.grid[y + 1][x] = self.grid[y + 1][x], self.grid[y][x]
                 m = self:checkMatch()
-                if not (#m > 0) then
+                -- print(self.chara.charaFile .. "-> grid frozen: " .. self.freezeGrid[y][x])
+                if (not (#m > 0)) or (self.freezeGrid[y][x] == 1 or self.freezeGrid[y + 1][x] == 1) then
+                    -- print(self.chara.charaFile .. "-> Can't move this tile!!")
                     self.grid[y][x], self.grid[y + 1][x] = self.grid[y + 1][x], self.grid[y][x]
                 end
             else
@@ -186,7 +197,9 @@ function Grid:swap(x, y, direction)
             if self.grid[x - 1] ~= nil then
                 self.grid[y][x], self.grid[y][x - 1] = self.grid[y][x - 1], self.grid[y][x]
                 m = self:checkMatch()
-                if not (#m > 0) then
+                -- print(self.chara.charaFile .. "-> grid frozen: " .. self.freezeGrid[y][x])
+                if (not (#m > 0)) or (self.freezeGrid[y][x] == 1 or self.freezeGrid[y][x - 1] == 1) then
+                    -- print(self.chara.charaFile .. "-> Can't move this tile!!")
                     self.grid[y][x], self.grid[y][x - 1] = self.grid[y][x - 1], self.grid[y][x]
                 end
             else
@@ -196,7 +209,9 @@ function Grid:swap(x, y, direction)
             if self.grid[x + 1] ~= nil then
                 self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
                 m = self:checkMatch()
-                if not (#m > 0) then
+                -- print(self.chara.charaFile .. "-> grid frozen: " .. self.freezeGrid[y][x])
+                if (not (#m > 0)) or (self.freezeGrid[y][x] == 1 or self.freezeGrid[y][x + 1] == 1) then
+                    -- print(self.chara.charaFile .. "-> Can't move this tile!!")
                     self.grid[y][x], self.grid[y][x + 1] = self.grid[y][x + 1], self.grid[y][x]
                 end
             else
@@ -346,12 +361,15 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {
-                x = x,
-                y = y,
-                dir = "up",
-                matches = m
-            })
+            table.insert(
+                possibleSwaps,
+                {
+                    x = x,
+                    y = y,
+                    dir = "up",
+                    matches = m
+                }
+            )
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
     end
@@ -360,12 +378,15 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {
-                x = x,
-                y = y,
-                dir = "down",
-                matches = m
-            })
+            table.insert(
+                possibleSwaps,
+                {
+                    x = x,
+                    y = y,
+                    dir = "down",
+                    matches = m
+                }
+            )
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
     end
@@ -374,12 +395,15 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {
-                x = x,
-                y = y,
-                dir = "left",
-                matches = m
-            })
+            table.insert(
+                possibleSwaps,
+                {
+                    x = x,
+                    y = y,
+                    dir = "left",
+                    matches = m
+                }
+            )
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
     end
@@ -388,12 +412,15 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(possibleSwaps, {
-                x = x,
-                y = y,
-                dir = "right",
-                matches = m
-            })
+            table.insert(
+                possibleSwaps,
+                {
+                    x = x,
+                    y = y,
+                    dir = "right",
+                    matches = m
+                }
+            )
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
     end
@@ -408,10 +435,13 @@ function Grid:checkUnfrozenTiles()
     for i, row in ipairs(freezeGrid) do
         for j, col in ipairs(row) do
             if col == 0 then
-                table.insert(unfrozenTiles, {
-                    x = j,
-                    y = i
-                })
+                table.insert(
+                    unfrozenTiles,
+                    {
+                        x = j,
+                        y = i
+                    }
+                )
             end
         end
     end
