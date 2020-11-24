@@ -162,7 +162,7 @@ function Chara:initCallbacks()
                         f = function(t)
                             -- TODO end freeze function
                             -- set this to freeze duration
-                            if t.accumulator == 5 then
+                            if t.accumulator == 3 then
                                 for k, tile in ipairs(tilesToFreeze) do
                                     self.enemy.grid:unfreezeTile(tile.x, tile.y)
                                 end

@@ -2,14 +2,11 @@ local Keybind = require "lib.utils.keybind"
 local Anime = require "lib.utils.anime"
 local Grid = require "lib.core.grid"
 local AI = require "lib.core.ai"
+local Player = require "lib.core.player"
 local Chara = require "lib.core.chara"
 
 function love.load()
-    cursor = {
-        selectMode = false,
-        x = 1,
-        y = 1
-    }
+   
     deltaTime = 0
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     moons = {
@@ -19,6 +16,7 @@ function love.load()
         [4] = Anime:new("meter", love.graphics.newImage("res/images/moonMeter.png")),
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
+    keybind = Keybind:new()
 
     newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
@@ -30,7 +28,7 @@ function love.load()
 
     grid = Grid:new(newGrid, chara, moons)
     grid:fill()
-    -- grid:show()
+    player1 = Player:new(grid, keybind) 
 
     chara:evalMatchResults()
 
@@ -46,54 +44,19 @@ function love.load()
     ai = AI:new(0.5, grid2)
     ai:start()
 
-    keybind = Keybind:new()
 
     grid:getUnfrozenTiles(3)
 
-    -- grid:registerCallback("clearedMatches", function(g, res)
-    --     print("Matched:")
-    --     for k, v in ipairs(res) do
-    --         print("["..moons[k].name.."]: "..v)
-    --     end
-    --     print("combo: "..g.combo)
-    -- end)
-
-    -- possibleMoves = grid:checkPossibleMoves()
-
-    -- print("possible moves")
-    -- for i, move in ipairs(possibleMoves) do
-    --     print("x: " .. move.x .. " y: " .. move.y .. " dir: " .. move.dir)
-    --     for j, match in ipairs(move.matches) do
-    --         print("\tmatches-> x: "..match[1].." y: "..match[2].." tileType: "..match[3])
-    --     end
-    -- end
 end
 
 function love.draw()
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
-    -- love.graphics.print("Screen width: "..screenWidth, font, 10, 10)
-    -- love.graphics.print("Screen height: "..screenHeight, font, 10, 20)
-    -- love.graphics.rectangle("line", 10, 10, 780 / 2, 580)
-    -- love.graphics.rectangle("line", screenWidth / 2, 10, 780 / 2, 580)
+   
     grid:draw(10, 60, 50, 50)
+    player1:draw(10, 60, 50, 50)
     grid2:draw(420, 60, 50, 50)
     ai:draw(420, 60, 50, 50)
-
-    width = 50
-    height = 50
-    ox = width - 10
-    oy = height - 60
-    nx = (cursor.x * width) - ox
-    ny = (cursor.y * height) - oy
-    -- nx2 = ((cursor.x + 1) * width) - ox
-    if cursor.selectMode == true then
-        love.graphics.setColor(50 / 255, 255 / 255, 0 / 255, 1)
-    end
-
-    love.graphics.rectangle("line", nx, ny, width, height)
-    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
-    -- love.graphics.rectangle("line", nx2, ny, width, height)
 
     show_vars()
 end
@@ -104,63 +67,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-    if cursor.selectMode == true then
-        if key == keybind.SPACE then
-            cursor.selectMode = not cursor.selectMode
-        end
-        local invalidMove = false
-        if key == keybind.UP then
-            invalidMove = grid:swap(cursor.x, cursor.y, "up")
-        end
-
-        if key == keybind.DOWN then
-            invalidMove = grid:swap(cursor.x, cursor.y, "down")
-        end
-
-        if key == keybind.LEFT then
-            invalidMove = grid:swap(cursor.x, cursor.y, "left")
-        end
-
-        if key == keybind.RIGHT then
-            invalidMove = grid:swap(cursor.x, cursor.y, "right")
-        end
-
-        if invalidMove == false then
-            cursor.selectMode = false
-        end
-    else
-        if key == keybind.UP then
-            if cursor.y > 1 then
-                cursor.y = cursor.y - 1
-            end
-        end
-
-        if key == keybind.DOWN then
-            if cursor.y < grid:getHeight() then
-                cursor.y = cursor.y + 1
-            end
-        end
-
-        if key == keybind.LEFT then
-            if cursor.x > 1 then
-                cursor.x = cursor.x - 1
-            end
-        end
-
-        if key == keybind.RIGHT then
-            if cursor.x < grid:getWidth() then
-                cursor.x = cursor.x + 1
-            end
-        end
-
-        if key == keybind.SPACE then
-            cursor.selectMode = not cursor.selectMode
-        end
-    end
-
-    if key == keybind.R then
-        grid:reset()
-    end
+    player1:keypressed(key)
 end
 
 function love.keyreleased(key)
@@ -169,13 +76,6 @@ function love.keyreleased(key)
 end
 
 function show_vars()
-    -- for i, row in ipairs(grid.grid) do
-    --     local rowVals = ""
-    --     for j, col in ipairs(row) do
-    --         rowVals = rowVals .. grid.grid[i][j]
-    --     end
-    --     love.graphics.print(rowVals, font, 500, i * 10)
-    -- end
     love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - ".. chara:getShieldDuration(), font, 100, 470)
     love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(), font, 600, 470)
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
