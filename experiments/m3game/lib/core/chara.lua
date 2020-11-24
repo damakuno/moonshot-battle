@@ -3,56 +3,56 @@ local LIP = require "lib.utils.LIP"
 local Timer = require "lib.utils.timer"
 
 function Chara:new(charaFile, object)
-    object =
-        object or
-        {
-            charaFile = charaFile,
-            state = {},
-            grid = {},
-            enemy = {},
-            -- These are configurations, unused so far
-            actions = {
-                -- damage
-                [1] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- freeze
-                [2] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 1,
-                    enabled = false
-                },
-                -- heal
-                [3] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- meter
-                [4] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- shield
-                [5] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 1,
-                    enabled = false
-                }
+    object = object or {
+        charaFile = charaFile,
+        state = {},
+        grid = {},
+        enemy = {},
+        -- These are configurations, unused so far
+        actions = {
+            -- damage
+            [1] = {
+                currentTime = 0,
+                duration = 0.5,
+                effectDuration = 0,
+                enabled = false
             },
-            updates = {},
-            shieldCurrentTime = 0,
-            shieldDuration = 0,
-            shielded = false
-        }
+            -- freeze
+            [2] = {
+                currentTime = 0,
+                duration = 0.5,
+                effectDuration = 1,
+                enabled = false
+            },
+            -- heal
+            [3] = {
+                currentTime = 0,
+                duration = 0.5,
+                effectDuration = 0,
+                enabled = false
+            },
+            -- meter
+            [4] = {
+                currentTime = 0,
+                duration = 0.5,
+                effectDuration = 0,
+                enabled = false
+            },
+            -- shield
+            [5] = {
+                currentTime = 0,
+                duration = 0.5,
+                effectDuration = 1,
+                enabled = false
+            }
+        },
+        updates = {},
+        shieldCurrentTime = 0,
+        shieldDuration = 0,
+        shielded = false,
+        callback = {},
+        callbackFlag = {}
+    }
     object.state = LIP.load(object.charaFile)
     -- print("\n")
     -- for k, v in pairs(object.state) do
@@ -79,7 +79,7 @@ function Chara:update(dt)
             self.shieldCurrentTime = 0
             self.shieldDuration = 0
             self.shielded = false
-        -- print("shield end")
+            -- print("shield end")
         end
     end
     for i, arg in ipairs(self.updates) do
@@ -111,6 +111,15 @@ function Chara:takeDamage(damage)
         end
     end
     self.state.stats.hp = self.state.stats.hp - damage
+
+    if self.state.stats.hp <= 0 then
+        if self.callback["dead"] ~= nil then
+            if self.callbackFlag["dead"] == false then
+                self.callback["dead"](self, self.enemy)
+                self.callbackFlag["dead"] = true
+            end
+        end
+    end
 end
 
 function Chara:heal(points)
@@ -132,73 +141,74 @@ function Chara:fillMeter(meter)
 end
 
 function Chara:initCallbacks()
-    self.grid:registerCallback(
-        "clearedMatches",
-        function(g, res)
-            -- print("Matched:")
-            for k, v in ipairs(res) do
-                -- print("[" .. moons[k].name .. "]: " .. v)
-                if v > 0 then
-                    -- TODO add all actions here. Actions that affect enemy will go to enemy state.
-                    local f = function()
-                    end
-                    local timer = Timer:new(1, f, true)
-                    -- Damage
-                    if k == 1 then
-                        f = function(t)
-                            self.enemy:takeDamage(self.state.stats.damage * v)
-                            t.enabled = false
-                        end
-                        timer = Timer:new(1, f, true)
-                    end
-                    -- Freeze
-                    if k == 2 then
-                        -- TODO freeze function
-                        local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v)
-                        for k, tile in ipairs(tilesToFreeze) do
-                            -- print("freeze " .. self.enemy.charaFile .. " for x: " .. tile.x .. " y: " .. tile.y)
-                            self.enemy.grid:freezeTile(tile.x, tile.y)
-                        end
-                        f = function(t)
-                            -- TODO end freeze function
-                            -- set this to freeze duration
-                            if t.accumulator == 3 then
-                                for k, tile in ipairs(tilesToFreeze) do
-                                    self.enemy.grid:unfreezeTile(tile.x, tile.y)
-                                end
-                                t.enabled = false
-                            end
-                        end
-                        timer = Timer:new(1, f, true)
-                    end
-                    -- Heal
-                    if k == 3 then
-                        f = function(t)
-                            self:heal(self.state.stats.heal * v)
-                            t.enabled = false
-                        end
-                        timer = Timer:new(0.2, f, true)
-                    end
-                    -- Meter
-                    if k == 4 then
-                        f = function(t)
-                            self:fillMeter(v)
-                            t.enabled = false
-                        end
-                        timer = Timer:new(0.2, f, true)
-                    end
-                    -- shield
-                    if k == 5 then
-                        self.shieldDuration = self.shieldDuration + v
-                        if self.shielded == false then
-                            self.shielded = true
-                        end
-                    end
-                    table.insert(self.updates, timer)
+    if self.callback["dead"] ~= nil then
+        self.callbackFlag["dead"] = false
+    end
+
+    self.grid:registerCallback("clearedMatches", function(g, res)
+        -- print("Matched:")
+        for k, v in ipairs(res) do
+            -- print("[" .. moons[k].name .. "]: " .. v)
+            if v > 0 then
+                -- TODO add all actions here. Actions that affect enemy will go to enemy state.
+                local f = function()
                 end
+                local timer = Timer:new(1, f, true)
+                -- Damage
+                if k == 1 then
+                    f = function(t)
+                        self.enemy:takeDamage(self.state.stats.damage * v)
+                        t.enabled = false
+                    end
+                    timer = Timer:new(1, f, true)
+                end
+                -- Freeze
+                if k == 2 then
+                    -- TODO freeze function
+                    local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v)
+                    for k, tile in ipairs(tilesToFreeze) do
+                        -- print("freeze " .. self.enemy.charaFile .. " for x: " .. tile.x .. " y: " .. tile.y)
+                        self.enemy.grid:freezeTile(tile.x, tile.y)
+                    end
+                    f = function(t)
+                        -- TODO end freeze function
+                        -- set this to freeze duration
+                        if t.accumulator == 3 then
+                            for k, tile in ipairs(tilesToFreeze) do
+                                self.enemy.grid:unfreezeTile(tile.x, tile.y)
+                            end
+                            t.enabled = false
+                        end
+                    end
+                    timer = Timer:new(1, f, true)
+                end
+                -- Heal
+                if k == 3 then
+                    f = function(t)
+                        self:heal(self.state.stats.heal * v)
+                        t.enabled = false
+                    end
+                    timer = Timer:new(0.2, f, true)
+                end
+                -- Meter
+                if k == 4 then
+                    f = function(t)
+                        self:fillMeter(v)
+                        t.enabled = false
+                    end
+                    timer = Timer:new(0.2, f, true)
+                end
+                -- shield
+                if k == 5 then
+                    self.shieldDuration = self.shieldDuration + v
+                    if self.shielded == false then
+                        self.shielded = true
+                    end
+                end
+                table.insert(self.updates, timer)
             end
         end
-    )
+    end)
 end
 
 function Chara:getSpawnTable()
@@ -216,6 +226,11 @@ function Chara:evalMatchResults()
     for k, v in pairs(self.grid.matchResults) do
         -- print(k, v)
     end
+end
+
+function Chara:registerCallback(event, callback)
+    self.callback[event] = callback
+    self.callbackFlag[event] = false
 end
 
 function randomInt(start, length)
