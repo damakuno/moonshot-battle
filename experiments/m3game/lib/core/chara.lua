@@ -64,26 +64,31 @@ function Chara:update(dt)
 end
 
 function Chara:draw(x, y, align)
-    if align == "left" then
+    if align == "right" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
         love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y, self.state.stats.hp * 3, 20)
-        love.graphics.setColor(0 / 255, 0 / 255, 0 / 255, 1)
-        love.graphics.print(self.state.stats.hp, font, x + 4, y + 4)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+        love.graphics.print(self.state.stats.hp, font, x + (self.state.stats.maxhp * 3) - 24, y + 4)
         love.graphics.setColor(255 / 255, 145 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y + 20, self.state.stats.maxmeter * 3, 20)
         love.graphics.setColor(225 / 255, 255 / 255, 105 / 255, 1)
         love.graphics.rectangle("fill", x, y + 20, self.state.stats.meter * 3, 20)
     end
-    if align == "right" then
+    if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
         love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", ((self.state.stats.maxhp - self.state.stats.hp) * 3) + x, y,
             self.state.stats.hp * 3, 20)
-        love.graphics.setColor(0 / 255, 0 / 255, 0 / 255, 1)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         love.graphics.print(self.state.stats.hp, font, x + 4, y + 4)
+        love.graphics.setColor(255 / 255, 145 / 255, 0 / 255, 1)
+        local offsetx = self.state.stats.maxhp / 2 * 3
+        love.graphics.rectangle("fill", x + offsetx, y + 20, self.state.stats.maxmeter * 3, 20)
+        love.graphics.setColor(225 / 255, 255 / 255, 105 / 255, 1)
+        love.graphics.rectangle("fill", ((self.state.stats.maxmeter- self.state.stats.meter) * 3) + x + offsetx, y + 20, self.state.stats.meter * 3, 20)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
