@@ -52,8 +52,12 @@ function Chara:update(dt)
         self.specialCurrentTime = self.specialCurrentTime + dt
         if self.specialCurrentTime >= self.specialDuration then
             self.specialCurrentTime = 0
-            self.specialDuration = 0
-            self.specialActive = false
+            -- self.specialDuration = 0
+            self.state.stats.meter = self.state.stats.meter - math.ceil(self.state.stats.maxmeter / 5)
+            if self.state.stats.meter < 1 then
+                self.specialActive = false
+                self.state.stats.meter = 0
+            end
         end
     end
     for i, arg in ipairs(self.updates) do
@@ -133,24 +137,26 @@ end
 
 function Chara:fillMeter(meter)
     local meterto = self.state.stats.meter + meter
-    if meterto > self.state.stats.maxmeter then
-        self.state.stats.meter = self.state.stats.maxmeter
-    else
-        self.state.stats.meter = meterto
+    if self.specialActive == false then
+        if meterto > self.state.stats.maxmeter then
+            self.state.stats.meter = self.state.stats.maxmeter
+        else
+            self.state.stats.meter = meterto
+        end
     end
 end
 
 function Chara:specialActivate()
     if self.state.stats.meter >= self.state.stats.maxmeter then
-        self.state.stats.meter = 0
+        -- self.state.stats.meter = 0
         self.specialActive = true
-        self.specialDuration = self.specialDuration + self.state.stats.special
+        self.specialDuration = 1 --self.specialDuration + self.state.stats.special
     end
 end
 
-function Chara:getSpecialDuration()
-    return math.ceil(self.specialDuration - self.specialCurrentTime)
-end
+-- function Chara:getSpecialDuration()
+--     return math.ceil(self.specialDuration - self.specialCurrentTime)
+-- end
 
 function Chara:initCallbacks()
     if self.callback["dead"] ~= nil then
