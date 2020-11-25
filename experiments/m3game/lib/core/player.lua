@@ -88,6 +88,10 @@ function Player:keypressed(key)
         if key == self.keybind.SPACE then
             self.cursor.selectMode = not self.cursor.selectMode
         end
+
+        if key == self.keybind.X then
+            grid.chara:specialActivate()
+        end
     end
 
     if key == self.keybind.R then

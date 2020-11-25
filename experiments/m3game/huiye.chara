@@ -6,6 +6,7 @@ maxmeter=50
 damage=2
 heal=1
 freeze=3
+special=10
 shield=1
 
 [spawnTable]

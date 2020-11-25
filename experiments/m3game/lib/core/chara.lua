@@ -14,6 +14,9 @@ function Chara:new(charaFile, object)
             shieldCurrentTime = 0,
             shieldDuration = 0,
             shielded = false,
+            specialCurrentTime = 0,
+            specialDuration = 0,
+            specialActive = false,
             callback = {},
             callbackFlag = {},
             dead = false
@@ -39,12 +42,18 @@ end
 function Chara:update(dt)
     if self.shielded == true then
         self.shieldCurrentTime = self.shieldCurrentTime + dt
-        -- print("shield left: "..(self.shieldDuration - self.shieldCurrentTime))
         if self.shieldCurrentTime >= self.shieldDuration then
             self.shieldCurrentTime = 0
             self.shieldDuration = 0
             self.shielded = false
-        -- print("shield end")
+        end
+    end
+    if self.specialActive == true then
+        self.specialCurrentTime = self.specialCurrentTime + dt
+        if self.specialCurrentTime >= self.specialDuration then
+            self.specialCurrentTime = 0
+            self.specialDuration = 0
+            self.specialActive = false
         end
     end
     for i, arg in ipairs(self.updates) do
@@ -129,6 +138,18 @@ function Chara:fillMeter(meter)
     else
         self.state.stats.meter = meterto
     end
+end
+
+function Chara:specialActivate()
+    if self.state.stats.meter >= self.state.stats.maxmeter then
+        self.state.stats.meter = 0
+        self.specialActive = true
+        self.specialDuration = self.specialDuration + self.state.stats.special
+    end
+end
+
+function Chara:getSpecialDuration()
+    return math.ceil(self.specialDuration - self.specialCurrentTime)
 end
 
 function Chara:initCallbacks()

@@ -6,11 +6,12 @@ maxmeter=50
 damage=2
 heal=1
 freeze=3
+special=10
 shield=1
 
 [spawnTable]
-damage=20
+damage=30
 freeze=20
 heal=20
-meter=20
+meter=10
 shield=20

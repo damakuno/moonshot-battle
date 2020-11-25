@@ -39,7 +39,7 @@ function love.load()
     chara:initCallbacks()
     chara2:initCallbacks()
 
-    ai = AI:new(0.5, grid2)
+    ai = AI:new(0.4, grid2)
     ai:start()
 
     chara:registerCallback("dead", function(p1, p2)
@@ -80,6 +80,8 @@ function love.keyreleased(key)
 end
 
 function show_vars()
+    love.graphics.print("special active: " .. (chara.specialActive and "true" or "false") .. " - ".. chara:getSpecialDuration(), font, 100, 460)
+    love.graphics.print("special active: " .. (chara2.specialActive and "true" or "false") .. " - " .. chara2:getSpecialDuration(), font, 600, 460)
     love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - ".. chara:getShieldDuration(), font, 100, 470)
     love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(), font, 600, 470)
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
