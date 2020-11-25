@@ -30,8 +30,6 @@ function love.load()
     grid:fill()
     player1 = Player:new(grid, keybind) 
 
-    chara:evalMatchResults()
-
     newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
@@ -44,9 +42,13 @@ function love.load()
     ai = AI:new(0.5, grid2)
     ai:start()
 
+    chara:registerCallback("dead", function(p1, p2)
+        print("Player 1 dead")
+    end)
 
-    grid:getUnfrozenTiles(3)
-
+    chara2:registerCallback("dead", function(p2, p1)
+        print("Player 2 dead")
+    end)
 end
 
 function love.draw()
