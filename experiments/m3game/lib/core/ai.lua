@@ -69,6 +69,7 @@ function AI:play()
         self.grid:swap(self.chosenMove.x, self.chosenMove.y, self.chosenMove.dir)
         self.chosenMove.chosen = false
         self.cursor.selectMode = false
+        self.grid.chara:specialActivate()
     else
         cursorMovement = self:cursorMovement(self.cursor.x, self.cursor.y, self.chosenMove.x, self.chosenMove.y)
         self.cursor.x = self.cursor.x + cursorMovement.x

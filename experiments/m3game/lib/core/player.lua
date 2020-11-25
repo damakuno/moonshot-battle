@@ -42,19 +42,19 @@ function Player:keypressed(key)
         end
         local invalidMove = false
         if key == self.keybind.UP then
-            invalidMove = grid:swap(self.cursor.x, self.cursor.y, "up")
+            invalidMove = self.grid:swap(self.cursor.x, self.cursor.y, "up")
         end
 
         if key == self.keybind.DOWN then
-            invalidMove = grid:swap(self.cursor.x, self.cursor.y, "down")
+            invalidMove = self.grid:swap(self.cursor.x, self.cursor.y, "down")
         end
 
         if key == self.keybind.LEFT then
-            invalidMove = grid:swap(self.cursor.x, self.cursor.y, "left")
+            invalidMove = self.grid:swap(self.cursor.x, self.cursor.y, "left")
         end
 
         if key == self.keybind.RIGHT then
-            invalidMove = grid:swap(self.cursor.x, self.cursor.y, "right")
+            invalidMove = self.grid:swap(self.cursor.x, self.cursor.y, "right")
         end
 
         if invalidMove == false then
@@ -68,7 +68,7 @@ function Player:keypressed(key)
         end
 
         if key == self.keybind.DOWN then
-            if self.cursor.y < grid:getHeight() then
+            if self.cursor.y < self.grid:getHeight() then
                 self.cursor.y = self.cursor.y + 1
             end
         end
@@ -80,7 +80,7 @@ function Player:keypressed(key)
         end
 
         if key == self.keybind.RIGHT then
-            if self.cursor.x < grid:getWidth() then
+            if self.cursor.x < self.grid:getWidth() then
                 self.cursor.x = self.cursor.x + 1
             end
         end
@@ -90,12 +90,12 @@ function Player:keypressed(key)
         end
 
         if key == self.keybind.X then
-            grid.chara:specialActivate()
+            self.grid.chara:specialActivate()
         end
     end
 
     if key == self.keybind.R then
-        grid:reset()
+        self.grid:reset()
     end
 end
 
