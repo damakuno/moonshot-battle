@@ -164,14 +164,19 @@ function Chara:initCallbacks()
             for k, v in ipairs(res) do
                 -- print("[" .. moons[k].name .. "]: " .. v)
                 if v > 0 then
-                    -- TODO add all actions here. Actions that affect enemy will go to enemy state.
+                    local specialMultiplier = 1
+                    if self.specialActive then
+                        specialMultiplier = 2
+                    else
+                        specialMultiplier = 1
+                    end
                     local f = function()
                     end
                     local timer = Timer:new(1, f, true)
                     -- Damage
                     if k == 1 then
                         f = function(t)
-                            self.enemy:takeDamage(self.state.stats.damage * v)
+                            self.enemy:takeDamage(self.state.stats.damage * v * specialMultiplier)
                             t.enabled = false
                         end
                         timer = Timer:new(1, f, true)
@@ -179,7 +184,7 @@ function Chara:initCallbacks()
                     -- Freeze
                     if k == 2 then
                         -- TODO freeze function
-                        local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v)
+                        local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v * specialMultiplier)
                         for k, tile in ipairs(tilesToFreeze) do
                             -- print("freeze " .. self.enemy.charaFile .. " for x: " .. tile.x .. " y: " .. tile.y)
                             self.enemy.grid:freezeTile(tile.x, tile.y)
@@ -199,7 +204,7 @@ function Chara:initCallbacks()
                     -- Heal
                     if k == 3 then
                         f = function(t)
-                            self:heal(self.state.stats.heal * v)
+                            self:heal(self.state.stats.heal * v * specialMultiplier)
                             t.enabled = false
                         end
                         timer = Timer:new(0.2, f, true)
@@ -214,7 +219,7 @@ function Chara:initCallbacks()
                     end
                     -- shield
                     if k == 5 then
-                        self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v)
+                        self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v * specialMultiplier)
                         if self.shielded == false then
                             self.shielded = true
                         end
