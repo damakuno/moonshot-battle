@@ -6,7 +6,7 @@ local Player = require "lib.core.player"
 local Chara = require "lib.core.chara"
 
 function love.load()
-   
+
     deltaTime = 0
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     moons = {
@@ -16,6 +16,12 @@ function love.load()
         [4] = Anime:new("meter", love.graphics.newImage("res/images/moonMeter.png")),
         [5] = Anime:new("shield", love.graphics.newImage("res/images/moonShield.png"))
     }
+
+    expandingCircle = Anime:new("circle", love.graphics.newImage("res/images/expandingCircle.png"), 350, 350, 0.2, 1)
+    expandingCircle:hide()
+    expandingCircle:registerCallback("animationEnd", function(anime)
+        anime:hide()
+    end)
     keybind = Keybind:new()
 
     newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
@@ -28,7 +34,7 @@ function love.load()
 
     grid = Grid:new(newGrid, chara, moons)
     grid:fill()
-    player1 = Player:new(grid, keybind) 
+    player1 = Player:new(grid, keybind)
 
     newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
@@ -38,6 +44,12 @@ function love.load()
 
     chara:initCallbacks()
     chara2:initCallbacks()
+
+    chara:registerCallback("specialActivate", function()
+        expandingCircle:show()
+        expandingCircle:start()
+    end)
+
 
     ai = AI:new(0.4, grid2)
     ai:start()
@@ -54,7 +66,7 @@ end
 function love.draw()
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
-   
+
     grid:draw(10, 60, 50, 50)
     player1:draw(10, 60, 50, 50)
     grid2:draw(420, 60, 50, 50)
@@ -62,12 +74,14 @@ function love.draw()
     chara:draw(50, 10, "left")
     chara2:draw(430, 10, "right")
 
+    expandingCircle:draw(10, 60, 0, 1, 1)
+
     show_vars()
 end
 
 function love.update(dt)
     deltaTime = dt
-    updates(dt, grid, grid2, ai, chara, chara2)
+    updates(dt, grid, grid2, ai, chara, chara2, expandingCircle)
 end
 
 function love.keypressed(key)
@@ -82,8 +96,10 @@ end
 function show_vars()
     -- love.graphics.print("special active: " .. (chara.specialActive and "true" or "false") .. " - ".. chara:getSpecialDuration(), font, 100, 460)
     -- love.graphics.print("special active: " .. (chara2.specialActive and "true" or "false") .. " - " .. chara2:getSpecialDuration(), font, 600, 460)
-    love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - ".. chara:getShieldDuration(), font, 100, 470)
-    love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(), font, 600, 470)
+    love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - " .. chara:getShieldDuration(),
+        font, 100, 470)
+    love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(),
+        font, 600, 470)
     love.graphics.print("combo: " .. grid.combo, font, 100, 480)
     love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
     love.graphics.print("hp: " .. chara.state.stats.hp .. "/" .. chara.state.stats.maxhp, font, 100, 490)

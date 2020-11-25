@@ -51,10 +51,13 @@ function Chara:update(dt)
         if self.specialCurrentTime >= self.specialDuration then
             self.specialCurrentTime = 0
             -- self.specialDuration = 0
-            self.state.stats.meter = self.state.stats.meter - 3 
+            self.state.stats.meter = self.state.stats.meter - 3
             if self.state.stats.meter < 1 then
                 self.specialActive = false
                 self.state.stats.meter = 0
+                if self.callback["specialActivate"] ~= nil then
+                    self.callbackFlag["specialActivate"] = false
+                end
             end
         end
     end
@@ -88,7 +91,8 @@ function Chara:draw(x, y, align)
         local offsetx = self.state.stats.maxhp / 2 * 3
         love.graphics.rectangle("fill", x + offsetx, y + 20, self.state.stats.maxmeter * 3, 20)
         love.graphics.setColor(225 / 255, 255 / 255, 105 / 255, 1)
-        love.graphics.rectangle("fill", ((self.state.stats.maxmeter- self.state.stats.meter) * 3) + x + offsetx, y + 20, self.state.stats.meter * 3, 20)
+        love.graphics.rectangle("fill", ((self.state.stats.maxmeter - self.state.stats.meter) * 3) + x + offsetx,
+            y + 20, self.state.stats.meter * 3, 20)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
@@ -153,6 +157,12 @@ function Chara:specialActivate()
         -- self.state.stats.meter = 0
         self.specialActive = true
         self.specialDuration = 1 -- self.specialDuration + self.state.stats.special
+        if self.callback["specialActivate"] ~= nil then
+            if self.callbackFlag["specialActivate"] == false then
+                self.callback["specialActivate"](self)
+                self.callbackFlag["specialActivate"] = true
+            end
+        end
     end
 end
 
@@ -163,6 +173,10 @@ end
 function Chara:initCallbacks()
     if self.callback["dead"] ~= nil then
         self.callbackFlag["dead"] = false
+    end
+
+    if self.callback["specialActivate"] ~= nil then
+        self.callbackFlag["specialActivate"] = false
     end
 
     self.grid:registerCallback("clearedMatches", function(g, res)
