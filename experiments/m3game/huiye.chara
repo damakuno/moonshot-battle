@@ -5,6 +5,8 @@ meter=0
 maxmeter=50
 damage=2
 heal=1
+freeze=3
+shield=1
 
 [spawnTable]
 damage=20

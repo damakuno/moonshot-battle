@@ -10,44 +10,6 @@ function Chara:new(charaFile, object)
             state = {},
             grid = {},
             enemy = {},
-            -- These are configurations, unused so far
-            actions = {
-                -- damage
-                [1] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- freeze
-                [2] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 1,
-                    enabled = false
-                },
-                -- heal
-                [3] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- meter
-                [4] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 0,
-                    enabled = false
-                },
-                -- shield
-                [5] = {
-                    currentTime = 0,
-                    duration = 0.5,
-                    effectDuration = 1,
-                    enabled = false
-                }
-            },
             updates = {},
             shieldCurrentTime = 0,
             shieldDuration = 0,
@@ -181,7 +143,7 @@ function Chara:initCallbacks()
                         f = function(t)
                             -- TODO end freeze function
                             -- set this to freeze duration
-                            if t.accumulator == 3 then
+                            if t.accumulator == self.state.stats.freeze then
                                 for k, tile in ipairs(tilesToFreeze) do
                                     self.enemy.grid:unfreezeTile(tile.x, tile.y)
                                 end
@@ -208,7 +170,7 @@ function Chara:initCallbacks()
                     end
                     -- shield
                     if k == 5 then
-                        self.shieldDuration = self.shieldDuration + v
+                        self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v)
                         if self.shielded == false then
                             self.shielded = true
                         end
