@@ -59,6 +59,7 @@ function love.draw()
     player1:draw(10, 60, 50, 50)
     grid2:draw(420, 60, 50, 50)
     ai:draw(420, 60, 50, 50)
+    chara:draw(50, 10, "left")
 
     show_vars()
 end

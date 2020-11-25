@@ -52,7 +52,14 @@ function Chara:update(dt)
     end
 end
 
-function Chara:draw()
+function Chara:draw(x, y, align)
+    if align == "left" then
+        love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
+        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
+        love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
+        love.graphics.rectangle("fill", x, y, self.state.stats.hp * 3, 20)
+    end
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
 
 function Chara:setEnemy(enemy)
