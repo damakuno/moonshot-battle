@@ -60,6 +60,7 @@ function love.draw()
     grid2:draw(420, 60, 50, 50)
     ai:draw(420, 60, 50, 50)
     chara:draw(50, 10, "left")
+    chara2:draw(430, 10, "right")
 
     show_vars()
 end

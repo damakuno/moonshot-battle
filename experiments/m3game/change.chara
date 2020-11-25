@@ -1,6 +1,6 @@
 [stats]
-hp=120
-maxhp=120
+hp=100
+maxhp=100
 meter=0
 maxmeter=50
 damage=2

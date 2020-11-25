@@ -58,6 +58,22 @@ function Chara:draw(x, y, align)
         love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
         love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y, self.state.stats.hp * 3, 20)
+        love.graphics.setColor(0 / 255, 0 / 255, 0 / 255, 1)
+        love.graphics.print(self.state.stats.hp, font, x + 4, y + 4)
+    end
+    if align == "right" then
+        love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
+        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
+        love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
+        love.graphics.rectangle(
+            "fill",
+            ((self.state.stats.maxhp - self.state.stats.hp) * 3) + x,
+            y,
+            self.state.stats.hp * 3,
+            20
+        )
+        love.graphics.setColor(0 / 255, 0 / 255, 0 / 255, 1)
+        love.graphics.print(self.state.stats.hp, font, x + 4, y + 4)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
