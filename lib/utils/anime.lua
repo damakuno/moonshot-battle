@@ -74,8 +74,12 @@ function Anime:draw(x, y, r, sx, sy, ox, oy, kx, ky)
     end
 end
 
-function Anime:start()
+function Anime:start(reset)
     self.enabled = true
+    if reset == true then
+        self.spriteNum = 1
+        self.currentTime = 0
+    end
     if self.callback["animationEnd"] ~= nil then
         self.callbackFlag["animationEnd"] = false
     end
