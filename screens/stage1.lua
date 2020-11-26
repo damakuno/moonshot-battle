@@ -62,6 +62,7 @@ local Stage1 = {
         chara:registerCallback(
             "dead",
             function(p1, p2)
+                -- TODO show match results first
                 -- TODO gameover screen
                 print("Player 1 dead")
             end
@@ -71,6 +72,7 @@ local Stage1 = {
             "dead",
             function(p2, p1)
                 print("Player 2 dead")
+                -- TODO show match results first
                 nextScreen()
             end
         )
@@ -97,5 +99,33 @@ local Stage1 = {
         player1:keypressed(key)
     end
 }
+
+function show_vars()
+    -- love.graphics.print("special active: " .. (chara.specialActive and "true" or "false") .. " - ".. chara:getSpecialDuration(), font, 100, 460)
+    -- love.graphics.print("special active: " .. (chara2.specialActive and "true" or "false") .. " - " .. chara2:getSpecialDuration(), font, 600, 460)
+    love.graphics.print("shielded: " .. (chara.shielded and "true" or "false") .. " - " .. chara:getShieldDuration(),
+        font, 100, 470)
+    love.graphics.print("shielded: " .. (chara2.shielded and "true" or "false") .. " - " .. chara2:getShieldDuration(),
+        font, 600, 470)
+    love.graphics.print("combo: " .. grid.combo, font, 100, 480)
+    love.graphics.print("combo: " .. grid2.combo, font, 600, 480)
+    love.graphics.print("hp: " .. chara.state.stats.hp .. "/" .. chara.state.stats.maxhp, font, 100, 490)
+    love.graphics.print("hp: " .. chara2.state.stats.hp .. "/" .. chara2.state.stats.maxhp, font, 600, 490)
+    love.graphics.print("meter: " .. chara.state.stats.meter .. "/" .. chara.state.stats.maxmeter, font, 100, 500)
+    love.graphics.print("meter: " .. chara2.state.stats.meter .. "/" .. chara2.state.stats.maxmeter, font, 600, 500)
+    for i, res in ipairs(grid.matchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
+    end
+    for i, res in ipairs(grid.finalMatchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 100, 500 + (i * 10))
+    end
+    for i, res in ipairs(grid2.matchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 600, 400 + (i * 10))
+    end
+    for i, res in ipairs(grid2.finalMatchResults) do
+        love.graphics.print(moons[i].name .. ": " .. res, font, 600, 500 + (i * 10))
+    end
+end
+
 
 return Stage1

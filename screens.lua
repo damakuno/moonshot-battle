@@ -16,16 +16,12 @@ local Screens = {
     -- Intro
     [1] = {
         load = function()
+            storyend = false
             moonshot = Moonshot:new("intro", dialog_font)
             moonshot:registerCallback(
                 "storyend",
                 function()
-                    local f = function(t)
-                        nextScreen()
-                        t.enabled = false
-                    end
-                    local t = Timer:new(2, f)                                        
-                    table.insert(globalUpdates, t)
+                    storyend = true
                 end
             )
             moonshot:start()
@@ -39,7 +35,11 @@ local Screens = {
         end,
         keyreleased = function(key)
             if key == keybind.SPACE then
-                moonshot:keyreleased(key, keybind)
+                if storyend == true then
+                    nextScreen()
+                else
+                    moonshot:keyreleased(key, keybind)
+                end
             end
         end
     },
@@ -52,7 +52,6 @@ function nextScreen(args)
     screenArgs = args
     Screens[Flow.index].load()
 end
-
 
 return function()
     return Screens, Flow
