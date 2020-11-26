@@ -44,7 +44,37 @@ local Screens = {
         end
     },
     -- Round 1
-    [2] = Stage1
+    [2] = Stage1,
+    -- Act 1
+    [3] = {
+        load = function()
+            storyend = false
+            moonshot = Moonshot:new("act1", dialog_font)
+            moonshot:registerCallback(
+                "storyend",
+                function()
+                    storyend = true
+                end
+            )
+            moonshot:start()
+            love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
+        end,
+        draw = function()
+            draws(moonshot)
+        end,
+        update = function(dt)
+            updates(dt, moonshot)
+        end,
+        keyreleased = function(key)
+            if key == keybind.SPACE then
+                if storyend == true then
+                    -- nextScreen()
+                else
+                    moonshot:keyreleased(key, keybind)
+                end
+            end
+        end
+    }
 }
 
 function nextScreen(args)
