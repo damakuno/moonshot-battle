@@ -1,16 +1,6 @@
 local Anime = {}
 
-function Anime:new(
-    name,
-    image,
-    width,
-    height,
-    duration,
-    startingSpriteNum,
-    enabled,
-    loop,
-    playTillEnd,
-    dialogPosition,
+function Anime:new(name, image, width, height, duration, startingSpriteNum, enabled, loop, playTillEnd, dialogPosition,
     object)
     if width == nil then
         width = image:getWidth()
@@ -19,22 +9,23 @@ function Anime:new(
         height = image:getHeight()
     end
 
-    object =
-        object or
-        {
-            currentTime = 0,
-            name = name,
-            spriteSheet = image,
-            width = width,
-            height = height,
-            duration = duration or 1,
-            quads = {},
-            spriteNum = startingSpriteNum or 1,
-            enabled = enabled or false,
-            loop = loop or false,
-            playTillEnd = playTillEnd or false,
-            dialogPosition = dialogPosition or "left"
-        }
+    object = object or {
+        currentTime = 0,
+        name = name,
+        spriteSheet = image,
+        width = width,
+        height = height,
+        duration = duration or 1,
+        quads = {},
+        spriteNum = startingSpriteNum or 1,
+        enabled = enabled or false,
+        loop = loop or false,
+        playTillEnd = playTillEnd or false,
+        dialogPosition = dialogPosition or "left",
+        callback = {},
+        callbackFlag = {},
+        visible = true
+    }
 
     for y = 0, image:getHeight() - height, height do
         for x = 0, image:getWidth() - width, width do
@@ -65,19 +56,46 @@ function Anime:update(dt)
             end
         end
     end
+
+    if (self.spriteNum == #self.quads) then
+        if self.callback["animationEnd"] ~= nil then
+            if self.callbackFlag["animationEnd"] == false then
+                self.callback["animationEnd"](self)
+                self.callbackFlag["animationEnd"] = true
+            end
+        end
+    end
 end
 
 function Anime:draw(x, y, r, sx, sy, ox, oy, kx, ky)
     self.spriteNum = math.floor(self.currentTime / self.duration * #self.quads) + 1
-    love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r, sx, sy, ox, oy, kx, ky)
+    if self.visible == true then
+        love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r, sx, sy, ox, oy, kx, ky)
+    end
 end
 
 function Anime:start()
     self.enabled = true
+    if self.callback["animationEnd"] ~= nil then
+        self.callbackFlag["animationEnd"] = false
+    end
 end
 
 function Anime:stop()
     self.enabled = false
+end
+
+function Anime:show()
+    self.visible = true
+end
+
+function Anime:hide()
+    self.visible = false
+end
+
+function Anime:registerCallback(event, callback)
+    self.callback[event] = callback
+    self.callbackFlag[event] = false
 end
 
 return Anime

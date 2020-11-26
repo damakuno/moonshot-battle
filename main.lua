@@ -3,79 +3,34 @@ Timer = require "lib.utils.timer"
 Anime = require "lib.utils.anime"
 Dialog = require "lib.utils.dialog"
 Moonshot = require "lib.core.moonshot"
-
-local storyend = false
+Screens = require "screens"
 
 function love.load()
-    deltaTime = 0
-
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
-    moonshot = Moonshot:new("intro", dialog_font)
-    moonshot:registerCallback("storyend", function()
-        print("callback called")
-        storyend = true
-    end)
-    moonshot:start()
-
-    keybind = Keybind:new()
-    -- Example setting of key bindings
-    -- keybind:set("UP", "w")
-    love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
 end
 
 function love.draw()
-    draws(moonshot)
-    -- show_vars()
+
 end
 
 function love.update(dt)
-    deltaTime = dt
-    updates(dt, moonshot, mikiAnime, jillAnime)
+
 end
 
 function love.keyreleased(key)
-    if key == keybind.SPACE then
-        if storyend == true then
-            moonshot:setNewStory("act1")
-            moonshot:registerCallback("storyend", function()
-                print("callback called")
-                storyend = true
-            end)
-            moonshot:start()
-            storyend = false
-        else
-            moonshot:keyreleased(key, keybind)
-        end
-    end
-
+  
 end
 
-function show_vars()
-    love.graphics.print("dt: " .. deltaTime, font, 10, 10)
-end
-
-function calcVelocity(ticks, counter)
-    velocity.x = (imgPos.x - imgPos.px) / ticks
-    velocity.y = (imgPos.y - imgPos.py) / ticks
-    imgPos.px = imgPos.x
-    imgPos.py = imgPos.y
-    acceleration.x = (velocity.x - velocity.px) / ticks
-    acceleration.y = (velocity.y - velocity.py) / ticks
-    velocity.px = velocity.x
-    velocity.py = velocity.y
-end
-
-function updates(dt, ...)
-    local args = {...}
-    for i, arg in ipairs(args) do
-        arg:update(dt)
+function updates(dt, arr)
+    for i, a in ipairs(arr) do
+        a:update(dt)
     end
 end
 
-function draws(...)
-    local args = {...}
-    for i, arg in ipairs(args) do
-        arg:draw()
+function draws(arr)
+    for i, a in ipairs(arr) do
+        a:draw()
     end
 end
+
