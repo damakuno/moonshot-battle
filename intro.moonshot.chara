@@ -1,4 +1,4 @@
-[miki:idle]
+[change:idle]
 name=Kira Miki
 sprite=res/images/KiraMikiSprite.png
 width=205
@@ -6,13 +6,23 @@ height=200
 duration=1
 startingSpriteNum=1
 loop=false
-dialogPosition=left
+dialogPosition=right
 
-[jill:idle]
+[huiye:idle]
 name=Jill
 sprite=res/images/Jill.png
 width=205
 height=190
+duration=1
+startingSpriteNum=1
+loop=false
+dialogPosition=left
+
+[narrator:idle]
+name=Narrator
+sprite=res/images/Narrator.png
+width=200
+height=200
 duration=1
 startingSpriteNum=1
 loop=false

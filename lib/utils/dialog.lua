@@ -3,28 +3,32 @@ local Dialog = {}
 local Anime = require "lib.utils.anime"
 
 function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, object)
-    object = object or {
-        text = text,
-        font = font,
-        x = x or 10,
-        y = y or 500,
-        limit = limit or 760,
-        align = align or "left",
-        ticks = ticks or 0.3,
-        increment = increment or 1,
-        enabled = false,
-        counter = 0,
-        str_index = 1,
-        display_text = "",
-        displaying = true,
-        charaAnime = anime,
-        selectedChara = "left",
-        charaBuffer = {},
-        callback = {},        
-        callbackFlag = {}
-    }
+    object =
+        object or
+        {
+            text = text,
+            font = font,
+            x = x or 10,
+            y = y or 500,
+            limit = limit or 760,
+            align = align or "left",
+            ticks = ticks or 0.3,
+            increment = increment or 1,
+            enabled = false,
+            counter = 0,
+            str_index = 1,
+            display_text = "",
+            displaying = true,
+            charaAnime = anime,
+            selectedChara = "left",
+            charaBuffer = {},
+            callback = {},
+            callbackFlag = {}
+        }
 
     object.charaBuffer[anime.dialogPosition] = anime
+    object.selectedChara = anime.dialogPosition
+
     setmetatable(object, self)
     self.__index = self
     return object
@@ -43,17 +47,20 @@ end
 function Dialog:draw()
     local window_width = love.graphics.getWidth()
 
+    if self.selectedChara == "right" then
+        love.graphics.printf(self.charaBuffer["right"].name, self.font, self.x, self.y - 30, self.limit, "right")
+        love.graphics.setColor(100 / 255, 100 / 255, 100 / 255, 0.8)
+    end
+
     if self.charaBuffer["left"] ~= nil then
-        if self.selectedChara == "right" then
-            love.graphics.printf(self.charaBuffer["right"].name, self.font, self.x, self.y - 30, self.limit, "right")
-            love.graphics.setColor(100 / 255, 100 / 255, 100 / 255, 0.8)
-        end
         self.charaBuffer["left"]:draw(self.x, self.y - self.charaBuffer["left"].height - 40, 0)
     end
 
     if self.selectedChara == "left" then
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
-        love.graphics.printf(self.charaBuffer["left"].name, self.font, self.x, self.y - 30, self.limit, "left")
+        if self.charaBuffer["left"] ~= nil then
+            love.graphics.printf(self.charaBuffer["left"].name, self.font, self.x, self.y - 30, self.limit, "left")
+        end
         love.graphics.setColor(100 / 255, 100 / 255, 100 / 255, 0.8)
     end
 
@@ -61,8 +68,11 @@ function Dialog:draw()
         if self.selectedChara == "right" then
             love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         end
-        self.charaBuffer["right"]:draw(window_width - self.charaBuffer["right"].width - self.x,
-            self.y - self.charaBuffer["right"].height - 40, 0)
+        self.charaBuffer["right"]:draw(
+            window_width - self.charaBuffer["right"].width - self.x,
+            self.y - self.charaBuffer["right"].height - 40,
+            0
+        )
     end
     local x_offset = 0
     local limit_offset = 0
@@ -116,7 +126,7 @@ function Dialog:setNewDialog(text, charaAnime)
             self.callbackFlag["textend"] = false
         end
         self.charaAnime:start()
-        -- print(self.selectedChara)
+    -- print(self.selectedChara)
     end
 end
 
