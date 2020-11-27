@@ -49,7 +49,7 @@ local Screens = {
     [3] = {
         load = function()
             storyend = false
-            moonshot = Moonshot:new("act1", dialog_font)
+            moonshot = Moonshot:new("round1", dialog_font)
             moonshot:registerCallback(
                 "storyend",
                 function()
