@@ -1,13 +1,23 @@
-narrator:idle The terms of the Moonshot Battle are as follows -
-change:idle We know the terms already. Just get on with it.
-narrator:idle The battle is to take place in Terra Nullius, the neutral space between the Moon and the Earth.
-narrator:idle The Moon Goddess will grant the winning Champion a boon, while the losing Champion will sacrifice one thing that is most precious to them.
-narrator:idle As a celebration of the relationship between Moon and Earth, we wish both Lunarian and Terran representatives the best of luck.
-narrator:idle Do you agree to the terms?
-huiye:idle I do.
-change:idle Yeah, yeah, I agree to the terms, but let's not pretend that the Moonshot Battles aren't just a way for you Lunarians to demonstrate your superiority.
-change:idle Oh, look at us, we're all so beautiful and intelligent and immortal and Lunaria is so much more advanced than dirty, lowly Earth...
-narrator:idle As I recall, Earth's Champion, your wish is to become a Lunarian yourself and begin a new life on the Moon.
-change:idle Damn straight, I've packed my bags and I'm ready to move in.
-huiye:idle ...
-change:idle Look, I never said you weren't right.
+huiye So it begins...
+narrator The terms of the Moonshot Battle are as follows -
+change We know the terms already. Just get on with it.
+narrator The battle is to take place in Terra Nullius, the neutral space between the Moon and the Earth.
+narrator The Moon Goddess will grant the winning Champion a boon, while the losing Champion will sacrifice one thing that is most precious to them.
+narrator As a celebration of the relationship between Moon and Earth, we wish both Lunarian and Terran representatives the best of luck.
+narrator Do you agree to the terms?
+huiye I do.
+change Yeah, yeah, I agree to the terms, but let's not pretend that the Moonshot Battles aren't just a way for you Lunarians to demonstrate your superiority.
+change Oh, look at us, we're all so beautiful and intelligent and immortal and Lunaria is so much more advanced than dirty, lowly Earth...
+narrator As I recall, Earth's Champion, your wish is to become a Lunarian yourself and begin a new life on the Moon.
+change Damn straight, I've packed my bags and I'm ready to move in.
+huiye ...
+change Look, I never said you weren't right.
+narrator As someone who wishes to become part of our society, your attitude towards Lunarians is incredibly unnecessary and unbecoming -
+huiye Do you really have your bags packed?
+change Yep. Right here in my ship with me.
+change The only thing standing between me and my new life... is you.
+change Hey, let's make this easy. Just surrender, won't you?
+huiye No.
+change Looks like I'll have to make you submit, then.
+change I will crush anyone and anything that gets in my way!
+narrator Change-E takes the initiative with the first attack! The Moonshot Battle has commenced!

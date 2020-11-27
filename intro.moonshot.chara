@@ -1,4 +1,4 @@
-[change:idle]
+[change]
 name=Kira Miki
 sprite=res/images/KiraMikiSprite.png
 width=205
@@ -8,7 +8,7 @@ startingSpriteNum=1
 loop=false
 dialogPosition=right
 
-[huiye:idle]
+[huiye]
 name=Jill
 sprite=res/images/Jill.png
 width=205
@@ -18,7 +18,7 @@ startingSpriteNum=1
 loop=false
 dialogPosition=left
 
-[narrator:idle]
+[narrator]
 name=Narrator
 sprite=res/images/Narrator.png
 width=200
