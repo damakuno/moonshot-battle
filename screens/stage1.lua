@@ -84,10 +84,10 @@ local Stage1 = {
         if drawCountdown == true then
             love.graphics.print(countdown, countdown_font, 380, 250)
         end
-        grid:draw(10, 100, 50, 50)
-        player1:draw(10, 100, 50, 50)
-        grid2:draw(420, 100, 50, 50)
-        ai:draw(420, 100, 50, 50)
+        grid:draw(10, 140, 50, 50)
+        player1:draw(10, 140, 50, 50)
+        grid2:draw(420, 140, 50, 50)
+        ai:draw(420, 140, 50, 50)
         chara:draw(50, 10, "left")
         chara2:draw(430, 10, "right")
 
@@ -96,7 +96,7 @@ local Stage1 = {
 
         moonshotExpandingText:draw(0, 0, 0, 1, 1)
 
-        show_vars()
+        -- show_vars()
         if roundEnd == true then
             love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.6)
             love.graphics.rectangle("fill", 0, 0, 800, 600)

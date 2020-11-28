@@ -1,3 +1,13 @@
+[anime]
+name=Huiye
+sprite=res/images/huiye.png
+width=116
+height=99
+duration=1
+startingSpriteNum=1
+loop=false
+dialogPosition=left
+
 [stats]
 hp=100
 maxhp=100

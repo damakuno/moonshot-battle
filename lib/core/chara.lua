@@ -1,6 +1,7 @@
 local Chara = {}
 local LIP = require "lib.utils.LIP"
 local Timer = require "lib.utils.timer"
+local Anime = require "lib.utils.anime"
 
 function Chara:new(charaFile, object)
     object = object or {
@@ -17,16 +18,22 @@ function Chara:new(charaFile, object)
         specialActive = false,
         callback = {},
         callbackFlag = {},
-        dead = false
+        dead = false,
+        charaAnime = {},
+        actionFlags = {
+            damage = false,
+            heal = false,
+            freeze = false,
+            meter = false,
+            shield = false
+        }
     }
     object.state = LIP.load(object.charaFile)
-    -- print("\n")
-    -- for k, v in pairs(object.state) do
-    --     print(k)
-    --     for p, t in pairs(v) do
-    --         print("\t", p, t)
-    --     end
-    -- end
+
+    local config = object.state.anime
+    object.charaAnime = Anime:new(config.name, love.graphics.newImage(config.sprite), config.width, config.height,
+                            config.duration, config.startingSpriteNum, false, config.loop, false, config.dialogPosition)
+
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
         math.random()
@@ -51,8 +58,14 @@ function Chara:update(dt)
         if self.specialCurrentTime >= self.specialDuration then
             self.specialCurrentTime = 0
             -- self.specialDuration = 0
-            self.state.stats.meter = self.state.stats.meter - 3
+            if self.state.stats.meter % 2 == 0 then
+                self.actionFlags.meter = true
+            else
+                self.actionFlags.meter = false
+            end
+            self.state.stats.meter = self.state.stats.meter - 1
             if self.state.stats.meter < 1 then
+                self.actionFlags.meter = false
                 self.specialActive = false
                 self.state.stats.meter = 0
                 if self.callback["specialActivate"] ~= nil then
@@ -68,6 +81,8 @@ end
 
 function Chara:draw(x, y, align)
     local V2P = 3
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
     if align == "right" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
         love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * V2P, 20)
@@ -83,6 +98,9 @@ function Chara:draw(x, y, align)
         love.graphics.rectangle("fill", x, y + 40, self.state.stats.maxshield * V2P, 20)
         love.graphics.setColor(66 / 255, 147 / 255, 245 / 255, 1)
         love.graphics.rectangle("fill", x, y + 40, self:getShieldDuration() * V2P, 20)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+        self:setCharaColor()
+        self.charaAnime:draw(screenWidth - self.charaAnime.width - 10, y, 0, 1, 1)
     end
     if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
@@ -101,10 +119,25 @@ function Chara:draw(x, y, align)
         love.graphics.setColor(66 / 255, 75 / 255, 245 / 255, 1)
         love.graphics.rectangle("fill", x + offsetx, y + 40, self.state.stats.maxshield * V2P, 20)
         love.graphics.setColor(66 / 255, 147 / 255, 245 / 255, 1)
-        love.graphics.rectangle("fill", ((self.state.stats.maxshield - self:getShieldDuration()) * V2P) + x + offsetx, y + 40,
-            self:getShieldDuration() * V2P, 20)
+        love.graphics.rectangle("fill", ((self.state.stats.maxshield - self:getShieldDuration()) * V2P) + x + offsetx,
+            y + 40, self:getShieldDuration() * V2P, 20)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+        self:setCharaColor()
+        self.charaAnime:draw(10, y + 20, 0, 1, 1)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+end
+
+function Chara:setCharaColor()
+    if self.actionFlags.heal == true then
+        love.graphics.setColor(82 / 255, 255 / 255, 100 / 255, 1)
+    end
+    if self.actionFlags.meter == true then
+        love.graphics.setColor(255 / 255, 245 / 255, 133 / 255, 1)
+    end
+    if self.actionFlags.damage == true then
+        love.graphics.setColor(255 / 255, 100 / 255, 100 / 255, 0.6)
+    end
 end
 
 function Chara:setEnemy(enemy)
@@ -129,6 +162,15 @@ function Chara:takeDamage(damage)
     end
     self.state.stats.hp = self.state.stats.hp - damage
 
+    self.actionFlags.damage = true
+    local f = function(t)
+        self.actionFlags.damage = false
+        t.enabled = false
+    end
+    local timer = Timer:new(0.2, f)
+
+    table.insert(self.updates, timer)
+
     if self.state.stats.hp <= 0 then
         if self.enemy.dead == false then
             if self.callback["dead"] ~= nil then
@@ -149,6 +191,14 @@ function Chara:heal(points)
     else
         self.state.stats.hp = healto
     end
+    self.actionFlags.heal = true
+    local f = function(t)
+        self.actionFlags.heal = false
+        t.enabled = false
+    end
+    local timer = Timer:new(0.2, f)
+
+    table.insert(self.updates, timer)
 end
 
 function Chara:fillMeter(meter)
@@ -175,7 +225,7 @@ function Chara:specialActivate()
     if self.state.stats.meter >= self.state.stats.maxmeter then
         -- self.state.stats.meter = 0
         self.specialActive = true
-        self.specialDuration = 1 -- self.specialDuration + self.state.stats.special
+        self.specialDuration = 0.5 -- self.specialDuration + self.state.stats.special
         if self.callback["specialActivate"] ~= nil then
             if self.callbackFlag["specialActivate"] == false then
                 self.callback["specialActivate"](self)
@@ -218,7 +268,7 @@ function Chara:initCallbacks()
                         self.enemy:takeDamage(self.state.stats.damage * v * specialMultiplier)
                         t.enabled = false
                     end
-                    timer = Timer:new(1, f, true)
+                    timer = Timer:new(0.2, f, true)
                 end
                 -- Freeze
                 if k == 2 then
