@@ -44,7 +44,7 @@ local Stage1 = {
             -- TODO gameover screen
             gameover = true
             roundEnd = true
-            winner = "Player 1"
+            winner = "Player 2"
             ai:stop()
             player1:stop()
         end)
@@ -53,7 +53,7 @@ local Stage1 = {
             -- TODO show match results first
             -- nextScreen()
             roundEnd = true
-            winner = "Player 2"
+            winner = "Player 1"
             ai:stop()
             player1:stop()
         end)
@@ -98,7 +98,7 @@ local Stage1 = {
 
         show_vars()
         if roundEnd == true then
-            love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.5)
+            love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.6)
             love.graphics.rectangle("fill", 0, 0, 800, 600)
             love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
             love.graphics.print(winner .. " wins!!", countdown_font, 220, 250)
