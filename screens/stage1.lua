@@ -6,6 +6,8 @@ local Timer = require "lib.utils.timer"
 
 local Stage1 = {
     load = function()
+        roundEnd = false
+
         newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
@@ -36,16 +38,24 @@ local Stage1 = {
             expandingCircle2:start(true)
         end)
 
+
+
         chara:registerCallback("dead", function(p1, p2)
             -- TODO show match results first
             -- TODO gameover screen
+            roundEnd = true
+            ai:stop()
+            player1:stop()
             print("Player 1 dead")
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
             print("Player 2 dead")
             -- TODO show match results first
-            nextScreen()
+            -- nextScreen()
+            roundEnd = true
+            ai:stop()
+            player1:stop()
         end)
 
         countdown = 3
@@ -53,7 +63,7 @@ local Stage1 = {
 
         player1 = Player:new(grid, keybind)
         ai = AI:new(0.4, grid2)
-        local f = function(t)
+        local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then
                 t.enabled = false
@@ -61,10 +71,10 @@ local Stage1 = {
                 ai:start()
                 player1:start()
                 moonshotExpandingText:show()
-                moonshotExpandingText:start()            
+                moonshotExpandingText:start()
             end
         end
-        countdownTimer = Timer:new(1, f)
+        countdownTimer = Timer:new(1, fcd)
         love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
     end,
     draw = function()
@@ -75,10 +85,10 @@ local Stage1 = {
             love.graphics.print(countdown, countdown_font, 380, 250)
         end
 
-        grid:draw(10, 60, 50, 50)
-        player1:draw(10, 60, 50, 50)
-        grid2:draw(420, 60, 50, 50)
-        ai:draw(420, 60, 50, 50)
+        grid:draw(10, 100, 50, 50)
+        player1:draw(10, 100, 50, 50)
+        grid2:draw(420, 100, 50, 50)
+        ai:draw(420, 100, 50, 50)
         chara:draw(50, 10, "left")
         chara2:draw(430, 10, "right")
 
@@ -90,10 +100,17 @@ local Stage1 = {
         show_vars()
     end,
     update = function(dt)
-        updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer, moonshotExpandingText)
+        updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer,
+            moonshotExpandingText)
     end,
     keypressed = function(key)
-        player1:keypressed(key)
+        if roundEnd == true then
+            if key == keybind.SPACE then
+                nextScreen()
+            end
+        else
+            player1:keypressed(key)
+        end
     end
 }
 
@@ -110,15 +127,15 @@ function show_vars()
     love.graphics.print("hp: " .. chara2.state.stats.hp .. "/" .. chara2.state.stats.maxhp, font, 600, 490)
     love.graphics.print("meter: " .. chara.state.stats.meter .. "/" .. chara.state.stats.maxmeter, font, 100, 500)
     love.graphics.print("meter: " .. chara2.state.stats.meter .. "/" .. chara2.state.stats.maxmeter, font, 600, 500)
-    for i, res in ipairs(grid.matchResults) do
-        love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
-    end
+    -- for i, res in ipairs(grid.matchResults) do
+    --     love.graphics.print(moons[i].name .. ": " .. res, font, 100, 400 + (i * 10))
+    -- end
     for i, res in ipairs(grid.finalMatchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 100, 500 + (i * 10))
     end
-    for i, res in ipairs(grid2.matchResults) do
-        love.graphics.print(moons[i].name .. ": " .. res, font, 600, 400 + (i * 10))
-    end
+    -- for i, res in ipairs(grid2.matchResults) do
+    --     love.graphics.print(moons[i].name .. ": " .. res, font, 600, 400 + (i * 10))
+    -- end
     for i, res in ipairs(grid2.finalMatchResults) do
         love.graphics.print(moons[i].name .. ": " .. res, font, 600, 500 + (i * 10))
     end

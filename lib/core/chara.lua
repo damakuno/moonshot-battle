@@ -67,32 +67,42 @@ function Chara:update(dt)
 end
 
 function Chara:draw(x, y, align)
+    local V2P = 3
     if align == "right" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
-        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
+        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * V2P, 20)
         love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
-        love.graphics.rectangle("fill", x, y, self.state.stats.hp * 3, 20)
+        love.graphics.rectangle("fill", x, y, self.state.stats.hp * V2P, 20)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
-        love.graphics.print(self.state.stats.hp, font, x + (self.state.stats.maxhp * 3) - 24, y + 4)
+        love.graphics.print(self.state.stats.hp, font, x + (self.state.stats.maxhp * V2P) - 24, y + 4)
         love.graphics.setColor(255 / 255, 145 / 255, 0 / 255, 1)
-        love.graphics.rectangle("fill", x, y + 20, self.state.stats.maxmeter * 3, 20)
+        love.graphics.rectangle("fill", x, y + 20, self.state.stats.maxmeter * V2P, 20)
         love.graphics.setColor(225 / 255, 255 / 255, 105 / 255, 1)
-        love.graphics.rectangle("fill", x, y + 20, self.state.stats.meter * 3, 20)
+        love.graphics.rectangle("fill", x, y + 20, self.state.stats.meter * V2P, 20)
+        love.graphics.setColor(66 / 255, 75 / 255, 245 / 255, 1)
+        love.graphics.rectangle("fill", x, y + 40, self.state.stats.maxshield * V2P, 20)
+        love.graphics.setColor(66 / 255, 147 / 255, 245 / 255, 1)
+        love.graphics.rectangle("fill", x, y + 40, self:getShieldDuration() * V2P, 20)
     end
     if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
-        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * 3, 20)
+        love.graphics.rectangle("fill", x, y, self.state.stats.maxhp * V2P, 20)
         love.graphics.setColor(0 / 255, 255 / 255, 0 / 255, 1)
-        love.graphics.rectangle("fill", ((self.state.stats.maxhp - self.state.stats.hp) * 3) + x, y,
-            self.state.stats.hp * 3, 20)
+        love.graphics.rectangle("fill", ((self.state.stats.maxhp - self.state.stats.hp) * V2P) + x, y,
+            self.state.stats.hp * V2P, 20)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         love.graphics.print(self.state.stats.hp, font, x + 4, y + 4)
         love.graphics.setColor(255 / 255, 145 / 255, 0 / 255, 1)
-        local offsetx = self.state.stats.maxhp / 2 * 3
-        love.graphics.rectangle("fill", x + offsetx, y + 20, self.state.stats.maxmeter * 3, 20)
+        local offsetx = self.state.stats.maxhp / 2 * V2P
+        love.graphics.rectangle("fill", x + offsetx, y + 20, self.state.stats.maxmeter * V2P, 20)
         love.graphics.setColor(225 / 255, 255 / 255, 105 / 255, 1)
-        love.graphics.rectangle("fill", ((self.state.stats.maxmeter - self.state.stats.meter) * 3) + x + offsetx,
-            y + 20, self.state.stats.meter * 3, 20)
+        love.graphics.rectangle("fill", ((self.state.stats.maxmeter - self.state.stats.meter) * V2P) + x + offsetx,
+            y + 20, self.state.stats.meter * V2P, 20)
+        love.graphics.setColor(66 / 255, 75 / 255, 245 / 255, 1)
+        love.graphics.rectangle("fill", x + offsetx, y + 40, self.state.stats.maxshield * V2P, 20)
+        love.graphics.setColor(66 / 255, 147 / 255, 245 / 255, 1)
+        love.graphics.rectangle("fill", ((self.state.stats.maxshield - self:getShieldDuration()) * V2P) + x + offsetx, y + 40,
+            self:getShieldDuration() * V2P, 20)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
@@ -149,6 +159,15 @@ function Chara:fillMeter(meter)
         else
             self.state.stats.meter = meterto
         end
+    end
+end
+
+function Chara:fillShield(duration)
+    local shieldto = self.shieldDuration + duration
+    if shieldto > self.state.stats.maxshield then
+        self.shieldDuration = self.state.stats.maxshield
+    else
+        self.shieldDuration = shieldto
     end
 end
 
@@ -239,7 +258,8 @@ function Chara:initCallbacks()
                 end
                 -- shield
                 if k == 5 then
-                    self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v * specialMultiplier)
+                    -- self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v * specialMultiplier)
+                    self:fillShield(v * specialMultiplier)
                     if self.shielded == false then
                         self.shielded = true
                     end
