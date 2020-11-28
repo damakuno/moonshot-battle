@@ -10,6 +10,7 @@ globalUpdates = {}
 function love.load()
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
+    countdown_font = love.graphics.newFont("res/fonts/lucon.ttf", 40)
     keybind = Keybind:new()
     moons = {
         [1] = Anime:new("damage", love.graphics.newImage("res/images/moonDamage.png")),
@@ -26,7 +27,7 @@ function love.load()
         function(anime)
             anime:hide()
         end
-    )
+    )    
     
     expandingCircle2 = Anime:new("circle", love.graphics.newImage("res/images/expandingCircle.png"), 350, 350, 0.2, 1)
     expandingCircle2:hide()
@@ -36,6 +37,9 @@ function love.load()
             anime:hide()
         end
     )
+
+    moonshotExpandingText = Anime:new("moonshotText", love.graphics.newImage("res/images/moonshotExpandingText.png"), 800, 600, 0.5, 1)
+    moonshotExpandingText:hide()
 
     Screens[Flow.index].load()
 end

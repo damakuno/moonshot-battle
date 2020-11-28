@@ -70,7 +70,7 @@ end
 function Anime:draw(x, y, r, sx, sy, ox, oy, kx, ky)
     self.spriteNum = math.floor(self.currentTime / self.duration * #self.quads) + 1
     if self.visible == true then
-        love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r, sx, sy, ox, oy, kx, ky)
+        love.graphics.draw(self.spriteSheet, self.quads[self.spriteNum], x, y, r or 0, sx or 1, sy or 1, ox, oy, kx, ky)
     end
 end
 

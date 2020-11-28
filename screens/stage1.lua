@@ -2,18 +2,12 @@ local Grid = require "lib.core.grid"
 local AI = require "lib.core.ai"
 local Player = require "lib.core.player"
 local Chara = require "lib.core.chara"
+local Timer = require "lib.utils.timer"
 
 local Stage1 = {
     load = function()
-        newGrid = {
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0}
-        }
+        newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+                   {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
         chara2 = Chara:new("change.chara")
@@ -22,17 +16,9 @@ local Stage1 = {
 
         grid = Grid:new(newGrid, chara, moons)
         grid:fill()
-        player1 = Player:new(grid, keybind)
 
-        newGrid2 = {
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0}
-        }
+        newGrid2 = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
+                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         grid2 = Grid:new(newGrid2, chara2, moons)
         grid2:fill()
@@ -40,47 +26,54 @@ local Stage1 = {
         chara:initCallbacks()
         chara2:initCallbacks()
 
-        chara:registerCallback(
-            "specialActivate",
-            function()
-                expandingCircle:show()
-                expandingCircle:start(true)
-            end
-        )
-        
-        chara2:registerCallback(
-            "specialActivate",
-            function()
-                expandingCircle2:show()
-                expandingCircle2:start(true)
-            end
-        )
+        chara:registerCallback("specialActivate", function()
+            expandingCircle:show()
+            expandingCircle:start(true)
+        end)
 
+        chara2:registerCallback("specialActivate", function()
+            expandingCircle2:show()
+            expandingCircle2:start(true)
+        end)
+
+        chara:registerCallback("dead", function(p1, p2)
+            -- TODO show match results first
+            -- TODO gameover screen
+            print("Player 1 dead")
+        end)
+
+        chara2:registerCallback("dead", function(p2, p1)
+            print("Player 2 dead")
+            -- TODO show match results first
+            nextScreen()
+        end)
+
+        countdown = 3
+        drawCountdown = true
+
+        player1 = Player:new(grid, keybind)
         ai = AI:new(0.4, grid2)
-        ai:start()
-
-        chara:registerCallback(
-            "dead",
-            function(p1, p2)
-                -- TODO show match results first
-                -- TODO gameover screen
-                print("Player 1 dead")
+        local f = function(t)
+            countdown = countdown - 1
+            if countdown == 0 then
+                t.enabled = false
+                drawCountdown = false
+                ai:start()
+                player1:start()
+                moonshotExpandingText:show()
+                moonshotExpandingText:start()            
             end
-        )
-
-        chara2:registerCallback(
-            "dead",
-            function(p2, p1)
-                print("Player 2 dead")
-                -- TODO show match results first
-                nextScreen()
-            end
-        )
+        end
+        countdownTimer = Timer:new(1, f)
         love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
     end,
     draw = function()
         local screenWidth = love.graphics.getWidth()
         local screenHeight = love.graphics.getHeight()
+
+        if drawCountdown == true then
+            love.graphics.print(countdown, countdown_font, 380, 250)
+        end
 
         grid:draw(10, 60, 50, 50)
         player1:draw(10, 60, 50, 50)
@@ -91,9 +84,13 @@ local Stage1 = {
 
         expandingCircle:draw(10, 60, 0, 1, 1)
         expandingCircle2:draw(420, 60, 0, 1, 1)
+
+        moonshotExpandingText:draw(0, 0, 0, 1, 1)
+
+        show_vars()
     end,
     update = function(dt)
-        updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2)
+        updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer, moonshotExpandingText)
     end,
     keypressed = function(key)
         player1:keypressed(key)
@@ -126,6 +123,5 @@ function show_vars()
         love.graphics.print(moons[i].name .. ": " .. res, font, 600, 500 + (i * 10))
     end
 end
-
 
 return Stage1

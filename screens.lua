@@ -41,6 +41,9 @@ local Screens = {
                     moonshot:keyreleased(key, keybind)
                 end
             end
+            if key == keybind.S then
+                nextScreen()
+            end
         end
     },
     -- Round 1
