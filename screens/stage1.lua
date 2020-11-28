@@ -8,7 +8,7 @@ local Stage1 = {
     load = function()
         roundEnd = false
         gameover = false
-
+        winner = ""
         newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
@@ -44,6 +44,7 @@ local Stage1 = {
             -- TODO gameover screen
             gameover = true
             roundEnd = true
+            winner = "Player 1"
             ai:stop()
             player1:stop()
         end)
@@ -52,6 +53,7 @@ local Stage1 = {
             -- TODO show match results first
             -- nextScreen()
             roundEnd = true
+            winner = "Player 2"
             ai:stop()
             player1:stop()
         end)
@@ -82,7 +84,6 @@ local Stage1 = {
         if drawCountdown == true then
             love.graphics.print(countdown, countdown_font, 380, 250)
         end
-
         grid:draw(10, 100, 50, 50)
         player1:draw(10, 100, 50, 50)
         grid2:draw(420, 100, 50, 50)
@@ -96,6 +97,13 @@ local Stage1 = {
         moonshotExpandingText:draw(0, 0, 0, 1, 1)
 
         show_vars()
+        if roundEnd == true then
+            love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.5)
+            love.graphics.rectangle("fill", 0, 0, 800, 600)
+            love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+            love.graphics.print(winner .. " wins!!", countdown_font, 220, 250)
+        end
+
     end,
     update = function(dt)
         updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer,
