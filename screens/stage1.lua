@@ -7,6 +7,7 @@ local Timer = require "lib.utils.timer"
 local Stage1 = {
     load = function()
         roundEnd = false
+        gameover = false
 
         newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
@@ -38,19 +39,16 @@ local Stage1 = {
             expandingCircle2:start(true)
         end)
 
-
-
         chara:registerCallback("dead", function(p1, p2)
             -- TODO show match results first
             -- TODO gameover screen
+            gameover = true
             roundEnd = true
             ai:stop()
             player1:stop()
-            print("Player 1 dead")
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
-            print("Player 2 dead")
             -- TODO show match results first
             -- nextScreen()
             roundEnd = true
@@ -106,7 +104,9 @@ local Stage1 = {
     keypressed = function(key)
         if roundEnd == true then
             if key == keybind.SPACE then
-                nextScreen()
+                nextScreen({
+                    gameover = gameover
+                })
             end
         else
             player1:keypressed(key)

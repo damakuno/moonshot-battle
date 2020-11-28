@@ -12,18 +12,14 @@ local Flow = {
 
 local screenArgs = {}
 
-local Screens = {
-    -- Intro
-    [1] = {
+function loadStory(moonshotName)
+    local story = {
         load = function()
             storyend = false
-            moonshot = Moonshot:new("intro", dialog_font)
-            moonshot:registerCallback(
-                "storyend",
-                function()
-                    storyend = true
-                end
-            )
+            moonshot = Moonshot:new(moonshotName, dialog_font)
+            moonshot:registerCallback("storyend", function()
+                storyend = true
+            end)
             moonshot:start()
             love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
         end,
@@ -45,43 +41,31 @@ local Screens = {
                 nextScreen()
             end
         end
-    },
+    }
+
+    return story
+end
+
+local Screens = {
+    -- Intro
+    [1] = loadStory("intro"),
     -- Round 1
     [2] = Stage1,
     -- Act 1
-    [3] = {
-        load = function()
-            storyend = false
-            moonshot = Moonshot:new("round1", dialog_font)
-            moonshot:registerCallback(
-                "storyend",
-                function()
-                    storyend = true
-                end
-            )
-            moonshot:start()
-            love.graphics.setBackgroundColor(30 / 255, 30 / 255, 30 / 255)
-        end,
-        draw = function()
-            draws(moonshot)
-        end,
-        update = function(dt)
-            updates(dt, moonshot)
-        end,
-        keyreleased = function(key)
-            if key == keybind.SPACE then
-                if storyend == true then
-                    -- nextScreen()
-                else
-                    moonshot:keyreleased(key, keybind)
-                end
-            end
-        end
-    }
+    [3] = loadStory("round1"),
+    [99] = loadStory("gameover")
+    -- TODO add menu/reset at index [100]
 }
 
 function nextScreen(args)
     Flow.index = Flow.index + 1
+    if args ~= nil then
+        if args.gameover ~= nil then
+            if args.gameover == true then
+                Flow.index = 99
+            end
+        end
+    end
     screenArgs = args
     Screens[Flow.index].load()
 end
