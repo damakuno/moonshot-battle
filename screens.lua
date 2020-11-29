@@ -24,6 +24,8 @@ local screenArgs = {}
 function loadStory(moonshotName)
     local story = {
         load = function()
+            srcBGM1:setLooping(true)
+            srcBGM1:play()
             storyend = false
             moonshot = Moonshot:new(moonshotName, dialog_font)
             moonshot:registerCallback("storyend", function()
@@ -41,12 +43,14 @@ function loadStory(moonshotName)
         keyreleased = function(key)
             if key == keybind.SPACE then
                 if storyend == true then
+                    srcBGM1:stop()
                     nextScreen()
                 else
                     moonshot:keyreleased(key, keybind)
                 end
             end
             if key == keybind.S then
+                srcBGM1:stop()                
                 nextScreen()
             end
         end

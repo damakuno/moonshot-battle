@@ -41,6 +41,15 @@ function love.load()
     moonshotExpandingText = Anime:new("moonshotText", love.graphics.newImage("res/images/moonshotExpandingText.png"), 800, 600, 0.5, 1)
     moonshotExpandingText:hide()
 
+    srcBlip = love.audio.newSource("res/audio/blip.wav", "static")
+    srcBlip:setVolume(0.6)
+
+    srcBGM1 = love.audio.newSource("res/audio/enchantedtiki86.mp3", "stream")
+    srcBGM1:setVolume(0.6)
+
+    srcBGM2 = love.audio.newSource("res/audio/tleov.mp3", "stream")
+    srcBGM2:setVolume(0.6)
+
     Screens[Flow.index].load()
 end
 

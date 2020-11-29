@@ -3,28 +3,26 @@ local Dialog = {}
 local Anime = require "lib.utils.anime"
 
 function Dialog:new(anime, text, font, x, y, limit, align, ticks, increment, object)
-    object =
-        object or
-        {
-            text = text,
-            font = font,
-            x = x or 10,
-            y = y or 500,
-            limit = limit or 760,
-            align = align or "left",
-            ticks = ticks or 0.3,
-            increment = increment or 1,
-            enabled = false,
-            counter = 0,
-            str_index = 1,
-            display_text = "",
-            displaying = true,
-            charaAnime = anime,
-            selectedChara = "left",
-            charaBuffer = {},
-            callback = {},
-            callbackFlag = {}
-        }
+    object = object or {
+        text = text,
+        font = font,
+        x = x or 10,
+        y = y or 500,
+        limit = limit or 760,
+        align = align or "left",
+        ticks = ticks or 0.3,
+        increment = increment or 1,
+        enabled = false,
+        counter = 0,
+        str_index = 1,
+        display_text = "",
+        displaying = true,
+        charaAnime = anime,
+        selectedChara = "left",
+        charaBuffer = {},
+        callback = {},
+        callbackFlag = {}
+    }
 
     object.charaBuffer[anime.dialogPosition] = anime
     object.selectedChara = anime.dialogPosition
@@ -68,11 +66,8 @@ function Dialog:draw()
         if self.selectedChara == "right" then
             love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         end
-        self.charaBuffer["right"]:draw(
-            window_width - self.charaBuffer["right"].width - self.x,
-            self.y - self.charaBuffer["right"].height - 40,
-            0
-        )
+        self.charaBuffer["right"]:draw(window_width - self.charaBuffer["right"].width - self.x,
+            self.y - self.charaBuffer["right"].height - 40, 0)
     end
     local x_offset = 0
     local limit_offset = 0
@@ -90,6 +85,15 @@ function Dialog:updateDialogText()
         self.displaying = true
         self:addIncrement(self.increment)
         self.display_text = text:sub(1, self.str_index)
+        local pitches = {
+            [1] = 0.98,
+            [2] = 0.99,
+            [3] = 1.00,
+            [4] = 1.01,
+            [5] = 1.02
+        }
+        srcBlip:setPitch(pitches[randomInt(1, 5)])
+        srcBlip:play()
     end
 
     if self.str_index == #text then
@@ -126,7 +130,7 @@ function Dialog:setNewDialog(text, charaAnime)
             self.callbackFlag["textend"] = false
         end
         self.charaAnime:start()
-    -- print(self.selectedChara)
+        -- print(self.selectedChara)
     end
 end
 
@@ -146,6 +150,10 @@ end
 function Dialog:registerCallback(event, callback)
     self.callback[event] = callback
     self.callbackFlag[event] = false
+end
+
+function randomInt(start, length)
+    return math.floor(math.random() * length + start)
 end
 
 return Dialog

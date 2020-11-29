@@ -6,7 +6,11 @@ local Timer = require "lib.utils.timer"
 
 local Stage = {
     load = function()
+        bgmvolume = 0.6
+        srcBGM2:setLooping(true)
+        srcBGM2:play()
         roundEnd = false
+        musicEnd = false
         drawRoundEnd = false
         gameover = false
         winner = ""
@@ -45,6 +49,19 @@ local Stage = {
             roundEnd = true
         end
 
+        local f_volume = function(t)
+            bgmvolume = bgmvolume - 0.1
+            srcBGM2:setVolume(bgmvolume)
+            if t.accumulator >= 4 then
+                t.enabled = false
+                srcBGM2:stop()
+                musicEnd = true
+            end
+        end
+
+        volumeTimer = Timer:new(0.3, f_volume)
+        volumeTimer:stop()
+
         chara:registerCallback("dead", function(p1, p2)
             -- TODO show match results first
             gameover = true
@@ -52,7 +69,8 @@ local Stage = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(2, fcd_dead)
+            countdownTimer = Timer:new(3, fcd_dead)
+            volumeTimer:start()
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
@@ -61,7 +79,8 @@ local Stage = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(2, fcd_dead)
+            countdownTimer = Timer:new(3, fcd_dead)
+            volumeTimer:start()
         end)
 
         countdown = 3
@@ -115,10 +134,10 @@ local Stage = {
     end,
     update = function(dt)
         updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer,
-            moonshotExpandingText)
+            moonshotExpandingText, volumeTimer)
     end,
     keypressed = function(key)
-        if drawRoundEnd == true then
+        if musicEnd == true and roundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
                     FlowIndex = 2,
