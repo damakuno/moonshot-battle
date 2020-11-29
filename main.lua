@@ -8,6 +8,7 @@ Screens, Flow = require "screens"()
 globalUpdates = {}
 
 function love.load()
+    love.window.setTitle("Moonshot Battle")
     font = love.graphics.newFont("res/fonts/lucon.ttf", 12)
     dialog_font = love.graphics.newFont("res/fonts/lucon.ttf", 20)
     countdown_font = love.graphics.newFont("res/fonts/lucon.ttf", 40)
