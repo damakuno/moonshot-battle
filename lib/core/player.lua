@@ -97,14 +97,14 @@ function Player:keypressed(key)
                 self.cursor.selectMode = not self.cursor.selectMode
             end
 
-            if key == self.keybind.X then
+            if key == self.keybind.S then
                 self.grid.chara:specialActivate()
             end
         end
 
-        if key == self.keybind.R then
-            self.grid:reset()
-        end
+        -- if key == self.keybind.R then
+        --     self.grid:reset()
+        -- end
     end
 end
 

@@ -1,36 +1,41 @@
 local Grid = {}
 
 function Grid:new(grid, chara, tiles, object)
-    object =
-        object or
-        {
-            grid = grid,
-            chara = chara,
-            tiles = tiles,
-            freezeGrid = {},
-            spawnRates = {},
-            spawnRateCount = 0,
-            matchResults = {
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-                [4] = 0,
-                [5] = 0
-            },
-            finalMatchResults = {
-                [1] = 0,
-                [2] = 0,
-                [3] = 0,
-                [4] = 0,
-                [5] = 0
-            },
-            combo = 0,
-            currentTime = 0,
-            duration = 0.3,
-            enabled = false,
-            callback = {},
-            callbackFlag = {}
-        }
+    object = object or {
+        grid = grid,
+        chara = chara,
+        tiles = tiles,
+        freezeGrid = {},
+        spawnRates = {},
+        spawnRateCount = 0,
+        matchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        finalMatchResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        specialResults = {
+            [1] = 0,
+            [2] = 0,
+            [3] = 0,
+            [4] = 0,
+            [5] = 0
+        },
+        combo = 0,
+        currentTime = 0,
+        duration = 0.3,
+        enabled = false,
+        callback = {},
+        callbackFlag = {}
+    }
 
     math.randomseed(os.clock() * 100000000000)
     for i = 1, 3 do
@@ -76,9 +81,9 @@ function Grid:update(dt)
                         self.callbackFlag["clearedAllMatches"] = true
                     end
                 end
-                self.combo = 0                
+                self.combo = 0
 
-                local possibleMoves = self:checkPossibleMoves() 
+                local possibleMoves = self:checkPossibleMoves()
                 -- print("possible move count: "..#possibleMoves)
                 if #possibleMoves < 1 then
                     self:reset()
@@ -315,6 +320,9 @@ function Grid:clearMatches()
         if self.grid[y][x] ~= 0 then
             self.matchResults[self.grid[y][x]] = self.matchResults[self.grid[y][x]] + 1
             self.finalMatchResults[self.grid[y][x]] = self.finalMatchResults[self.grid[y][x]] + 1
+            if self.chara.specialActive == true then
+                self.specialResults[self.grid[y][x]] = self.specialResults[self.grid[y][x]] + 1
+            end
             self.grid[y][x] = 0
         end
     end
@@ -355,15 +363,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "up",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "up",
+                matches = m
+            })
         end
         grid[y][x], grid[y - 1][x] = grid[y - 1][x], grid[y][x]
     end
@@ -372,15 +377,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "down",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "down",
+                matches = m
+            })
         end
         grid[y][x], grid[y + 1][x] = grid[y + 1][x], grid[y][x]
     end
@@ -389,15 +391,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "left",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "left",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x - 1] = grid[y][x - 1], grid[y][x]
     end
@@ -406,15 +405,12 @@ function Grid:checkTileMoves(x, y, _grid)
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
         m = self:checkMatch(grid)
         if #m > 0 then
-            table.insert(
-                possibleSwaps,
-                {
-                    x = x,
-                    y = y,
-                    dir = "right",
-                    matches = m
-                }
-            )
+            table.insert(possibleSwaps, {
+                x = x,
+                y = y,
+                dir = "right",
+                matches = m
+            })
         end
         grid[y][x], grid[y][x + 1] = grid[y][x + 1], grid[y][x]
     end
@@ -429,13 +425,10 @@ function Grid:checkUnfrozenTiles()
     for i, row in ipairs(freezeGrid) do
         for j, col in ipairs(row) do
             if col == 0 then
-                table.insert(
-                    unfrozenTiles,
-                    {
-                        x = j,
-                        y = i
-                    }
-                )
+                table.insert(unfrozenTiles, {
+                    x = j,
+                    y = i
+                })
             end
         end
     end

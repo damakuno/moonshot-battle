@@ -52,7 +52,7 @@ local Stage1 = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(1, fcd_dead)
+            countdownTimer = Timer:new(2, fcd_dead)
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
@@ -61,7 +61,7 @@ local Stage1 = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(1, fcd_dead)
+            countdownTimer = Timer:new(2, fcd_dead)
         end)
 
         countdown = 3
@@ -103,11 +103,13 @@ local Stage1 = {
         moonshotExpandingText:draw(0, 0, 0, 1, 1)
 
         -- show_vars()
-        if roundEnd == true then
-            love.graphics.setColor(155 / 255, 155 / 255, 155 / 255, 0.6)
+        if drawRoundEnd == true then
+            love.graphics.setColor(85 / 255, 85 / 255, 85 / 255, 0.7)
             love.graphics.rectangle("fill", 0, 0, 800, 600)
             love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
-            love.graphics.print(winner .. " wins!!", countdown_font, 220, 250)
+            love.graphics.print(winner .. " wins!!", countdown_font, 220, 50)
+            chara:drawResults(50, 10)
+            chara2:drawResults(430, 10)
         end
 
     end,
@@ -119,6 +121,7 @@ local Stage1 = {
         if drawRoundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
+                    FlowIndex = 2,
                     gameover = gameover
                 })
             end

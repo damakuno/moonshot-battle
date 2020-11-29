@@ -26,7 +26,8 @@ function Chara:new(charaFile, object)
             freeze = false,
             meter = false,
             shield = false
-        }
+        },
+        counter = 0
     }
     object.state = LIP.load(object.charaFile)
 
@@ -45,6 +46,10 @@ function Chara:new(charaFile, object)
 end
 
 function Chara:update(dt)
+    self.counter = self.counter + dt
+    if self.counter >= 10 then
+        self.counter = self.counter - 10
+    end
     if self.shielded == true then
         self.shieldCurrentTime = self.shieldCurrentTime + dt
         if self.shieldCurrentTime >= self.shieldDuration then
@@ -101,6 +106,14 @@ function Chara:draw(x, y, align)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         self:setCharaColor()
         self.charaAnime:draw(screenWidth - self.charaAnime.width - 10, y + 120 - self.charaAnime.height, 0, 1, 1)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+
+        if self.state.stats.meter == self.state.stats.maxmeter then
+            if math.ceil(self.counter * 2) % 2 == 0 then
+                love.graphics.setColor(255 / 255, 245 / 255, 133 / 255, 1)
+            end
+            love.graphics.printf("Press S to activate Special!", dialog_font, x + 120, y + 65, 200)
+        end
     end
     if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
@@ -123,8 +136,34 @@ function Chara:draw(x, y, align)
             y + 40, self:getShieldDuration() * V2P, 20)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         self:setCharaColor()
-        self.charaAnime:draw(10, y  + 120 - self.charaAnime.height, 0, 1, 1)
+        self.charaAnime:draw(10, y + 120 - self.charaAnime.height, 0, 1, 1)
+        love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+
+        if self.state.stats.meter == self.state.stats.maxmeter then
+            if math.ceil(self.counter * 2) % 2 == 0 then
+                love.graphics.setColor(255 / 255, 245 / 255, 133 / 255, 1)
+            end
+            love.graphics.printf("Press S to activate Special!", dialog_font, x + offsetx - 60, y + 65, 200)
+        end
     end
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
+
+end
+
+function Chara:drawResults(x, y)
+    love.graphics.print("Results:", countdown_font, x + 20, y + 120)
+    self:drawResult(1, x - 20, y + 200)
+    self:drawResult(2, x - 20, y + 260)
+    self:drawResult(3, x - 20, y + 320)
+    self:drawResult(4, x - 20, y + 380)
+    self:drawResult(5, x - 20, y + 440)
+end
+
+function Chara:drawResult(moonNum, x, y)
+    moons[moonNum]:draw(x, y, 0, 55 / moons[moonNum].width, 55 / moons[moonNum].height)
+    love.graphics.print(self.grid.finalMatchResults[moonNum], countdown_font, x + 120, y + 10)
+    love.graphics.setColor(255 / 255, 245 / 255, 133 / 255, 1)
+    love.graphics.print(self.grid.specialResults[moonNum], countdown_font, x + 220, y + 10)
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
 
