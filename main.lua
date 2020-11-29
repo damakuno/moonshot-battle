@@ -104,12 +104,12 @@ function love.keyreleased(key)
     if Screens[Flow.index].keyreleased ~= nil then
         Screens[Flow.index].keyreleased(key)
     end
-    if key == keybind.X then
-        srcBGM1:stop()
-        srcBGM2:stop()
-        srcBGM3:stop()
-        nextScreen()
-    end
+    -- if key == keybind.X then
+    --     srcBGM1:stop()
+    --     srcBGM2:stop()
+    --     srcBGM3:stop()
+    --     nextScreen()
+    -- end
 end
 
 function love.keypressed(key)
