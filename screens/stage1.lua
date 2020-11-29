@@ -6,7 +6,7 @@ local Timer = require "lib.utils.timer"
 
 local Stage = {
     load = function()
-        bgmvolume = 0.6
+        bgmvolume = masterVolume * musicVolume
         srcBGM2:setLooping(true)
         srcBGM2:play()
         roundEnd = false
@@ -50,16 +50,16 @@ local Stage = {
         end
 
         local f_volume = function(t)
-            bgmvolume = bgmvolume - 0.1
+            bgmvolume = bgmvolume - (bgmvolume * 0.2)
             srcBGM2:setVolume(bgmvolume)
-            if t.accumulator >= 4 then
+            if t.accumulator >= 8 then
                 t.enabled = false
                 srcBGM2:stop()
                 musicEnd = true
             end
         end
 
-        volumeTimer = Timer:new(0.3, f_volume)
+        volumeTimer = Timer:new(0.1, f_volume)
         volumeTimer:stop()
 
         chara:registerCallback("dead", function(p1, p2)
@@ -116,8 +116,8 @@ local Stage = {
         chara:draw(50, 10, "left")
         chara2:draw(430, 10, "right")
 
-        expandingCircle:draw(10, 60, 0, 1, 1)
-        expandingCircle2:draw(420, 60, 0, 1, 1)
+        expandingCircle:draw(10, 140, 0, 1, 1)
+        expandingCircle2:draw(420, 140, 0, 1, 1)
 
         moonshotExpandingText:draw(0, 0, 0, 1, 1)
 

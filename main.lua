@@ -22,35 +22,67 @@ function love.load()
 
     expandingCircle = Anime:new("circle", love.graphics.newImage("res/images/expandingCircle.png"), 350, 350, 0.2, 1)
     expandingCircle:hide()
-    expandingCircle:registerCallback(
-        "animationEnd",
-        function(anime)
-            anime:hide()
-        end
-    )    
-    
+    expandingCircle:registerCallback("animationEnd", function(anime)
+        anime:hide()
+    end)
+
     expandingCircle2 = Anime:new("circle", love.graphics.newImage("res/images/expandingCircle.png"), 350, 350, 0.2, 1)
     expandingCircle2:hide()
-    expandingCircle2:registerCallback(
-        "animationEnd",
-        function(anime)
-            anime:hide()
-        end
-    )
+    expandingCircle2:registerCallback("animationEnd", function(anime)
+        anime:hide()
+    end)
 
-    moonshotExpandingText = Anime:new("moonshotText", love.graphics.newImage("res/images/moonshotExpandingText.png"), 800, 600, 0.5, 1)
+    moonshotExpandingText = Anime:new("moonshotText", love.graphics.newImage("res/images/moonshotExpandingText.png"),
+                                800, 600, 0.5, 1)
     moonshotExpandingText:hide()
 
-    srcBlip = love.audio.newSource("res/audio/blip.wav", "static")
-    srcBlip:setVolume(0.6)
+    masterVolume = 0.5
+    sfxVolume = 0.3
+    musicVolume = 0.1
+    voiceVolume = 1.0
+    -- SFX
+    srcBlip = love.audio.newSource("res/audio/blip2.wav", "static")
+    srcBlip:setVolume(masterVolume * sfxVolume)
 
+    srcDamage = love.audio.newSource("res/audio/damage.wav", "static")
+    srcDamage:setVolume(masterVolume * sfxVolume)
+
+    srcHeal = love.audio.newSource("res/audio/heal.wav", "static")
+    srcHeal:setVolume(masterVolume * sfxVolume * 0.3)
+
+    srcMeter = love.audio.newSource("res/audio/meter.wav", "static")
+    srcMeter:setVolume(masterVolume * sfxVolume * 0.3)
+
+    srcSpecialActivate = love.audio.newSource("res/audio/specialActivate.wav", "static")
+    srcSpecialActivate:setVolume(masterVolume * sfxVolume * 0.5)
+    sfx = {
+        sources = {
+            blip = srcBlip,
+            damage = srcDamage,
+            heal = srcHeal,
+            meter = srcMeter,
+            specialActivate = srcSpecialActivate,
+        },
+        applySettings = function()
+            srcBlip:setVolume(masterVolume * sfxVolume)
+            srcDamage:setVolume(masterVolume * sfxVolume)
+            srcHeal:setVolume(masterVolume * sfxVolume * 0.5)
+            srcMeter:setVolume(masterVolume * sfxVolume)
+            srcSpecialActivate:setVolume(masterVolume * sfxVolume)
+        end
+    }
+    -- BGM
     srcBGM1 = love.audio.newSource("res/audio/enchantedtiki86.mp3", "stream")
-    srcBGM1:setVolume(0.6)
+    srcBGM1:setVolume(masterVolume * musicVolume)
 
     srcBGM2 = love.audio.newSource("res/audio/tleov.mp3", "stream")
-    srcBGM2:setVolume(0.6)
+    srcBGM2:setVolume(masterVolume * musicVolume)
 
     Screens[Flow.index].load()
+end
+
+function randomInt(start, length)
+    return math.floor(math.random() * length + start)
 end
 
 function love.draw()

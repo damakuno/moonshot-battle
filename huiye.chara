@@ -8,6 +8,17 @@ startingSpriteNum=1
 loop=false
 dialogPosition=left
 
+[sfx]
+attack1=res/audio/huiye/attack1.wav
+attack2=res/audio/huiye/attack2.wav
+attack3=res/audio/huiye/attack3.wav
+damaged1=res/audio/huiye/damaged1.wav
+damaged2=res/audio/huiye/damaged2.wav
+damaged3=res/audio/huiye/damaged3.wav
+freeze=res/audio/huiye/freeze.wav
+heal=res/audio/huiye/heal.wav
+bubbles=res/audio/huiye/bubbles.wav
+
 [stats]
 hp=100
 maxhp=100

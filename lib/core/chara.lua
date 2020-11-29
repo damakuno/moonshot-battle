@@ -27,6 +27,7 @@ function Chara:new(charaFile, object)
             meter = false,
             shield = false
         },
+        sfx = {},
         counter = 0
     }
     object.state = LIP.load(object.charaFile)
@@ -199,6 +200,13 @@ function Chara:takeDamage(damage)
             self.shieldDuration = self.shieldDuration - damage
         end
     end
+
+    sfx.sources.damage:play()
+
+    if self.sfx.srcDamages ~= nil then
+        self.sfx.srcDamages[randomInt(1, 3)]:play()
+    end
+
     local hpto = self.state.stats.hp - damage
     if hpto < 0 then
         hpto = 0
@@ -234,6 +242,9 @@ function Chara:heal(points)
     else
         self.state.stats.hp = healto
     end
+
+    sfx.sources.heal:play()
+
     self.actionFlags.heal = true
     local f = function(t)
         self.actionFlags.heal = false
@@ -253,6 +264,9 @@ function Chara:fillMeter(meter)
             self.state.stats.meter = meterto
         end
     end
+    
+    sfx.sources.meter:play()
+
 end
 
 function Chara:fillShield(duration)
@@ -275,6 +289,7 @@ function Chara:specialActivate()
                 self.callbackFlag["specialActivate"] = true
             end
         end
+        sfx.sources.specialActivate:play()
     end
 end
 
@@ -283,6 +298,36 @@ end
 -- end
 
 function Chara:initCallbacks()
+    if self.state.sfx ~= nil then
+
+        self.sfx.srcAttacks = {
+            [1] = love.audio.newSource(self.state.sfx.attack1, "static"),
+            [2] = love.audio.newSource(self.state.sfx.attack2, "static"),
+            [3] = love.audio.newSource(self.state.sfx.attack3, "static")
+        }
+        self.sfx.srcAttacks[1]:setVolume(masterVolume * voiceVolume)
+        self.sfx.srcAttacks[2]:setVolume(masterVolume * voiceVolume)
+        self.sfx.srcAttacks[3]:setVolume(masterVolume * voiceVolume)
+
+        self.sfx.srcDamages = {
+            [1] = love.audio.newSource(self.state.sfx.damaged1, "static"),
+            [2] = love.audio.newSource(self.state.sfx.damaged2, "static"),
+            [3] = love.audio.newSource(self.state.sfx.damaged3, "static")
+        }
+        self.sfx.srcDamages[1]:setVolume(masterVolume * voiceVolume)
+        self.sfx.srcDamages[2]:setVolume(masterVolume * voiceVolume)    
+        self.sfx.srcDamages[3]:setVolume(masterVolume * voiceVolume)
+
+        self.sfx.srcFreeze = love.audio.newSource(self.state.sfx.freeze, "static")
+        self.sfx.srcHeal = love.audio.newSource(self.state.sfx.heal, "static")
+
+        self.sfx.srcFreeze:setVolume(masterVolume * voiceVolume)
+        self.sfx.srcHeal:setVolume(masterVolume * voiceVolume)
+
+        self.sfx.srcBubbles = love.audio.newSource(self.state.sfx.bubbles, "static")
+        self.sfx.srcBubbles:setVolume(masterVolume * voiceVolume)
+    end
+
     if self.callback["dead"] ~= nil then
         self.callbackFlag["dead"] = false
     end
@@ -307,6 +352,9 @@ function Chara:initCallbacks()
                 local timer = Timer:new(1, f, true)
                 -- Damage
                 if k == 1 then
+                    if self.sfx.srcAttacks ~= nil then
+                        self.sfx.srcAttacks[randomInt(1, 3)]:play()
+                    end
                     f = function(t)
                         self.enemy:takeDamage(self.state.stats.damage * v * specialMultiplier)
                         t.enabled = false
@@ -316,6 +364,9 @@ function Chara:initCallbacks()
                 -- Freeze
                 if k == 2 then
                     -- TODO freeze function
+                    if self.sfx.srcFreeze ~= nil then
+                        self.sfx.srcFreeze:play()                    
+                    end
                     local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v * specialMultiplier)
                     for k, tile in ipairs(tilesToFreeze) do
                         -- print("freeze " .. self.enemy.charaFile .. " for x: " .. tile.x .. " y: " .. tile.y)
@@ -335,6 +386,9 @@ function Chara:initCallbacks()
                 end
                 -- Heal
                 if k == 3 then
+                    if self.sfx.srcHeal ~= nil then
+                        self.sfx.srcHeal:play()
+                    end
                     f = function(t)
                         self:heal(self.state.stats.heal * v * specialMultiplier)
                         t.enabled = false
@@ -351,6 +405,9 @@ function Chara:initCallbacks()
                 end
                 -- shield
                 if k == 5 then
+                    if self.sfx.srcBubbles ~= nil then
+                        self.sfx.srcBubbles:play()
+                    end
                     -- self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v * specialMultiplier)
                     self:fillShield(v * self.state.stats.shield * specialMultiplier)
                     if self.shielded == false then

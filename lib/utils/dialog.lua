@@ -85,15 +85,21 @@ function Dialog:updateDialogText()
         self.displaying = true
         self:addIncrement(self.increment)
         self.display_text = text:sub(1, self.str_index)
+      
         local pitches = {
-            [1] = 0.98,
-            [2] = 0.99,
+            [1] = 0.96,
+            [2] = 0.98,
             [3] = 1.00,
-            [4] = 1.01,
-            [5] = 1.02
+            [4] = 1.02,
+            [5] = 1.04
         }
         srcBlip:setPitch(pitches[randomInt(1, 5)])
+        srcBlip:setVolume(0.1)
         srcBlip:play()
+
+        if string.sub(self.display_text, -1) == " " then
+            srcBlip:stop()
+        end
     end
 
     if self.str_index == #text then

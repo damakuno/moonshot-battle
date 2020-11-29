@@ -46,7 +46,7 @@ function Moonshot:new(path, font, object)
 
     local story = object.story[object.story_index]
     local anime = object.charaAnimes[story.alias]
-    object.dialog = Dialog:new(anime, story.text, object.font, 10, 500, 760, "left", 0.03)
+    object.dialog = Dialog:new(anime, story.text, object.font, 10, 500, 760, "left", 0.04)
 
     setmetatable(object, self)
     self.__index = self
@@ -126,7 +126,7 @@ function Moonshot:setNewStory(path)
 
     local story = self.story[self.story_index]
     local anime = self.charaAnimes[story.alias]
-    self.dialog = Dialog:new(anime, story.text, self.font, 10, 500, 760, "left", 0.03)
+    self.dialog = Dialog:new(anime, story.text, self.font, 10, 500, 760, "left", 0.04)
 end
 
 function Moonshot:registerCallback(event, callback)
