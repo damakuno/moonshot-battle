@@ -14,7 +14,7 @@ local Stage = {
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
-        chara2 = Chara:new("bunred.chara")
+        chara2 = Chara:new("bunlightblue.chara")
         chara:setEnemy(chara2)
         chara2:setEnemy(chara)
 

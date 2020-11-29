@@ -104,10 +104,10 @@ local Screens = {
     [8] = Stage4,
     [9] = loadStory("round4"),
     [10] = Stage5,
-    [11] = load("round5"),
+    [11] = loadStory("round5"),
     [12] = Stage6,
-    [13] = load("ending"),
-    [14] = load("endscreen"),
+    [13] = loadStory("ending"),
+    [14] = loadStory("endscreen"),
     [99] = loadStory("gameover"),
     -- TODO add menu/reset at index [100]
     [100] = resetMenu

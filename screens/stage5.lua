@@ -121,7 +121,7 @@ local Stage = {
         if drawRoundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
-                    FlowIndex = 2,
+                    FlowIndex = 10,
                     gameover = gameover
                 })
             end

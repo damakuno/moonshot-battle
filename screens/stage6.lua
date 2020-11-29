@@ -14,7 +14,7 @@ local Stage = {
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
-        chara2 = Chara:new("bunred.chara")
+        chara2 = Chara:new("change.chara")
         chara:setEnemy(chara2)
         chara2:setEnemy(chara)
 
@@ -68,7 +68,7 @@ local Stage = {
         drawCountdown = true
 
         player1 = Player:new(grid, keybind)
-        ai = AI:new(0.4, grid2)
+        ai = AI:new(0.36, grid2)
         local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then
@@ -121,7 +121,7 @@ local Stage = {
         if drawRoundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
-                    FlowIndex = 2,
+                    FlowIndex = 12,
                     gameover = gameover
                 })
             end

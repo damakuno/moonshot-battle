@@ -17,7 +17,7 @@ damage=2
 heal=1
 freeze=3
 special=2
-shield=1
+shield=1.5
 maxshield=50
 
 [spawnTable]

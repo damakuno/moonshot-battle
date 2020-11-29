@@ -14,7 +14,7 @@ local Stage = {
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
-        chara2 = Chara:new("bunred.chara")
+        chara2 = Chara:new("bungreen.chara")
         chara:setEnemy(chara2)
         chara2:setEnemy(chara)
 
@@ -121,7 +121,7 @@ local Stage = {
         if drawRoundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
-                    FlowIndex = 2,
+                    FlowIndex = 6,
                     gameover = gameover
                 })
             end

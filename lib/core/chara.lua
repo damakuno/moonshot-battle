@@ -199,7 +199,11 @@ function Chara:takeDamage(damage)
             self.shieldDuration = self.shieldDuration - damage
         end
     end
-    self.state.stats.hp = self.state.stats.hp - damage
+    local hpto = self.state.stats.hp - damage
+    if hpto < 0 then
+        hpto = 0
+    end
+    self.state.stats.hp = hpto
 
     self.actionFlags.damage = true
     local f = function(t)
@@ -348,7 +352,7 @@ function Chara:initCallbacks()
                 -- shield
                 if k == 5 then
                     -- self.shieldDuration = self.shieldDuration + (self.state.stats.shield * v * specialMultiplier)
-                    self:fillShield(v * specialMultiplier)
+                    self:fillShield(v * self.state.stats.shield * specialMultiplier)
                     if self.shielded == false then
                         self.shielded = true
                     end
