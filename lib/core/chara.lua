@@ -265,7 +265,6 @@ function Chara:fillMeter(meter)
         end
     end
     
-    sfx.sources.meter:play()
 
 end
 
@@ -350,6 +349,7 @@ function Chara:initCallbacks()
                 local f = function()
                 end
                 local timer = Timer:new(1, f, true)
+                sfx.sources.meter:play()
                 -- Damage
                 if k == 1 then
                     if self.sfx.srcAttacks ~= nil then

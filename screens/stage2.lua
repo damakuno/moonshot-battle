@@ -150,7 +150,7 @@ local Stage = {
         if musicEnd == true and roundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
-                    FlowIndex = 2,
+                    FlowIndex = 4,
                     gameover = gameover
                 })
             end
