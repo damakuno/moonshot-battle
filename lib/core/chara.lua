@@ -115,6 +115,8 @@ function Chara:draw(x, y, align)
             end
             love.graphics.printf("Press S to activate Special!", dialog_font, x + 120, y + 65, 200)
         end
+
+        love.graphics.print("Player 2", dialog_font, x, y + 500)
     end
     if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
@@ -146,6 +148,8 @@ function Chara:draw(x, y, align)
             end
             love.graphics.printf("Press S to activate Special!", dialog_font, x + offsetx - 60, y + 65, 200)
         end
+
+        love.graphics.print("Player 1", dialog_font, x + 200, y + 500)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 
@@ -264,7 +268,6 @@ function Chara:fillMeter(meter)
             self.state.stats.meter = meterto
         end
     end
-    
 
 end
 
@@ -314,7 +317,7 @@ function Chara:initCallbacks()
             [3] = love.audio.newSource(self.state.sfx.damaged3, "static")
         }
         self.sfx.srcDamages[1]:setVolume(masterVolume * voiceVolume)
-        self.sfx.srcDamages[2]:setVolume(masterVolume * voiceVolume)    
+        self.sfx.srcDamages[2]:setVolume(masterVolume * voiceVolume)
         self.sfx.srcDamages[3]:setVolume(masterVolume * voiceVolume)
 
         self.sfx.srcFreeze = love.audio.newSource(self.state.sfx.freeze, "static")
@@ -365,7 +368,7 @@ function Chara:initCallbacks()
                 if k == 2 then
                     -- TODO freeze function
                     if self.sfx.srcFreeze ~= nil then
-                        self.sfx.srcFreeze:play()                    
+                        self.sfx.srcFreeze:play()
                     end
                     local tilesToFreeze = self.enemy.grid:getUnfrozenTiles(v * specialMultiplier)
                     for k, tile in ipairs(tilesToFreeze) do
