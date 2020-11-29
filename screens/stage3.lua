@@ -19,7 +19,7 @@ local Stage = {
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
-        chara2 = Chara:new("bungreen.chara")
+        chara2 = Chara:new("bunyellow.chara")
         chara:setEnemy(chara2)
         chara2:setEnemy(chara)
 
