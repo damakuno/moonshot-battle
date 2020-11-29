@@ -5,6 +5,10 @@ local Dialog = require "lib.utils.dialog"
 local Moonshot = require "lib.core.moonshot"
 
 local Stage1 = require "screens.stage1"
+local Stage2 = require "screens.stage2"
+local Stage3 = require "screens.stage3"
+local Stage4 = require "screens.stage4"
+local Stage5 = require "screens.stage5"
 
 local Flow = {
     index = 1
@@ -68,6 +72,24 @@ resetMenu.keyreleased = function(key)
     end
 end
 
+local endScreen = loadStory("endScreen")
+endScreen.keyreleased = function(key)
+    if key == keybind.SPACE then
+        moonshot:keyreleased(key, keybind)
+    end
+    if key == keybind.X then
+        love.event.quit()
+    end
+    if key == keybind.R then
+        Flow.index = PrevStageIndex
+        Screens[Flow.index].load()
+    end
+    if key == keybind.S then
+        Flow.index = 1
+        Screens[Flow.index].load()
+    end
+end
+
 local Screens = {
     -- Intro
     [1] = loadStory("intro"),
@@ -75,6 +97,17 @@ local Screens = {
     [2] = Stage1,
     -- Act 1
     [3] = loadStory("round1"),
+    [4] = Stage2,
+    [5] = loadStory("round2"),
+    [6] = Stage3,
+    [7] = loadStory("round3"),
+    [8] = Stage4,
+    [9] = loadStory("round4"),
+    [10] = Stage5,
+    [11] = load("round5"),
+    [12] = Stage6,
+    [13] = load("ending"),
+    [14] = load("endscreen"),
     [99] = loadStory("gameover"),
     -- TODO add menu/reset at index [100]
     [100] = resetMenu
