@@ -8,6 +8,7 @@ local Stage = {
     load = function()
         bgmvolume = masterVolume * musicVolume
         srcBGM2:setLooping(true)
+        srcBGM2:setVolume(bgmvolume)
         srcBGM2:play()
         roundEnd = false
         musicEnd = false
@@ -50,7 +51,7 @@ local Stage = {
         end
 
         local f_volume = function(t)
-            bgmvolume = bgmvolume - (bgmvolume * 0.2)
+            bgmvolume = bgmvolume - (bgmvolume * 0.1)
             srcBGM2:setVolume(bgmvolume)
             if t.accumulator >= 8 then
                 t.enabled = false
@@ -131,6 +132,9 @@ local Stage = {
             chara2:drawResults(430, 10)
         end
 
+        if roundEnd == true and musicEnd == true then
+            love.graphics.print("Press Space to continue...", countdown_font, 140, 550)
+        end
     end,
     update = function(dt)
         updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer,
@@ -138,14 +142,18 @@ local Stage = {
     end,
     keypressed = function(key)
         if musicEnd == true and roundEnd == true then
+        else
+            player1:keypressed(key)
+        end
+    end,
+    keyreleased = function(key)
+        if musicEnd == true and roundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
                     FlowIndex = 2,
                     gameover = gameover
                 })
             end
-        else
-            player1:keypressed(key)
         end
     end
 }

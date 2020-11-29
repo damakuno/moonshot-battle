@@ -6,7 +6,12 @@ local Timer = require "lib.utils.timer"
 
 local Stage = {
     load = function()
+        bgmvolume = masterVolume * musicVolume
+        srcBGM3:setVolume(bgmvolume)
+        srcBGM3:setLooping(true)
+        srcBGM3:play()
         roundEnd = false
+        musicEnd = false
         drawRoundEnd = false
         gameover = false
         winner = ""
@@ -45,6 +50,19 @@ local Stage = {
             roundEnd = true
         end
 
+        local f_volume = function(t)
+            bgmvolume = bgmvolume - (bgmvolume * 0.2)
+            srcBGM3:setVolume(bgmvolume)
+            if t.accumulator >= 8 then
+                t.enabled = false
+                srcBGM3:stop()
+                musicEnd = true
+            end
+        end
+
+        volumeTimer = Timer:new(0.1, f_volume)
+        volumeTimer:stop()
+
         chara:registerCallback("dead", function(p1, p2)
             -- TODO show match results first
             gameover = true
@@ -52,7 +70,8 @@ local Stage = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(2, fcd_dead)
+            countdownTimer = Timer:new(3, fcd_dead)
+            volumeTimer:start()
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
@@ -61,14 +80,15 @@ local Stage = {
             ai:stop()
             player1:stop()
             drawRoundEnd = true
-            countdownTimer = Timer:new(2, fcd_dead)
+            countdownTimer = Timer:new(3, fcd_dead)
+            volumeTimer:start()
         end)
 
         countdown = 3
         drawCountdown = true
 
         player1 = Player:new(grid, keybind)
-        ai = AI:new(0.36, grid2)
+        ai = AI:new(0.35, grid2)
         local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then
@@ -97,8 +117,8 @@ local Stage = {
         chara:draw(50, 10, "left")
         chara2:draw(430, 10, "right")
 
-        expandingCircle:draw(10, 60, 0, 1, 1)
-        expandingCircle2:draw(420, 60, 0, 1, 1)
+        expandingCircle:draw(10, 140, 0, 1, 1)
+        expandingCircle2:draw(420, 140, 0, 1, 1)
 
         moonshotExpandingText:draw(0, 0, 0, 1, 1)
 
@@ -112,21 +132,28 @@ local Stage = {
             chara2:drawResults(430, 10)
         end
 
+        if roundEnd == true and musicEnd == true then
+            love.graphics.print("Press Space to continue...", countdown_font, 140, 550)
+        end
     end,
     update = function(dt)
         updates(dt, grid, grid2, ai, chara, chara2, expandingCircle, expandingCircle2, countdownTimer,
-            moonshotExpandingText)
+            moonshotExpandingText, volumeTimer)
     end,
     keypressed = function(key)
-        if drawRoundEnd == true then
+        if musicEnd == true and roundEnd == true then
+        else
+            player1:keypressed(key)
+        end
+    end,
+    keyreleased = function(key)
+        if musicEnd == true and roundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
-                    FlowIndex = 12,
+                    FlowIndex = 2,
                     gameover = gameover
                 })
             end
-        else
-            player1:keypressed(key)
         end
     end
 }
@@ -159,3 +186,8 @@ function show_vars()
 end
 
 return Stage
+
+
+
+
+

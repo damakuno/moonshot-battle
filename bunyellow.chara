@@ -23,6 +23,6 @@ maxshield=50
 [spawnTable]
 damage=20
 freeze=20
-heal=10
-meter=40
-shield=10
+heal=15
+meter=30
+shield=15

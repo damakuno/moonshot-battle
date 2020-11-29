@@ -100,7 +100,7 @@ dialogPosition=right
 
 [both]
 name=Both
-sprite=res/images/change.png
+sprite=res/images/huiye.png
 width=100
 height=117
 duration=1

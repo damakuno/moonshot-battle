@@ -9,6 +9,7 @@ local Stage2 = require "screens.stage2"
 local Stage3 = require "screens.stage3"
 local Stage4 = require "screens.stage4"
 local Stage5 = require "screens.stage5"
+local Stage6 = require "screens.stage6"
 
 local Flow = {
     index = 1
@@ -50,7 +51,7 @@ function loadStory(moonshotName)
                 end
             end
             if key == keybind.S then
-                srcBGM1:stop()                
+                srcBGM1:stop()
                 nextScreen()
             end
         end
@@ -61,16 +62,21 @@ end
 local resetMenu = loadStory("resetMenu")
 resetMenu.keyreleased = function(key)
     if key == keybind.SPACE then
-        moonshot:keyreleased(key, keybind)
+        if storyend == true then
+        else
+            moonshot:keyreleased(key, keybind)
+        end
     end
     if key == keybind.X then
         love.event.quit()
     end
     if key == keybind.R then
+        srcBGM1:stop()
         Flow.index = PrevStageIndex
         Screens[Flow.index].load()
     end
     if key == keybind.S then
+        srcBGM1:stop()
         Flow.index = 1
         Screens[Flow.index].load()
     end
@@ -79,16 +85,21 @@ end
 local endScreen = loadStory("endScreen")
 endScreen.keyreleased = function(key)
     if key == keybind.SPACE then
-        moonshot:keyreleased(key, keybind)
+        if storyend == true then
+        else
+            moonshot:keyreleased(key, keybind)
+        end
     end
     if key == keybind.X then
         love.event.quit()
     end
     if key == keybind.R then
+        srcBGM1:stop()
         Flow.index = PrevStageIndex
         Screens[Flow.index].load()
     end
     if key == keybind.S then
+        srcBGM1:stop()
         Flow.index = 1
         Screens[Flow.index].load()
     end
@@ -111,7 +122,7 @@ local Screens = {
     [11] = loadStory("round5"),
     [12] = Stage6,
     [13] = loadStory("ending"),
-    [14] = loadStory("endscreen"),
+    [14] = endScreen,
     [99] = loadStory("gameover"),
     -- TODO add menu/reset at index [100]
     [100] = resetMenu

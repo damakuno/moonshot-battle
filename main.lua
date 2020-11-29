@@ -62,7 +62,7 @@ function love.load()
             damage = srcDamage,
             heal = srcHeal,
             meter = srcMeter,
-            specialActivate = srcSpecialActivate,
+            specialActivate = srcSpecialActivate
         },
         applySettings = function()
             srcBlip:setVolume(masterVolume * sfxVolume)
@@ -78,6 +78,9 @@ function love.load()
 
     srcBGM2 = love.audio.newSource("res/audio/tleov.mp3", "stream")
     srcBGM2:setVolume(masterVolume * musicVolume)
+
+    srcBGM3 = love.audio.newSource("res/audio/tleev.mp3", "stream")
+    srcBGM3:setVolume(masterVolume * musicVolume)
 
     Screens[Flow.index].load()
 end
@@ -100,6 +103,12 @@ end
 function love.keyreleased(key)
     if Screens[Flow.index].keyreleased ~= nil then
         Screens[Flow.index].keyreleased(key)
+    end
+    if key == keybind.X then
+        srcBGM1:stop()
+        srcBGM2:stop()
+        srcBGM3:stop()
+        nextScreen()
     end
 end
 
