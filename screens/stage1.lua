@@ -7,13 +7,14 @@ local Timer = require "lib.utils.timer"
 local Stage1 = {
     load = function()
         roundEnd = false
+        drawRoundEnd = false
         gameover = false
         winner = ""
         newGrid = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0},
                    {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
 
         chara = Chara:new("huiye.chara")
-        chara2 = Chara:new("change.chara")
+        chara2 = Chara:new("bunred.chara")
         chara:setEnemy(chara2)
         chara2:setEnemy(chara)
 
@@ -39,23 +40,28 @@ local Stage1 = {
             expandingCircle2:start(true)
         end)
 
+        local fcd_dead = function(t)
+            t.enabled = false
+            roundEnd = true
+        end
+
         chara:registerCallback("dead", function(p1, p2)
             -- TODO show match results first
-            -- TODO gameover screen
             gameover = true
-            roundEnd = true
             winner = "Player 2"
             ai:stop()
             player1:stop()
+            drawRoundEnd = true
+            countdownTimer = Timer:new(1, fcd_dead)
         end)
 
         chara2:registerCallback("dead", function(p2, p1)
             -- TODO show match results first
-            -- nextScreen()
-            roundEnd = true
             winner = "Player 1"
             ai:stop()
             player1:stop()
+            drawRoundEnd = true
+            countdownTimer = Timer:new(1, fcd_dead)
         end)
 
         countdown = 3
@@ -110,7 +116,7 @@ local Stage1 = {
             moonshotExpandingText)
     end,
     keypressed = function(key)
-        if roundEnd == true then
+        if drawRoundEnd == true then
             if key == keybind.SPACE then
                 nextScreen({
                     gameover = gameover

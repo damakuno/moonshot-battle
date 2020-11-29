@@ -1,12 +1,12 @@
 [anime]
-name=Huiye
-sprite=res/images/huiye.png
-width=116
-height=99
+name=Red Bunny
+sprite=res/images/bunny_red.png
+width=100
+height=69
 duration=1
 startingSpriteNum=1
 loop=false
-dialogPosition=left
+dialogPosition=right
 
 [stats]
 hp=100
@@ -21,8 +21,8 @@ shield=1
 maxshield=50
 
 [spawnTable]
-damage=20
+damage=40
 freeze=20
-heal=20
+heal=10
 meter=20
-shield=20
+shield=10

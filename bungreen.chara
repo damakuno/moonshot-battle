@@ -1,12 +1,12 @@
 [anime]
-name=Huiye
-sprite=res/images/huiye.png
-width=116
-height=99
+name=Green Bunny
+sprite=res/images/bunny_green.png
+width=100
+height=69
 duration=1
 startingSpriteNum=1
 loop=false
-dialogPosition=left
+dialogPosition=right
 
 [stats]
 hp=100
@@ -23,6 +23,6 @@ maxshield=50
 [spawnTable]
 damage=20
 freeze=20
-heal=20
-meter=20
-shield=20
+heal=40
+meter=10
+shield=10

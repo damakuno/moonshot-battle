@@ -100,7 +100,7 @@ function Chara:draw(x, y, align)
         love.graphics.rectangle("fill", x, y + 40, self:getShieldDuration() * V2P, 20)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         self:setCharaColor()
-        self.charaAnime:draw(screenWidth - self.charaAnime.width - 10, y, 0, 1, 1)
+        self.charaAnime:draw(screenWidth - self.charaAnime.width - 10, y + 120 - self.charaAnime.height, 0, 1, 1)
     end
     if align == "left" then
         love.graphics.setColor(255 / 255, 0 / 255, 0 / 255, 1)
@@ -123,7 +123,7 @@ function Chara:draw(x, y, align)
             y + 40, self:getShieldDuration() * V2P, 20)
         love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
         self:setCharaColor()
-        self.charaAnime:draw(10, y + 20, 0, 1, 1)
+        self.charaAnime:draw(10, y  + 120 - self.charaAnime.height, 0, 1, 1)
     end
     love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
@@ -255,7 +255,7 @@ function Chara:initCallbacks()
             if v > 0 then
                 local specialMultiplier = 1
                 if self.specialActive then
-                    specialMultiplier = 2
+                    specialMultiplier = self.state.stats.special
                 else
                     specialMultiplier = 1
                 end
