@@ -88,7 +88,7 @@ local Stage = {
         drawCountdown = true
 
         player1 = Player:new(grid, keybind)
-        ai = AI:new(0.35, grid2)
+        ai = AI:new(0.3, grid2)
         local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then
@@ -97,7 +97,7 @@ local Stage = {
                 ai:start()
                 player1:start()
                 moonshotExpandingText:show()
-                moonshotExpandingText:start()
+                moonshotExpandingText:start(true)
             end
         end
         countdownTimer = Timer:new(1, fcd)

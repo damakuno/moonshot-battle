@@ -97,7 +97,7 @@ local Stage = {
                 ai:start()
                 player1:start()
                 moonshotExpandingText:show()
-                moonshotExpandingText:start()
+                moonshotExpandingText:start(true)
             end
         end
         countdownTimer = Timer:new(1, fcd)
