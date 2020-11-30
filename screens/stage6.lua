@@ -53,7 +53,7 @@ local Stage = {
         local f_volume = function(t)
             bgmvolume = bgmvolume - (bgmvolume * 0.2)
             srcBGM3:setVolume(bgmvolume)
-            if t.accumulator >= 8 then
+            if t.accumulator >= 4 then
                 t.enabled = false
                 srcBGM3:stop()
                 musicEnd = true
@@ -88,7 +88,7 @@ local Stage = {
         drawCountdown = true
 
         player1 = Player:new(grid, keybind)
-        ai = AI:new(0.3, grid2)
+        ai = AI:new(0.2, grid2)
         local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then

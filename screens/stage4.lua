@@ -53,7 +53,7 @@ local Stage = {
         local f_volume = function(t)
             bgmvolume = bgmvolume - (bgmvolume * 0.2)
             srcBGM2:setVolume(bgmvolume)
-            if t.accumulator >= 8 then
+            if t.accumulator >= 3 then
                 t.enabled = false
                 srcBGM2:stop()
                 musicEnd = true
