@@ -88,7 +88,7 @@ local Stage = {
         drawCountdown = true
 
         player1 = Player:new(grid, keybind)
-        ai = AI:new(0.2, grid2)
+        ai = AI:new(0.3, grid2)
         local fcd = function(t)
             countdown = countdown - 1
             if countdown == 0 then
